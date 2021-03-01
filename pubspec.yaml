@@ -29,6 +29,7 @@ dependencies:
   cupertino_icons: ^1.0.0
   material_design_icons_flutter:
   google_fonts: ^1.1.2
+  persistent_bottom_nav_bar:
 
 dev_dependencies:
   flutter_test:
