@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart.';
+import 'package:flutter/material.dart';
 
 const Color gc = Color(0xff28797C);
 const Color tc = Color(0xffb5e8e9);

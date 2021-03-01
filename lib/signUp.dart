@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gur/login.dart';
 import 'Utils/SizeConfig.dart';
 import 'Utils/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:toast/toast.dart';
 
 class SignUp extends StatefulWidget {
   _SignUpState createState() => _SignUpState();
@@ -12,6 +14,15 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   bool isVisible = false;
   bool isVisible2 = false;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController pwdController = TextEditingController();
+  TextEditingController confirmPwdController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+
+  AutovalidateMode phoneValidator = AutovalidateMode.disabled;
+  AutovalidateMode pwdValidator = AutovalidateMode.disabled;
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -74,6 +85,7 @@ class _SignUpState extends State<SignUp> {
                         ),
                         Container(
                           child: TextField(
+                            controller: nameController,
                             style: TextStyle(
                               color: Color(0xffbde5e6),
                               fontSize: SizeConfig.screenWidth * 12 / 414,
@@ -119,6 +131,7 @@ class _SignUpState extends State<SignUp> {
                         ),
                         Container(
                           child: TextField(
+                            controller: emailController,
                             keyboardType: TextInputType.emailAddress,
                             style: TextStyle(
                               color: Color(0xffbde5e6),
@@ -165,6 +178,7 @@ class _SignUpState extends State<SignUp> {
                         ),
                         Container(
                           child: TextField(
+                            controller: pwdController,
                             keyboardType: TextInputType.visiblePassword,
                             style: TextStyle(
                               color: Color(0xffbde5e6),
@@ -240,7 +254,18 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ),
                         Container(
-                          child: TextField(
+                          child: TextFormField(
+                            autovalidateMode: pwdValidator,
+                            validator: (String value) {
+                              if (value != pwdController.text)
+                                return "Password did not match";
+                              else
+                                return null;
+                            },
+                            onEditingComplete: () {
+                              pwdValidator = AutovalidateMode.always;
+                            },
+                            controller: confirmPwdController,
                             obscuringCharacter: '*',
                             obscureText: !isVisible2,
                             style: TextStyle(
@@ -309,7 +334,18 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ),
                         Container(
-                          child: TextField(
+                          child: TextFormField(
+                            autovalidateMode: phoneValidator,
+                            validator: (String value) {
+                              if (value.length != 10)
+                                return "Invalid phone number";
+                              else
+                                return null;
+                            },
+                            onFieldSubmitted: (String value) {
+                              phoneValidator = AutovalidateMode.always;
+                            },
+                            controller: phoneController,
                             keyboardType: TextInputType.phone,
                             style: TextStyle(
                               color: Color(0xffbde5e6),
@@ -393,6 +429,10 @@ class _SignUpState extends State<SignUp> {
                           child: MaterialButton(
                             onPressed: () {
                               print('Add Session');
+                              if (pwdController.text !=
+                                  confirmPwdController.text) {
+                              } else
+                                signUpEmail();
                             },
                             color: Color(0xffff9104),
                             shape: RoundedRectangleBorder(
@@ -459,5 +499,37 @@ class _SignUpState extends State<SignUp> {
         ),
       ),
     );
+  }
+
+  void signUpEmail() async {
+    String userName = nameController.text;
+    String email = emailController.text;
+    String pwd = pwdController.text;
+    String phone = phoneController.text;
+
+    print(
+        'User Name: $userName \nEmail: $email \nPassword: $pwd \nPhone: $phone');
+
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: pwd);
+
+      Toast.show('Welcome $userName', context,
+          duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+      addUsertoDB(userName, email, pwd, phone);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email');
+      } else {
+        print(e);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> addUsertoDB(
+      String userName, String email, String pwd, String phone) {
+    print("Signed In Successfully");
   }
 }
