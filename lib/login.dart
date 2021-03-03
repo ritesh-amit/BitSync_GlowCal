@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gur/dialogBoxRequest.dart';
 import 'package:gur/forgotPassword.dart';
 import 'package:gur/signUp.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -310,8 +311,10 @@ class _LoginState extends State<Login> {
                           children: [
                             InkWell(
                               onTap: () {
+
                                 print("Google Sign In");
                                 googleSignIn();
+
                               },
                               child: Container(
                                 decoration: BoxDecoration(

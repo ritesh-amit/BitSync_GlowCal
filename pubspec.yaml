@@ -31,6 +31,8 @@ dependencies:
   google_sign_in: ^4.5.9
   material_design_icons_flutter: null
   toast: ^0.1.5
+  persistent_bottom_nav_bar:
+
 
 dev_dependencies:
   flutter_test:
