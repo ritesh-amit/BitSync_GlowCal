@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/dialogBoxRequest.dart';
 import 'package:gur/forgotPassword.dart';
 import 'package:gur/signUp.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:toast/toast.dart';
 import 'Utils/SizeConfig.dart';
 import 'Utils/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +17,9 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool isVisible = false;
+
+  TextEditingController emailTextController = TextEditingController();
+  TextEditingController pwdEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +83,7 @@ class _LoginState extends State<Login> {
                         ),
                         Container(
                           child: TextField(
+                            controller: emailTextController,
                             style: TextStyle(
                               color: Color(0xffbde5e6),
                               fontSize: SizeConfig.screenWidth * 12 / 414,
@@ -120,6 +127,7 @@ class _LoginState extends State<Login> {
                         ),
                         Container(
                           child: TextField(
+                            controller: pwdEditingController,
                             obscuringCharacter: '*',
                             obscureText: !isVisible,
                             style: TextStyle(
@@ -215,6 +223,7 @@ class _LoginState extends State<Login> {
                         MaterialButton(
                           onPressed: () {
                             print('Add Session');
+                            login();
                           },
                           color: Color(0xffff9104),
                           shape: RoundedRectangleBorder(
@@ -302,7 +311,10 @@ class _LoginState extends State<Login> {
                           children: [
                             InkWell(
                               onTap: () {
-                                dialogBoxRequest(context);
+
+                                print("Google Sign In");
+                                googleSignIn();
+
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -369,5 +381,49 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  void login() async {
+    String email = emailTextController.text;
+    String pwd = pwdEditingController.text;
+
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: pwd);
+
+      Toast.show("Login Succesfull", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        Toast.show("User not found", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      } else if (e.code == 'wrong-password') {
+        Toast.show("Wrong Password", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      } else {
+        Toast.show(e.toString(), context);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void googleSignIn() async {
+    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    final GoogleAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+
+    try {
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      Toast.show("Login Successfull", context,
+          duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+    } catch (e) {
+      print(e);
+    }
   }
 }

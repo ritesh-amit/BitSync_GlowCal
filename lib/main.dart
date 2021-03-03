@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/Utils/SizeConfig.dart';
 import 'package:gur/aboutNgo.dart';
@@ -7,9 +8,15 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'Utils/constants.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+
 
 BuildContext testContext;
+
 
 class MyApp extends StatelessWidget {
   @override

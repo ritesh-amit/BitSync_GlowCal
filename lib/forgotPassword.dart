@@ -215,4 +215,6 @@ class ForgotPassword extends StatelessWidget {
       ),
     );
   }
+
+  void sendVerificationCode() {}
 }
