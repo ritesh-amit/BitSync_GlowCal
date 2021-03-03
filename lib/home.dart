@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gur/dialogBoxDonate.dart';
-import 'package:gur/dialogBoxRequest.dart';
 import 'package:gur/drawer.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'Utils/SizeConfig.dart';
@@ -11,9 +10,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  @override
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(

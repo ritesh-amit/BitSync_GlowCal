@@ -1,24 +1,22 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:gur/Utils/SizeConfig.dart';
-import 'package:gur/aboutNgo.dart';
-import 'package:gur/home.dart';
-import 'package:gur/profile.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'Utils/constants.dart';
+import 'package:gur/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'mainMenu.dart';
 
+var preferences = SharedPreferences.getInstance();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  bool isLoggedIn = pref.getBool('isLoggedIn');
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(MyApp(isLoggedIn));
 }
 
-
-BuildContext testContext;
-
-
 class MyApp extends StatelessWidget {
+  final bool isLoggedIn;
+  MyApp(this.isLoggedIn);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,128 +25,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: MainMenu(),
-    );
-  }
-}
-
-class MainMenu extends StatefulWidget {
-  MainMenu({Key key}) : super(key: key);
-
-  @override
-  _MainMenuState createState() => _MainMenuState();
-}
-
-class _MainMenuState extends State<MainMenu> {
-  PersistentTabController _controller;
-  bool _hideNavBar;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = PersistentTabController(initialIndex: 0);
-    _hideNavBar = false;
-  }
-
-  List<Widget> _buildScreens() {
-    return [
-      HomePage(),
-      AboutNgo(),
-      AboutNgo(),
-      AboutNgo(),
-      Profile(),
-    ];
-  }
-
-  List<PersistentBottomNavBarItem> _navBarsItems() {
-    return [
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.home),
-        title: "Home",
-        activeColor: mc,
-        inactiveColor: textColor,
-      ),
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.settings),
-        title: ("Settings"),
-        activeColor: mc,
-        inactiveColor: textColor,
-      ),
-      PersistentBottomNavBarItem(
-        icon: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Icon(
-            MdiIcons.fileDocument,
-            color: Colors.white,
-            size: SizeConfig.screenWidth * 24 / 414,
-          ),
-          Text(
-            "Sponsors",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: SizeConfig.screenWidth * 10 / 414,
-            ),
-          ),
-        ]),
-        activeColor: mc,
-        inactiveColor: textColor,
-      ),
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.notifications),
-        title: ("Notifications"),
-        activeColor: mc,
-        inactiveColor: textColor,
-      ),
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.person),
-        title: ("Profile"),
-        activeColor: mc,
-        inactiveColor: textColor,
-      ),
-    ];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    return Scaffold(
-      body: PersistentTabView(
-        context,
-        controller: _controller,
-        screens: _buildScreens(),
-        items: _navBarsItems(),
-        confineInSafeArea: true,
-        backgroundColor: Colors.white,
-        handleAndroidBackButtonPress: true,
-        resizeToAvoidBottomInset: true,
-        stateManagement: true,
-        navBarHeight: MediaQuery.of(context).viewInsets.bottom > 0
-            ? 0.0
-            : kBottomNavigationBarHeight,
-        hideNavigationBarWhenKeyboardShows: true,
-        popActionScreens: PopActionScreensType.once,
-        bottomScreenMargin: 0.0,
-        onWillPop: () async {
-          return false;
-        },
-        selectedTabScreenContext: (context) {
-          testContext = context;
-        },
-        hideNavigationBar: _hideNavBar,
-        decoration: NavBarDecoration(
-          borderRadius: BorderRadius.circular(0.0),
-        ),
-        popAllScreensOnTapOfSelectedTab: true,
-        itemAnimationProperties: ItemAnimationProperties(
-          duration: Duration(milliseconds: 400),
-          curve: Curves.ease,
-        ),
-        screenTransitionAnimation: ScreenTransitionAnimation(
-          animateTabTransition: true,
-          curve: Curves.ease,
-          duration: Duration(milliseconds: 200),
-        ),
-        navBarStyle: NavBarStyle.style15,
-      ),
+      home: isLoggedIn == true ? MainMenu() : Login(),
     );
   }
 }
