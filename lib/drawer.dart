@@ -1,7 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:gur/login.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Utils/SizeConfig.dart';
 import 'Utils/constants.dart';
+import 'main.dart';
 
 class DrawerCode extends StatefulWidget {
   final String userName;
@@ -267,6 +272,7 @@ class _DrawerCodeState extends State<DrawerCode> {
               onTap: () {
                 setState(() {
                   isLogOut = !isLogOut;
+                  logOut();
                 });
               },
               child: Container(
@@ -386,5 +392,27 @@ class _DrawerCodeState extends State<DrawerCode> {
         ),
       ),
     );
+  }
+
+  void logOut() async {
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    GoogleSignIn googleSignIn = GoogleSignIn();
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    try {
+      await firebaseAuth.signOut();
+      await googleSignIn.disconnect();
+      await googleSignIn.signOut();
+      preferences.setBool('isLoggedIn', false);
+      print("Signed Out");
+      //Navigator.of(context).pop();
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+        return Login();
+      }));
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    } catch (e) {
+      print(e);
+    }
   }
 }

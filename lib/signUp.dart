@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gur/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Utils/SizeConfig.dart';
 import 'Utils/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,6 +21,7 @@ class _SignUpState extends State<SignUp> {
   TextEditingController pwdController = TextEditingController();
   TextEditingController confirmPwdController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+  SharedPreferences preferences;
 
   AutovalidateMode phoneValidator = AutovalidateMode.disabled;
   AutovalidateMode pwdValidator = AutovalidateMode.disabled;
@@ -511,9 +514,9 @@ class _SignUpState extends State<SignUp> {
         'User Name: $userName \nEmail: $email \nPassword: $pwd \nPhone: $phone');
 
     try {
-      UserCredential userCredential = await FirebaseAuth.instance
+      await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: pwd);
-
+      preferences.setBool('isLoggedIn', true);
       Toast.show('Welcome $userName', context,
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       addUsertoDB(userName, email, pwd, phone);
@@ -528,8 +531,7 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-  Future<void> addUsertoDB(
-      String userName, String email, String pwd, String phone) {
-    print("Signed In Successfully");
+  void addUsertoDB(String userName, String email, String pwd, String phone) {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
   }
 }

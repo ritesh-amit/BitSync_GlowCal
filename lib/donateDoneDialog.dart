@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gur/home.dart';
 import 'package:gur/main.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'Utils/SizeConfig.dart';
 import 'Utils/constants.dart';
+import 'mainMenu.dart';
 
 class DialogBoxDonateDone extends StatelessWidget {
   @override
