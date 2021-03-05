@@ -4,7 +4,6 @@ import 'package:gur/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'mainMenu.dart';
 
-var preferences = SharedPreferences.getInstance();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences pref = await SharedPreferences.getInstance();

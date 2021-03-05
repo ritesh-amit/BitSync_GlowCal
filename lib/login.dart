@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -397,11 +398,13 @@ class _LoginState extends State<Login> {
     preferences = await SharedPreferences.getInstance();
 
     try {
-      await FirebaseAuth.instance
+      UserCredential credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: pwd);
+
       Toast.show("Login Succesfull", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
       preferences.setBool('isLoggedIn', true);
+      getUserDataFromDb(credential.user.uid);
 
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
         return MainMenu();
@@ -414,7 +417,8 @@ class _LoginState extends State<Login> {
         Toast.show("Wrong Password", context,
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
       } else {
-        Toast.show(e.toString(), context);
+        Toast.show("Failure, Kindly login after sometime", context,
+            duration: Toast.LENGTH_LONG);
       }
     } catch (e) {
       print(e);
@@ -442,5 +446,15 @@ class _LoginState extends State<Login> {
     } catch (e) {
       print(e);
     }
+  }
+
+  void getUserDataFromDb(String userUid) {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    firestore.collection('users').doc(userUid).snapshots().listen((snapshot) {
+      preferences.setString('currentUserName', snapshot.data()['name']);
+      preferences.setString('currentUserEmail', snapshot.data()['email']);
+      preferences.setString('currentUserPhone', snapshot.data()['phone']);
+    });
   }
 }
