@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:gur/login.dart';
+import 'package:gur/screens/authScreens/login.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Utils/SizeConfig.dart';
@@ -22,6 +22,7 @@ class DrawerCode extends StatefulWidget {
 }
 
 class _DrawerCodeState extends State<DrawerCode> {
+  SharedPreferences preferences;
   bool isEmail = false;
   bool isPass = false;
   bool isVisible = false;
@@ -37,6 +38,33 @@ class _DrawerCodeState extends State<DrawerCode> {
   bool isLogOut = false;
   bool isShare = false;
   bool isVersion = false;
+
+  String userName = "";
+  String userPhone = "";
+  String address = "";
+  String email = "";
+
+  loadData() async {
+    preferences = await SharedPreferences.getInstance();
+
+    setState(() {
+      userName = preferences.getString("currentUserName");
+      email = preferences.getString("currentUserEmail");
+
+      if (preferences.containsKey("currentUserPhone")) {
+        userPhone = preferences.getString("currentUserPhone");
+      } else {
+        userPhone = "Not Provided";
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    loadData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +82,7 @@ class _DrawerCodeState extends State<DrawerCode> {
               height: SizeConfig.screenHeight * 107 / 896,
             ),
             Text(
-              "Nishant Singh", //this.userName
+              userName, //this.userName
               style: TextStyle(
                 color: textColor,
                 fontWeight: FontWeight.w500,
@@ -83,7 +111,7 @@ class _DrawerCodeState extends State<DrawerCode> {
                     width: SizeConfig.screenWidth * 8 / 414,
                   ),
                   Text(
-                    "6387246025", // this.phoneNumber
+                    userPhone, // this.phoneNumber
                     style: TextStyle(
                       color: textColor,
                       fontWeight: FontWeight.w400,
@@ -402,17 +430,20 @@ class _DrawerCodeState extends State<DrawerCode> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     try {
-      await firebaseAuth.signOut();
-      //await googleSignIn.disconnect();
-      //await googleSignIn.signOut();
-      preferences.setBool('isLoggedIn', false);
-      preferences.remove('currentUserName');
-      preferences.remove('currentUserPhone');
-      preferences.remove('currentUserEmail');
-      print("Signed Out");
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return Login();
-      }));
+      await firebaseAuth.signOut().then((value) {
+        preferences.setBool('isLoggedIn', false);
+        preferences.remove('currentUserName');
+        preferences.remove('currentUserPhone');
+        preferences.remove('currentUserEmail');
+        print("Signed Out");
+        Navigator.of(context).pop();
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) {
+          return Login();
+        }), (route) => false);
+      }).catchError((e) {
+        print(e);
+      });
     } on FirebaseAuthException catch (e) {
       print(e);
     } catch (e) {

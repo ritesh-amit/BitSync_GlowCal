@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gur/Utils/constants.dart';
-import 'package:gur/profile.dart';
+import 'package:gur/screens/mainScreens/profile.dart';
 
 void main() {
   runApp(MyApp());
