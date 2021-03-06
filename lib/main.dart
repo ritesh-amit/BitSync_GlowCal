@@ -1,14 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:gur/login.dart';
+import 'package:gur/screens/authScreens/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'mainMenu.dart';
+import 'screens/mainMenu.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences pref = await SharedPreferences.getInstance();
-  bool isLoggedIn = pref.getBool('isLoggedIn');
+  bool isLoggedIn;
   await Firebase.initializeApp();
+  FirebaseAuth auth = FirebaseAuth.instance;
+  User user = auth.currentUser;
+
+  if (user == null)
+    isLoggedIn = false;
+  else
+    isLoggedIn = true;
+
+  pref.setBool('isLoggedIn', isLoggedIn);
+
   runApp(MyApp(isLoggedIn));
 }
 

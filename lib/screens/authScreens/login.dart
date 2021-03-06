@@ -2,17 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gur/forgotPassword.dart';
+import 'package:gur/screens/authScreens/forgotPassword.dart';
 import 'package:gur/main.dart';
-import 'package:gur/signUp.dart';
+import 'package:gur/screens/authScreens/signUp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:toast/toast.dart';
-import 'Utils/SizeConfig.dart';
-import 'Utils/constants.dart';
+import '../../Utils/SizeConfig.dart';
+import '../../Utils/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'mainMenu.dart';
-import 'slidePage.dart';
+import '../mainMenu.dart';
+import '../../slidePage.dart';
 
 class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
@@ -435,7 +435,14 @@ class _LoginState extends State<Login> {
     preferences = await SharedPreferences.getInstance();
 
     try {
-      await FirebaseAuth.instance.signInWithCredential(credential);
+      await FirebaseAuth.instance
+          .signInWithCredential(credential)
+          .then((value) {
+        if (value.user != null) {
+          preferences.setString("currentUserName", value.user.displayName);
+          preferences.setString("currentUserEmail", value.user.email);
+        }
+      });
 
       Toast.show("Login Successfull", context,
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);

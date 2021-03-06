@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gur/profile.dart';
+import 'package:gur/screens/mainScreens/profile.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:gur/Utils/constants.dart';
-import 'Utils/SizeConfig.dart';
-import 'aboutNgo.dart';
-import 'home.dart';
+import '../Utils/SizeConfig.dart';
+import 'mainScreens/aboutNgo.dart';
+import 'mainScreens/home.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 BuildContext testContext;

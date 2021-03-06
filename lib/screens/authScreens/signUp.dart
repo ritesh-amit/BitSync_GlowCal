@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:gur/Utils/currentUser.dart';
-import 'package:gur/login.dart';
-import 'package:gur/mainMenu.dart';
-import 'package:gur/otpPage.dart';
+import 'package:gur/models/currentUser.dart';
+import 'package:gur/screens/authScreens/login.dart';
+import 'package:gur/screens/mainMenu.dart';
+import 'package:gur/screens/authScreens/otpPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Utils/SizeConfig.dart';
-import 'Utils/constants.dart';
+import '../../Utils/SizeConfig.dart';
+import '../../Utils/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toast/toast.dart';
 
@@ -514,6 +514,7 @@ class _SignUpState extends State<SignUp> {
     String email = emailController.text;
     String pwd = pwdController.text;
     String phone = phoneController.text;
+    phone = "+91" + phone;
 
     preferences = await SharedPreferences.getInstance();
 
@@ -534,8 +535,7 @@ class _SignUpState extends State<SignUp> {
       addUsertoDB(userName, email, pwd, phone);
 
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        //return new MainMenu();
-        return OtpPage();
+        return OtpPage(phone);
       }));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
@@ -548,9 +548,7 @@ class _SignUpState extends State<SignUp> {
       print(e);
     }
 
-    phone = "+91" + phone;
     preferences.setString('currentUserName', userName);
-    preferences.setString('currentUserPhone', phone);
     preferences.setString('currentUserEmail', email);
   }
 

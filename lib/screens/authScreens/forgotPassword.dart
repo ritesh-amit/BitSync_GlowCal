@@ -1,16 +1,22 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gur/login.dart';
-import 'Utils/SizeConfig.dart';
-import 'Utils/constants.dart';
+import 'package:gur/screens/authScreens/login.dart';
+import '../../Utils/SizeConfig.dart';
+import '../../Utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'slidePage.dart';
+import '../../slidePage.dart';
 
 class ForgotPassword extends StatelessWidget {
+  final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
+
+  final TextEditingController emailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+      key: _scaffoldkey,
       backgroundColor: Color(0xffe5e5e5),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -74,6 +80,7 @@ class ForgotPassword extends StatelessWidget {
                             right: SizeConfig.screenWidth * 23 / 414,
                           ),
                           child: TextField(
+                            controller: emailController,
                             style: TextStyle(
                               color: Color(0xffbde5e6),
                               fontSize: SizeConfig.screenWidth * 12 / 414,
@@ -126,7 +133,7 @@ class ForgotPassword extends StatelessWidget {
                               left: SizeConfig.screenWidth * 23 / 414),
                           child: MaterialButton(
                             onPressed: () {
-                              print('Add Session');
+                              sendVerificationLink();
                             },
                             color: Color(0xffff9104),
                             shape: RoundedRectangleBorder(
@@ -153,8 +160,7 @@ class ForgotPassword extends StatelessWidget {
                           children: [
                             InkWell(
                               onTap: () {
-                                Navigator.of(context)
-                                    .push(SlideRightRoute(page: Login()));
+                                Navigator.of(context).pop();
                               },
                               child: Text(
                                 'Back to Login',
@@ -215,5 +221,15 @@ class ForgotPassword extends StatelessWidget {
     );
   }
 
-  void sendVerificationCode() {}
+  void sendVerificationLink() async {
+    String email = emailController.text;
+    await FirebaseAuth.instance
+        .sendPasswordResetEmail(email: email)
+        .then((value) {
+      _scaffoldkey.currentState.showSnackBar(SnackBar(
+        content: Text("Password reset link is sent to your email"),
+        backgroundColor: Colors.yellow,
+      ));
+    });
+  }
 }
