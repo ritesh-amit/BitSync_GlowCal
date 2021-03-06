@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:gur/Utils/currentUser.dart';
 import 'package:gur/login.dart';
+import 'package:gur/mainMenu.dart';
+import 'package:gur/otpPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Utils/SizeConfig.dart';
 import 'Utils/constants.dart';
@@ -22,6 +25,8 @@ class _SignUpState extends State<SignUp> {
   TextEditingController confirmPwdController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   SharedPreferences preferences;
+  String uid = "";
+  String userToken = "";
 
   AutovalidateMode phoneValidator = AutovalidateMode.disabled;
   AutovalidateMode pwdValidator = AutovalidateMode.disabled;
@@ -510,28 +515,63 @@ class _SignUpState extends State<SignUp> {
     String pwd = pwdController.text;
     String phone = phoneController.text;
 
+    preferences = await SharedPreferences.getInstance();
+
     print(
         'User Name: $userName \nEmail: $email \nPassword: $pwd \nPhone: $phone');
 
     try {
       await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: pwd);
+          .createUserWithEmailAndPassword(email: email, password: pwd)
+          .then((value) {
+        uid = value.user.uid;
+        userToken = 'NA';
+      });
+
       preferences.setBool('isLoggedIn', true);
       Toast.show('Welcome $userName', context,
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       addUsertoDB(userName, email, pwd, phone);
+
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+        //return new MainMenu();
+        return OtpPage();
+      }));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email');
+        Toast.show('The account already exists for that email', context,
+            duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       } else {
         print(e);
       }
     } catch (e) {
       print(e);
     }
+
+    phone = "+91" + phone;
+    preferences.setString('currentUserName', userName);
+    preferences.setString('currentUserPhone', phone);
+    preferences.setString('currentUserEmail', email);
   }
 
   void addUsertoDB(String userName, String email, String pwd, String phone) {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    String userName = nameController.text;
+    String email = emailController.text;
+    String phone = phoneController.text;
+
+    CurrentUser currentUser =
+        CurrentUser(name: userName, email: email, phone: phone, uid: uid);
+
+    Map<String, dynamic> map = currentUser.toMap();
+
+    try {
+      firestore.collection('users').doc(uid).set(map).whenComplete(() {
+        print("User added to DB");
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 }

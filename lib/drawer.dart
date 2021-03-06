@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:gur/login.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -107,6 +108,7 @@ class _DrawerCodeState extends State<DrawerCode> {
               onTap: () {
                 setState(() {
                   isComp = !isComp;
+                  sendComplaintMail();
                 });
               },
               child: Container(
@@ -401,11 +403,13 @@ class _DrawerCodeState extends State<DrawerCode> {
 
     try {
       await firebaseAuth.signOut();
-      await googleSignIn.disconnect();
-      await googleSignIn.signOut();
+      //await googleSignIn.disconnect();
+      //await googleSignIn.signOut();
       preferences.setBool('isLoggedIn', false);
+      preferences.remove('currentUserName');
+      preferences.remove('currentUserPhone');
+      preferences.remove('currentUserEmail');
       print("Signed Out");
-      //Navigator.of(context).pop();
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
         return Login();
       }));
@@ -414,5 +418,14 @@ class _DrawerCodeState extends State<DrawerCode> {
     } catch (e) {
       print(e);
     }
+  }
+
+  void sendComplaintMail() async {
+    Email email = Email(
+        recipients: ['sisodiasuraj2000@gmail.com'],
+        subject: 'Regarding DSC App',
+        isHTML: false);
+
+    await FlutterEmailSender.send(email);
   }
 }

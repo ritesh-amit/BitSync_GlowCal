@@ -33,6 +33,7 @@ dependencies:
   toast: ^0.1.5
   persistent_bottom_nav_bar:
   shared_preferences: ^0.5.12+4
+  flutter_email_sender: ^4.0.0
 
 
 dev_dependencies:
