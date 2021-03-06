@@ -5,7 +5,6 @@ import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../slidePage.dart';
 
 class ForgotPassword extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
@@ -15,6 +14,8 @@ class ForgotPassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
     return Scaffold(
       key: _scaffoldkey,
       backgroundColor: Color(0xffe5e5e5),
@@ -24,98 +25,47 @@ class ForgotPassword extends StatelessWidget {
             child: Column(
               children: [
                 Transform(
-                  transform: Matrix4.translationValues(
-                      -SizeConfig.screenWidth * 0 / 414,
-                      SizeConfig.screenHeight * 280 / 896,
-                      0),
+                  transform: Matrix4.translationValues(-b * 0, h * 280, 0),
                   child: Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.screenWidth * 32 / 414),
-                    height: SizeConfig.screenHeight * 585 / 896,
-                    width: SizeConfig.screenWidth,
+                    padding: EdgeInsets.symmetric(horizontal: b * 32),
+                    height: h * 585,
+                    width: b * 414,
                     decoration: BoxDecoration(
                       color: gc,
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(
-                          SizeConfig.screenWidth * 30 / 414,
-                        ),
-                        topRight: Radius.circular(
-                          SizeConfig.screenWidth * 30 / 414,
-                        ),
+                        topLeft: Radius.circular(b * 30),
+                        topRight: Radius.circular(b * 30),
                       ),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height: SizeConfig.screenHeight * 45 / 896,
-                        ),
+                        sh(45),
                         Text(
                           'Forgot password?',
                           style: GoogleFonts.playfairDisplay(
                             color: textColor,
-                            letterSpacing: 0.1,
                             fontWeight: FontWeight.w700,
-                            fontSize: SizeConfig.screenWidth * 40 / 414,
+                            fontSize: b * 40,
                           ),
                         ),
-                        SizedBox(
-                          height: SizeConfig.screenHeight * 35 / 896,
-                        ),
+                        sh(35),
                         Padding(
-                          padding: EdgeInsets.only(
-                              left: SizeConfig.screenWidth * 21 / 414),
+                          padding: EdgeInsets.only(left: b * 21),
                           child: Text(
                             'Email',
-                            style: TextStyle(
-                              color: textColor,
-                              fontWeight: FontWeight.w500,
-                              fontSize: SizeConfig.screenWidth * 18 / 414,
-                            ),
+                            style: txtS(textColor, 18, FontWeight.w500),
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.only(
-                            left: SizeConfig.screenWidth * 23 / 414,
-                            right: SizeConfig.screenWidth * 23 / 414,
-                          ),
+                          padding: EdgeInsets.only(left: b * 23, right: b * 23),
                           child: TextField(
                             controller: emailController,
-                            style: TextStyle(
-                              color: Color(0xffbde5e6),
-                              fontSize: SizeConfig.screenWidth * 12 / 414,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xffb5e8e9).withOpacity(0.36),
-                                  width: SizeConfig.screenWidth * 1 / 414,
-                                ),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xffb5e8e9).withOpacity(0.36),
-                                  width: SizeConfig.screenWidth * 1 / 414,
-                                ),
-                              ),
-                              hintText: 'Your Email ID',
-                              hintStyle: TextStyle(
-                                color: Color(0xffbde5e6),
-                                fontSize: SizeConfig.screenWidth * 12 / 414,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.screenHeight * 9 / 896),
-                            ),
-                            maxLines: 1,
-                            minLines: 1,
+                            style: txtS(Color(0xffb5e8e9), 16, FontWeight.w500),
+                            decoration: dec('Your Email ID'),
                           ),
                         ),
-                        SizedBox(
-                          height: SizeConfig.screenHeight * 30 / 896,
-                        ),
+                        sh(30),
                         Container(
                           decoration: BoxDecoration(
                             boxShadow: [
@@ -127,34 +77,25 @@ class ForgotPassword extends StatelessWidget {
                               ),
                             ],
                           ),
-                          height: SizeConfig.screenHeight * 48 / 896,
-                          width: SizeConfig.screenWidth * 330 / 414,
-                          padding: EdgeInsets.only(
-                              left: SizeConfig.screenWidth * 23 / 414),
+                          height: h * 48,
+                          width: b * 330,
+                          padding: EdgeInsets.only(left: b * 23),
                           child: MaterialButton(
                             onPressed: () {
                               sendVerificationLink();
                             },
-                            color: Color(0xffff9104),
+                            color: mc,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                SizeConfig.screenWidth * 35 / 414,
-                              ),
+                              borderRadius: BorderRadius.circular(b * 35),
                             ),
                             elevation: 0,
                             child: Text(
                               'Submit',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
-                                fontSize: SizeConfig.screenWidth * 18 / 414,
-                              ),
+                              style: txtS(Colors.white, 18, FontWeight.w500),
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: SizeConfig.screenHeight * 18 / 896,
-                        ),
+                        sh(18),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -164,11 +105,8 @@ class ForgotPassword extends StatelessWidget {
                               },
                               child: Text(
                                 'Back to Login',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xffb5e8e9),
-                                  fontSize: SizeConfig.screenWidth * 14 / 414,
-                                ),
+                                style: txtS(
+                                    Color(0xffb5e8e9), 14, FontWeight.w700),
                               ),
                             ),
                           ],
@@ -178,13 +116,11 @@ class ForgotPassword extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              width: SizeConfig.screenWidth * 183 / 414,
-                              height: SizeConfig.screenHeight * 7 / 896,
+                              width: b * 183,
+                              height: h * 7,
                               decoration: BoxDecoration(
                                 color: Color(0xffdee2e6),
-                                borderRadius: BorderRadius.circular(
-                                  SizeConfig.screenWidth * 15 / 414,
-                                ),
+                                borderRadius: BorderRadius.circular(b * 15),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black.withOpacity(0.25),
@@ -196,21 +132,17 @@ class ForgotPassword extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: SizeConfig.screenHeight * 15 / 896,
-                        ),
+                        sh(15),
                       ],
                     ),
                   ),
                 ),
                 Transform(
-                  transform: Matrix4.translationValues(
-                      -SizeConfig.screenWidth * 80 / 414,
-                      -SizeConfig.screenHeight * (585) / 896,
-                      0),
+                  transform:
+                      Matrix4.translationValues(-b * 80, -h * (896 - 400), 0),
                   child: Image.asset(
                     'images/girl.png',
-                    height: SizeConfig.screenHeight * 350 / 896,
+                    height: h * 250,
                   ),
                 ),
               ],
@@ -218,6 +150,44 @@ class ForgotPassword extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  TextStyle txtS(Color col, double siz, FontWeight wg) {
+    return TextStyle(
+      color: col,
+      fontWeight: wg,
+      fontSize: SizeConfig.screenWidth * siz / 414,
+    );
+  }
+
+  SizedBox sh(double h) {
+    return SizedBox(height: SizeConfig.screenHeight * h / 896);
+  }
+
+  InputDecoration dec(String txt) {
+    return InputDecoration(
+      enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: Color(0xffb5e8e9).withOpacity(0.36),
+          width: SizeConfig.screenWidth * 1 / 414,
+        ),
+      ),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: Color(0xffb5e8e9).withOpacity(0.36),
+          width: SizeConfig.screenWidth * 1 / 414,
+        ),
+      ),
+      hintText: txt,
+      hintStyle: TextStyle(
+        color: Color(0xffbde5e6),
+        fontSize: SizeConfig.screenWidth * 12 / 414,
+        fontWeight: FontWeight.w400,
+      ),
+      isDense: true,
+      contentPadding:
+          EdgeInsets.symmetric(vertical: SizeConfig.screenHeight * 9 / 896),
     );
   }
 
