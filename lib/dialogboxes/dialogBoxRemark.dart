@@ -3,136 +3,170 @@ import 'package:gur/dialogboxes/donateDoneDialog.dart';
 import '../Utils/SizeConfig.dart';
 import '../Utils/constants.dart';
 
-class DialogBoxRemark extends StatelessWidget {
+class DialogBoxRemark extends StatefulWidget {
+  _DialogBoxRemarkState createState() => _DialogBoxRemarkState();
+}
+
+class _DialogBoxRemarkState extends State<DialogBoxRemark> {
+  final ScrollController _scrollController = ScrollController();
+  bool rad = true;
+  void toNavigate(double qwer) {
+    _scrollController.animateTo(SizeConfig.screenHeight * qwer / 896,
+        curve: Curves.easeOut, duration: const Duration(microseconds: 100));
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
     return Dialog(
-      insetPadding: EdgeInsets.only(
-        top: SizeConfig.screenHeight * 255 / 896,
-      ),
+      insetPadding: EdgeInsets.only(top: h * 285),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(SizeConfig.screenWidth * 30 / 414),
-          topRight: Radius.circular(SizeConfig.screenWidth * 30 / 414),
+          topLeft: Radius.circular(b * 30),
+          topRight: Radius.circular(b * 30),
         ),
       ),
       child: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Container(
-            margin: EdgeInsets.symmetric(
-              vertical: SizeConfig.screenHeight * 26 / 814,
-            ),
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.screenWidth * 32 / 414,
-            ),
+            margin: EdgeInsets.symmetric(vertical: h * 26),
+            padding: EdgeInsets.symmetric(horizontal: b * 20),
             child: Column(
               children: [
                 Text(
                   'Remarks for NGO',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: textColor,
-                    fontSize: SizeConfig.screenWidth * 22 / 414,
-                  ),
+                  style: txtS(textColor, 22, FontWeight.w600),
                 ),
-                SizedBox(
-                  height: SizeConfig.screenHeight * 32 / 896,
-                ),
+                sh(32),
                 Container(
-                  height: SizeConfig.screenHeight * 317 / 896,
-                  width: SizeConfig.screenWidth * 350 / 414,
+                  height: h * 200,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Color(0xffff9104).withOpacity(0.31),
-                      width: 2,
+                      width: b * 2,
                     ),
-                    borderRadius: BorderRadius.circular(
-                        SizeConfig.screenWidth * 18 / 414),
+                    borderRadius: BorderRadius.circular(b * 18),
                   ),
                   child: TextField(
-                    style: TextStyle(
-                      color: textColor,
-                      fontSize: SizeConfig.screenWidth * 18 / 414,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    onTap: () {
+                      toNavigate(60);
+                    },
+                    style: txtS(textColor, 18, FontWeight.w500),
                     decoration: InputDecoration(
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
                       hintText: 'Enter Remarks',
-                      hintStyle: TextStyle(
-                        color: Color(0xff828282),
-                        fontSize: SizeConfig.screenWidth * 18 / 414,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      hintStyle: txtS(Color(0xff828282), 18, FontWeight.w500),
                       contentPadding: EdgeInsets.symmetric(
-                        vertical: SizeConfig.screenHeight * 9 / 896,
-                        horizontal: SizeConfig.screenWidth * 23 / 414,
-                      ),
+                          vertical: h * 9, horizontal: b * 23),
                     ),
                     maxLines: null,
                   ),
                 ),
-                SizedBox(
-                  height: SizeConfig.screenHeight * 32 / 896,
-                ),
-                InkWell(
-                  onTap: () {
-                    dialogBoxDonateDone(context);
-                  },
-                  child: Container(
-                    height: SizeConfig.screenHeight * 48 / 896,
-                    alignment: Alignment.center,
-                    width: SizeConfig.screenWidth * 350 / 414,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(
-                        color: mc,
-                        width: 2,
-                      ),
-                      borderRadius: BorderRadius.circular(
-                          SizeConfig.screenWidth * 46 / 414),
+                sh(38),
+                Row(
+                  children: [
+                    SizedBox(width: b * 20),
+                    Text(
+                      'Use Gelocation for Address',
+                      style: txtS(textColor, 18, FontWeight.w600),
                     ),
-                    child: Text(
-                      'Skip',
-                      style: TextStyle(
-                        color: mc,
-                        fontWeight: FontWeight.w700,
-                        fontSize: SizeConfig.screenWidth * 16 / 414,
+                    Spacer(),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          rad = !rad;
+                        });
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(2.5),
+                        height: h * 22,
+                        width: b * 22,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: mc,
+                            width: b * 1.5,
+                          ),
+                        ),
+                        child: CircleAvatar(
+                          radius: b * 7,
+                          backgroundColor: rad == false ? mc : Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: b * 20),
+                  ],
+                ),
+                sh(30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(color: rc, height: h * 1, width: b * 130),
+                    Text(
+                      'Or',
+                      style: txtS(rc, 14, FontWeight.w500),
+                    ),
+                    Container(color: rc, height: h * 1, width: b * 130),
+                  ],
+                ),
+                sh(30),
+                Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color(0xffff9104).withOpacity(0.31),
+                      width: b * 2,
+                    ),
+                    borderRadius: BorderRadius.circular(b * 18),
+                  ),
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: b * 300,
+                    child: TextFormField(
+                      keyboardType: TextInputType.text,
+                      onFieldSubmitted: (String qwert) {
+                        toNavigate(0);
+                      },
+                      onTap: () {
+                        toNavigate(500);
+                      },
+                      style: txtS(textColor, 18, FontWeight.w600),
+                      decoration: InputDecoration(
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        hintText: "Enter Location Manually",
+                        hintStyle: txtS(Color(0xff828282), 16, FontWeight.w600),
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(vertical: h * 12),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: SizeConfig.screenHeight * 32 / 896,
-                ),
+                sh(34),
                 InkWell(
                   onTap: () {
+                    Navigator.pop(context);
                     dialogBoxDonateDone(context);
                   },
                   child: Container(
-                    height: SizeConfig.screenHeight * 48 / 896,
+                    height: h * 48,
                     alignment: Alignment.center,
-                    width: SizeConfig.screenWidth * 350 / 414,
                     decoration: BoxDecoration(
                       color: mc,
-                      borderRadius: BorderRadius.circular(
-                          SizeConfig.screenWidth * 46 / 414),
+                      borderRadius: BorderRadius.circular(b * 46),
                     ),
                     child: Text(
                       'Done',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: SizeConfig.screenWidth * 16 / 414,
-                      ),
+                      style: txtS(Colors.white, 16, FontWeight.w700),
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: SizeConfig.screenHeight * 32 / 896,
-                ),
+                sh(350),
               ],
             ),
           ),
@@ -142,10 +176,33 @@ class DialogBoxRemark extends StatelessWidget {
   }
 }
 
+TextStyle txtS(Color col, double siz, FontWeight wg) {
+  return TextStyle(
+    color: col,
+    fontWeight: wg,
+    fontSize: SizeConfig.screenWidth * siz / 414,
+  );
+}
+
+SizedBox sh(double h) {
+  return SizedBox(height: SizeConfig.screenHeight * h / 896);
+}
+
 void dialogBoxRemark(BuildContext context) {
-  showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return DialogBoxRemark();
-      });
+  showGeneralDialog(
+    barrierLabel: "Label",
+    barrierDismissible: true,
+    barrierColor: Colors.black.withOpacity(0.5),
+    transitionDuration: Duration(milliseconds: 600),
+    context: context,
+    pageBuilder: (context, anim1, anim2) {
+      return DialogBoxRemark();
+    },
+    transitionBuilder: (context, anim1, anim2, child) {
+      return SlideTransition(
+        position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
+        child: child,
+      );
+    },
+  );
 }
