@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'Utils/SizeConfig.dart';
-import 'Utils/constants.dart';
+import 'package:gur/main.dart';
+import '../Utils/SizeConfig.dart';
+import '../Utils/constants.dart';
+import '../screens/mainMenu.dart';
 
-class DialogBoxRequest extends StatelessWidget {
+class DialogBoxDonateDone extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Dialog(
-      elevation: 200,
       insetPadding: EdgeInsets.symmetric(
         horizontal: SizeConfig.screenWidth * 16 / 414,
       ),
@@ -25,40 +25,27 @@ class DialogBoxRequest extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(
-                      Icons.close,
-                      color: gc,
-                    ),
-                  ),
-                ],
-              ),
               SizedBox(
-                height: SizeConfig.screenHeight * 17 / 896,
+                height: SizeConfig.screenHeight * 25 / 896,
               ),
               Container(
                 height: SizeConfig.screenHeight * 140 / 896,
-                width: SizeConfig.screenWidth * 140 / 414,
+                width: SizeConfig.screenWidth * 135 / 414,
                 decoration: BoxDecoration(
                   color: gc,
                   boxShadow: [
                     BoxShadow(
-                      color: gc.withOpacity(0.7),
-                      blurRadius: 20,
+                      color: gc.withOpacity(0.5),
+                      blurRadius: 10,
                       spreadRadius: 7,
-                      offset: Offset(0, 6),
+                      offset: Offset(0, 0),
                     ),
                   ],
-                  shape: BoxShape.circle,
+                  borderRadius:
+                      BorderRadius.circular(SizeConfig.screenWidth * 30 / 414),
                 ),
                 child: Icon(
-                  MdiIcons.bookmarkOutline,
+                  Icons.verified,
                   color: Colors.white,
                   size: SizeConfig.screenWidth * 80 / 414,
                 ),
@@ -71,7 +58,7 @@ class DialogBoxRequest extends StatelessWidget {
                   horizontal: SizeConfig.screenWidth * 36 / 414,
                 ),
                 child: Text(
-                  'Thanks a lot for your request! Your request has been approved and we will send you an invoice soon ',
+                  'Thanks a lot for your DonateDone! Your DonateDone has been approved and we will send you an invoice soon ',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
@@ -91,7 +78,11 @@ class DialogBoxRequest extends StatelessWidget {
                     color: gc,
                     padding: EdgeInsets.zero,
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) {
+                          return MainMenu();
+                        }),
+                      );
                     },
                     minWidth: SizeConfig.screenWidth * 97 / 414,
                     shape: RoundedRectangleBorder(
@@ -111,7 +102,7 @@ class DialogBoxRequest extends StatelessWidget {
                 ],
               ),
               SizedBox(
-                height: SizeConfig.screenHeight * 54 / 896,
+                height: SizeConfig.screenHeight * 50 / 896,
               ),
             ],
           ),
@@ -121,10 +112,10 @@ class DialogBoxRequest extends StatelessWidget {
   }
 }
 
-void dialogBoxRequest(BuildContext context) {
+void dialogBoxDonateDone(BuildContext context) {
   showDialog(
       context: context,
       builder: (BuildContext context) {
-        return DialogBoxRequest();
+        return DialogBoxDonateDone();
       });
 }

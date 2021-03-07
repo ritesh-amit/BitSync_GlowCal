@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gur/Utils/constants.dart';
-import 'package:gur/forgotPassword.dart';
-import 'package:gur/login.dart';
-import 'package:gur/profile.dart';
-import 'package:gur/signUp.dart';
+import 'package:gur/screens/mainScreens/profile.dart';
 
 void main() {
   runApp(MyApp());

@@ -27,12 +27,14 @@ dependencies:
   cupertino_icons: ^1.0.0
   firebase_auth: ^0.20.1
   firebase_core: ^0.7.0
+  flutter_email_sender: ^4.0.0
   google_fonts: ^1.1.2
   google_sign_in: ^4.5.9
   material_design_icons_flutter: null
+  persistent_bottom_nav_bar: null
+  pinput: ^1.0.0
+  shared_preferences: ^0.5.12+4
   toast: ^0.1.5
-  persistent_bottom_nav_bar:
-
 
 dev_dependencies:
   flutter_test:

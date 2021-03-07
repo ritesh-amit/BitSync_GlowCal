@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:gur/dialogBoxDonate.dart';
-import 'package:gur/dialogBoxRequest.dart';
+import 'package:gur/dialogboxes/dialogBoxDonate.dart';
 import 'package:gur/drawer.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'Utils/SizeConfig.dart';
-import 'Utils/constants.dart';
+import '../../Utils/SizeConfig.dart';
+import '../../Utils/constants.dart';
 
 class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  @override
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    var ho = TextStyle(
+      color: mc,
+      fontWeight: FontWeight.w600,
+      fontSize: SizeConfig.screenWidth * 20 / 414,
+    );
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
-      resizeToAvoidBottomPadding: true,
       drawer: DrawerCode(),
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -58,11 +60,7 @@ class _HomePageState extends State<HomePage> {
                 Spacer(),
                 Text(
                   'Home',
-                  style: TextStyle(
-                    color: mc,
-                    fontWeight: FontWeight.w600,
-                    fontSize: SizeConfig.screenWidth * 20 / 414,
-                  ),
+                  style: ho,
                 ),
                 Spacer(),
                 Icon(

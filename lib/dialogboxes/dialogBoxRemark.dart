@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gur/donateDoneDialog.dart';
-import 'Utils/SizeConfig.dart';
-import 'Utils/constants.dart';
+import 'package:gur/dialogboxes/donateDoneDialog.dart';
+import '../Utils/SizeConfig.dart';
+import '../Utils/constants.dart';
 
 class DialogBoxRemark extends StatelessWidget {
   @override
