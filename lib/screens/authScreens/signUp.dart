@@ -34,6 +34,9 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
+
     return Scaffold(
       backgroundColor: Color(0xffe5e5e5),
       body: SafeArea(
@@ -42,179 +45,77 @@ class _SignUpState extends State<SignUp> {
             child: Column(
               children: [
                 Transform(
-                  transform: Matrix4.translationValues(
-                      -SizeConfig.screenWidth * 0 / 414,
-                      SizeConfig.screenHeight * 270 / 896,
-                      0),
+                  transform: Matrix4.translationValues(-b * 0, h * 270, 0),
                   child: Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.screenWidth * 53 / 414),
-                    height: SizeConfig.screenHeight * 740 / 896,
-                    width: SizeConfig.screenWidth,
+                    padding: EdgeInsets.symmetric(horizontal: b * 53),
+                    height: h * 740,
+                    width: b * 414,
                     decoration: BoxDecoration(
                       color: gc,
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(
-                          SizeConfig.screenWidth * 30 / 414,
-                        ),
-                        topRight: Radius.circular(
-                          SizeConfig.screenWidth * 30 / 414,
-                        ),
+                        topLeft: Radius.circular(b * 30),
+                        topRight: Radius.circular(b * 30),
                       ),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height: SizeConfig.screenHeight * 35 / 896,
-                        ),
+                        sh(35),
                         Transform(
-                          transform: Matrix4.translationValues(
-                              -SizeConfig.screenWidth * 23 / 414, 0, 0),
+                          transform: Matrix4.translationValues(-b * 23, 0, 0),
                           child: Text(
                             'Sign-up',
                             style: GoogleFonts.playfairDisplay(
                               color: textColor,
                               fontWeight: FontWeight.w700,
-                              fontSize: SizeConfig.screenWidth * 40 / 414,
+                              fontSize: b * 40,
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: SizeConfig.screenHeight * 35 / 896,
-                        ),
+                        sh(35),
                         Text(
                           'Name',
-                          style: TextStyle(
-                            color: textColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: SizeConfig.screenWidth * 18 / 414,
-                          ),
+                          style: txtS(textColor, 18, FontWeight.w500),
                         ),
                         Container(
                           child: TextField(
                             controller: nameController,
-                            style: TextStyle(
-                              color: Color(0xffbde5e6),
-                              fontSize: SizeConfig.screenWidth * 12 / 414,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.screenHeight * 9 / 896),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xffb5e8e9).withOpacity(0.36),
-                                  width: SizeConfig.screenWidth * 1 / 414,
-                                ),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xffb5e8e9).withOpacity(0.36),
-                                  width: SizeConfig.screenWidth * 1 / 414,
-                                ),
-                              ),
-                              hintText: 'Your Name',
-                              hintStyle: TextStyle(
-                                color: Color(0xffbde5e6),
-                                fontSize: SizeConfig.screenWidth * 12 / 414,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            maxLines: 1,
-                            minLines: 1,
+                            style: txtS(Color(0xffbde5e6), 16, FontWeight.w500),
+                            decoration: dec('Your Name'),
                           ),
                         ),
-                        SizedBox(
-                          height: SizeConfig.screenHeight * 30 / 896,
-                        ),
+                        sh(30),
                         Text(
                           'Email',
-                          style: TextStyle(
-                            color: textColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: SizeConfig.screenWidth * 18 / 414,
-                          ),
+                          style: txtS(textColor, 18, FontWeight.w500),
                         ),
                         Container(
                           child: TextField(
                             controller: emailController,
                             keyboardType: TextInputType.emailAddress,
-                            style: TextStyle(
-                              color: Color(0xffbde5e6),
-                              fontSize: SizeConfig.screenWidth * 12 / 414,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xffb5e8e9).withOpacity(0.36),
-                                  width: SizeConfig.screenWidth * 1 / 414,
-                                ),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xffb5e8e9).withOpacity(0.36),
-                                  width: SizeConfig.screenWidth * 1 / 414,
-                                ),
-                              ),
-                              hintText: 'Your Email ID',
-                              hintStyle: TextStyle(
-                                color: Color(0xffbde5e6),
-                                fontSize: SizeConfig.screenWidth * 12 / 414,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.screenHeight * 9 / 896),
-                            ),
-                            maxLines: 1,
-                            minLines: 1,
+                            style: txtS(Color(0xffbde5e6), 16, FontWeight.w500),
+                            decoration: dec('Your Email Id'),
                           ),
                         ),
-                        SizedBox(
-                          height: SizeConfig.screenHeight * 30 / 896,
-                        ),
+                        sh(30),
                         Text(
                           'Password',
-                          style: TextStyle(
-                            color: textColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: SizeConfig.screenWidth * 18 / 414,
-                          ),
+                          style: txtS(textColor, 18, FontWeight.w500),
                         ),
                         Container(
                           child: TextField(
                             controller: pwdController,
                             keyboardType: TextInputType.visiblePassword,
-                            style: TextStyle(
-                              color: Color(0xffbde5e6),
-                              fontSize: SizeConfig.screenWidth * 12 / 414,
-                              fontWeight: FontWeight.w400,
-                            ),
+                            style: txtS(Color(0xffbde5e6), 16, FontWeight.w500),
                             obscuringCharacter: '*',
                             obscureText: !isVisible,
                             decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xffb5e8e9).withOpacity(0.36),
-                                  width: SizeConfig.screenWidth * 1 / 414,
-                                ),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xffb5e8e9).withOpacity(0.36),
-                                  width: SizeConfig.screenWidth * 1 / 414,
-                                ),
-                              ),
+                              enabledBorder: bor(),
+                              focusedBorder: bor(),
                               suffixIconConstraints: BoxConstraints(
-                                minWidth: SizeConfig.screenWidth * 16 / 414,
-                                minHeight: SizeConfig.screenHeight * 12 / 896,
-                              ),
+                                  minWidth: b * 16, minHeight: h * 12),
                               suffixIcon: Padding(
-                                padding: EdgeInsets.only(
-                                    right: SizeConfig.screenWidth * 15 / 414),
+                                padding: EdgeInsets.only(right: b * 15),
                                 child: InkWell(
                                   onTap: () {
                                     setState(() {
@@ -226,40 +127,26 @@ class _SignUpState extends State<SignUp> {
                                         ? Icons.visibility
                                         : Icons.visibility_off,
                                     color: Colors.black,
-                                    size: SizeConfig.screenWidth * 16 / 414,
+                                    size: b * 16,
                                   ),
                                 ),
                               ),
                               hintText: 'Password',
-                              hintStyle: TextStyle(
-                                color: Color(0xffbde5e6),
-                                fontSize: SizeConfig.screenWidth * 12 / 414,
-                                fontWeight: FontWeight.w400,
-                              ),
+                              hintStyle:
+                                  txtS(Color(0xffbde5e6), 12, FontWeight.w400),
                               isDense: true,
                               contentPadding: EdgeInsets.only(
-                                top: SizeConfig.screenHeight * 9 / 896,
-                                bottom: SizeConfig.screenHeight * 9 / 896,
-                                right: SizeConfig.screenWidth * 12 / 414,
+                                top: h * 9,
+                                bottom: h * 9,
+                                right: b * 12,
                               ),
                             ),
-                            maxLines: 1,
-                            minLines: 1,
                           ),
                         ),
-                        SizedBox(
-                          height: SizeConfig.screenHeight * 6 / 896,
-                        ),
-                        SizedBox(
-                          height: SizeConfig.screenHeight * 30 / 896,
-                        ),
+                        sh(30),
                         Text(
                           'Confirm Password',
-                          style: TextStyle(
-                            color: textColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: SizeConfig.screenWidth * 18 / 414,
-                          ),
+                          style: txtS(textColor, 18, FontWeight.w500),
                         ),
                         Container(
                           child: TextFormField(
@@ -276,31 +163,14 @@ class _SignUpState extends State<SignUp> {
                             controller: confirmPwdController,
                             obscuringCharacter: '*',
                             obscureText: !isVisible2,
-                            style: TextStyle(
-                              color: Color(0xffbde5e6),
-                              fontSize: SizeConfig.screenWidth * 12 / 414,
-                              fontWeight: FontWeight.w400,
-                            ),
+                            style: txtS(Color(0xffbde5e6), 16, FontWeight.w500),
                             decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xffb5e8e9).withOpacity(0.36),
-                                  width: SizeConfig.screenWidth * 1 / 414,
-                                ),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xffb5e8e9).withOpacity(0.36),
-                                  width: SizeConfig.screenWidth * 1 / 414,
-                                ),
-                              ),
+                              enabledBorder: bor(),
+                              focusedBorder: bor(),
                               suffixIconConstraints: BoxConstraints(
-                                minWidth: SizeConfig.screenWidth * 16 / 414,
-                                minHeight: SizeConfig.screenHeight * 12 / 896,
-                              ),
+                                  minWidth: b * 16, minHeight: h * 12),
                               suffixIcon: Padding(
-                                padding: EdgeInsets.only(
-                                    right: SizeConfig.screenWidth * 15 / 414),
+                                padding: EdgeInsets.only(right: b * 15),
                                 child: InkWell(
                                   onTap: () {
                                     setState(() {
@@ -312,34 +182,23 @@ class _SignUpState extends State<SignUp> {
                                         ? Icons.visibility
                                         : Icons.visibility_off,
                                     color: Colors.black,
-                                    size: SizeConfig.screenWidth * 16 / 414,
+                                    size: b * 16,
                                   ),
                                 ),
                               ),
                               hintText: 'Confirm your password',
-                              hintStyle: TextStyle(
-                                color: Color(0xffbde5e6),
-                                fontSize: SizeConfig.screenWidth * 12 / 414,
-                                fontWeight: FontWeight.w400,
-                              ),
+                              hintStyle:
+                                  txtS(Color(0xffbde5e6), 12, FontWeight.w400),
                               isDense: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.screenHeight * 9 / 896),
+                              contentPadding:
+                                  EdgeInsets.symmetric(vertical: h * 9),
                             ),
-                            maxLines: 1,
-                            minLines: 1,
                           ),
                         ),
-                        SizedBox(
-                          height: SizeConfig.screenHeight * 30 / 896,
-                        ),
+                        sh(30),
                         Text(
                           'Mobile Number',
-                          style: TextStyle(
-                            color: textColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: SizeConfig.screenWidth * 18 / 414,
-                          ),
+                          style: txtS(textColor, 18, FontWeight.w500),
                         ),
                         Container(
                           child: TextFormField(
@@ -355,51 +214,18 @@ class _SignUpState extends State<SignUp> {
                             },
                             controller: phoneController,
                             keyboardType: TextInputType.phone,
-                            style: TextStyle(
-                              color: Color(0xffbde5e6),
-                              fontSize: SizeConfig.screenWidth * 12 / 414,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xffb5e8e9).withOpacity(0.36),
-                                  width: SizeConfig.screenWidth * 1 / 414,
-                                ),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xffb5e8e9).withOpacity(0.36),
-                                  width: SizeConfig.screenWidth * 1 / 414,
-                                ),
-                              ),
-                              hintText: 'Mobile Number',
-                              hintStyle: TextStyle(
-                                color: Color(0xffbde5e6),
-                                fontSize: SizeConfig.screenWidth * 12 / 414,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.screenHeight * 9 / 896),
-                            ),
-                            maxLines: 1,
-                            minLines: 1,
+                            style: txtS(Color(0xffbde5e6), 16, FontWeight.w500),
+                            decoration: dec('Mobile Number'),
                           ),
                         ),
-                        SizedBox(
-                          height: SizeConfig.screenHeight * 11 / 896,
-                        ),
+                        sh(11),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
                               'Already have an account?  ',
-                              style: TextStyle(
-                                color: Color(0xffb5e8e9),
-                                fontWeight: FontWeight.w400,
-                                fontSize: SizeConfig.screenWidth * 14 / 414,
-                              ),
+                              style:
+                                  txtS(Color(0xffb5e8e9), 14, FontWeight.w400),
                             ),
                             InkWell(
                               onTap: () {
@@ -411,18 +237,13 @@ class _SignUpState extends State<SignUp> {
                               },
                               child: Text(
                                 'Login',
-                                style: TextStyle(
-                                  color: Color(0xffb5e8e9),
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: SizeConfig.screenWidth * 14 / 414,
-                                ),
+                                style: txtS(
+                                    Color(0xffb5e8e9), 14, FontWeight.w700),
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: SizeConfig.screenHeight * 35 / 896,
-                        ),
+                        sh(35),
                         Container(
                           decoration: BoxDecoration(
                             boxShadow: [
@@ -442,63 +263,29 @@ class _SignUpState extends State<SignUp> {
                               } else
                                 signUpEmail();
                             },
-                            color: Color(0xffff9104),
+                            color: mc,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                SizeConfig.screenWidth * 35 / 414,
-                              ),
+                              borderRadius: BorderRadius.circular(b * 35),
                             ),
                             elevation: 0,
-                            height: SizeConfig.screenHeight * 48 / 896,
-                            minWidth: SizeConfig.screenWidth * 304 / 414,
+                            height: h * 48,
+                            minWidth: b * 304,
                             child: Text(
                               'Sign-Up',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
-                                letterSpacing: SizeConfig.b * 0.0364,
-                                fontSize: SizeConfig.screenWidth * 18 / 414,
-                              ),
+                              style: txtS(Colors.white, 18, FontWeight.w500),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: SizeConfig.screenHeight * 30 / 896,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: SizeConfig.screenWidth * 183 / 414,
-                              height: SizeConfig.screenHeight * 7 / 896,
-                              decoration: BoxDecoration(
-                                color: Color(0xffdee2e6),
-                                borderRadius: BorderRadius.circular(
-                                  SizeConfig.screenWidth * 15 / 414,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.25),
-                                    blurRadius: 5,
-                                    offset: Offset(0, 3),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
                         ),
                       ],
                     ),
                   ),
                 ),
                 Transform(
-                  transform: Matrix4.translationValues(
-                      -SizeConfig.screenWidth * 80 / 414,
-                      -SizeConfig.screenHeight * (750) / 896,
-                      0),
+                  transform:
+                      Matrix4.translationValues(-b * 80, -h * (896 - 230), 0),
                   child: Image.asset(
                     'images/girl.png',
-                    height: SizeConfig.screenHeight * 350 / 896,
+                    height: h * 250,
                   ),
                 ),
               ],
@@ -507,6 +294,53 @@ class _SignUpState extends State<SignUp> {
         ),
       ),
     );
+  }
+
+  UnderlineInputBorder bor() {
+    return UnderlineInputBorder(
+      borderSide: BorderSide(
+        color: Color(0xffb5e8e9).withOpacity(0.36),
+        width: SizeConfig.screenWidth / 414 * 1,
+      ),
+    );
+  }
+
+  TextStyle txtS(Color col, double siz, FontWeight wg) {
+    return TextStyle(
+      color: col,
+      fontWeight: wg,
+      fontSize: SizeConfig.screenWidth * siz / 414,
+    );
+  }
+
+  InputDecoration dec(String txt) {
+    return InputDecoration(
+      enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: Color(0xffb5e8e9).withOpacity(0.36),
+          width: SizeConfig.screenWidth * 1 / 414,
+        ),
+      ),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: Color(0xffb5e8e9).withOpacity(0.36),
+          width: SizeConfig.screenWidth * 1 / 414,
+        ),
+      ),
+      hintText: txt,
+      hintStyle: TextStyle(
+        color: Color(0xffbde5e6),
+        fontSize: SizeConfig.screenWidth * 12 / 414,
+        fontWeight: FontWeight.w400,
+      ),
+      isDense: true,
+      contentPadding:
+          EdgeInsets.symmetric(vertical: SizeConfig.screenHeight * 9 / 896),
+    );
+  }
+
+  SizedBox sh(double h) {
+    return SizedBox(height: SizeConfig.screenHeight * h / 896);
   }
 
   void signUpEmail() async {
