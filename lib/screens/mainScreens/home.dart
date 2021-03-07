@@ -14,10 +14,14 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    var ho = TextStyle(
+      color: mc,
+      fontWeight: FontWeight.w600,
+      fontSize: SizeConfig.screenWidth * 20 / 414,
+    );
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
-      resizeToAvoidBottomPadding: true,
       drawer: DrawerCode(),
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -56,11 +60,7 @@ class _HomePageState extends State<HomePage> {
                 Spacer(),
                 Text(
                   'Home',
-                  style: TextStyle(
-                    color: mc,
-                    fontWeight: FontWeight.w600,
-                    fontSize: SizeConfig.screenWidth * 20 / 414,
-                  ),
+                  style: ho,
                 ),
                 Spacer(),
                 Icon(
