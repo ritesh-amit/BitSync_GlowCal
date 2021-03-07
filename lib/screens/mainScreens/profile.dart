@@ -1055,7 +1055,7 @@ class _ProfileState extends State<Profile> {
         ));
   }
 
-  void pwdChangeRequest(String pwd, String newPwd) {
+  pwdChangeRequest(String pwd, String newPwd) {
     FirebaseAuth auth = FirebaseAuth.instance;
 
     EmailAuthCredential credential =

@@ -398,21 +398,31 @@ class _LoginState extends State<Login> {
     preferences = await SharedPreferences.getInstance();
 
     try {
-      UserCredential credential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: pwd);
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: pwd)
+          .then((credential) {
+        Toast.show("Login Succesfull", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+        preferences.setBool('isLoggedIn', true);
+        getUserDataFromDb(credential.user.uid);
+        preferences.setString('currentUserUID', credential.user.uid);
 
-      Toast.show("Login Succesfull", context,
-          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-      preferences.setBool('isLoggedIn', true);
-      getUserDataFromDb(credential.user.uid);
-
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return MainMenu();
-      }));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return MainMenu();
+        }));
+      });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         Toast.show("User not found", context,
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      } else if (e.code == 'account-exists-with-different-credential') {
+        String email = e.email;
+        AuthCredential pendingCredential = e.credential;
+
+        List<String> userSignInMethods =
+            await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+
+        print(userSignInMethods);
       } else if (e.code == 'wrong-password') {
         Toast.show("Wrong Password", context,
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
@@ -439,17 +449,30 @@ class _LoginState extends State<Login> {
           .signInWithCredential(credential)
           .then((value) {
         if (value.user != null) {
-          preferences.setString("currentUserName", value.user.displayName);
-          preferences.setString("currentUserEmail", value.user.email);
+          getUserDataFromDb(value.user.uid);
+
+          Toast.show("Login Succesfull", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          preferences.setBool('isLoggedIn', true);
+          getUserDataFromDb(value.user.uid);
+          preferences.setString('currentUserUID', value.user.uid);
+
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return MainMenu();
+          }));
         }
       });
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'account-exists-with-different-credential') {
+        String email = e.email;
 
-      Toast.show("Login Successfull", context,
-          duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-      preferences.setBool('isLoggedIn', true);
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return MainMenu();
-      }));
+        List<String> userSignInMethods =
+            await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+
+        print(userSignInMethods);
+      } else {
+        print(e.message);
+      }
     } catch (e) {
       print(e);
     }
@@ -461,7 +484,14 @@ class _LoginState extends State<Login> {
     firestore.collection('users').doc(userUid).snapshots().listen((snapshot) {
       preferences.setString('currentUserName', snapshot.data()['name']);
       preferences.setString('currentUserEmail', snapshot.data()['email']);
+
+      if (snapshot.data()['phone'] != null) {
+        preferences.setString('currentUserPhone', snapshot.data()['phone']);
+      }
       preferences.setString('currentUserPhone', snapshot.data()['phone']);
+      if (snapshot.data()['address'] != null) {
+        preferences.setString('currentUserAddress', snapshot.data()['address']);
+      }
     });
   }
 }
