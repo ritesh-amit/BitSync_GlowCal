@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gur/screens/authScreens/forgotPassword.dart';
-import 'package:gur/main.dart';
 import 'package:gur/screens/authScreens/signUp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -246,7 +245,7 @@ class _LoginState extends State<Login> {
                   ),
                   Transform(
                     transform:
-                        Matrix4.translationValues(-b * 80, -h * (896 - 400), 0),
+                        Matrix4.translationValues(-b * 80, -h * (896 - 390), 0),
                     child: Image.asset(
                       'images/girl.png',
                       height: h * 250,
