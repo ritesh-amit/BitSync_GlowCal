@@ -621,9 +621,6 @@ class _ProfileState extends State<Profile> {
         ));
   }
 
-<<<<<<< HEAD
-  pwdChangeRequest(String pwd, String newPwd) {
-=======
   Icon ediB() {
     return Icon(
       Icons.edit,
@@ -736,7 +733,6 @@ class _ProfileState extends State<Profile> {
   }
 
   void pwdChangeRequest(String pwd, String newPwd) {
->>>>>>> ba6ac8aae16be1cb7ffb45d666f11767d4641534
     FirebaseAuth auth = FirebaseAuth.instance;
 
     EmailAuthCredential credential =
