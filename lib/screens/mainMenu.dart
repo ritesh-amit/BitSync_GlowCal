@@ -5,7 +5,6 @@ import 'package:gur/Utils/constants.dart';
 import '../Utils/SizeConfig.dart';
 import 'mainScreens/aboutNgo.dart';
 import 'mainScreens/home.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 BuildContext testContext;
 
@@ -32,7 +31,6 @@ class _MainMenuState extends State<MainMenu> {
       HomePage(),
       AboutNgo(),
       AboutNgo(),
-      AboutNgo(),
       Profile(),
     ];
   }
@@ -46,32 +44,14 @@ class _MainMenuState extends State<MainMenu> {
         inactiveColor: textColor,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.settings),
-        title: ("Settings"),
-        activeColor: mc,
-        inactiveColor: textColor,
-      ),
-      PersistentBottomNavBarItem(
-        icon: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Icon(
-            MdiIcons.fileDocument,
-            color: Colors.white,
-            size: SizeConfig.screenWidth * 24 / 414,
-          ),
-          Text(
-            "Sponsors",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: SizeConfig.screenWidth * 10 / 414,
-            ),
-          ),
-        ]),
-        activeColor: mc,
-        inactiveColor: textColor,
-      ),
-      PersistentBottomNavBarItem(
         icon: Icon(Icons.notifications),
         title: ("Notifications"),
+        activeColor: mc,
+        inactiveColor: textColor,
+      ),
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.settings),
+        title: ("Settings"),
         activeColor: mc,
         inactiveColor: textColor,
       ),
@@ -122,9 +102,9 @@ class _MainMenuState extends State<MainMenu> {
         screenTransitionAnimation: ScreenTransitionAnimation(
           animateTabTransition: true,
           curve: Curves.ease,
-          duration: Duration(milliseconds: 200),
+          duration: Duration(milliseconds: 5),
         ),
-        navBarStyle: NavBarStyle.style15,
+        navBarStyle: NavBarStyle.simple,
       ),
     );
   }
