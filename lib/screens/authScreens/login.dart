@@ -332,7 +332,6 @@ class _LoginState extends State<Login> {
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
       } else if (e.code == 'account-exists-with-different-credential') {
         String email = e.email;
-        AuthCredential pendingCredential = e.credential;
 
         List<String> userSignInMethods =
             await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
