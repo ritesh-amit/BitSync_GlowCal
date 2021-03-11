@@ -7,13 +7,14 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Utils/SizeConfig.dart';
 import 'Utils/constants.dart';
-import 'main.dart';
 
 class DrawerCode extends StatefulWidget {
   final String userName;
   final String designation;
+  final bool hide;
   final String mobileNumber;
   DrawerCode({
+    @required this.hide,
     this.userName,
     this.designation,
     this.mobileNumber,
@@ -290,15 +291,6 @@ class _DrawerCodeState extends State<DrawerCode> {
               height: SizeConfig.screenHeight * 10 / 896,
             ),
             InkWell(
-              /* onTap: () async {
-                  await firebaseAuth.signOut();
-                  await googleSignIn.disconnect();
-                  await googleSignIn.signOut();
-                  print("Signed Out");
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => MyApp()),
-                      (Route<dynamic> route) => false);
-                },*/
               onTap: () {
                 setState(() {
                   isLogOut = !isLogOut;
@@ -438,9 +430,11 @@ class _DrawerCodeState extends State<DrawerCode> {
         print("Signed Out");
         Navigator.of(context).pop();
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) {
-          return Login();
-        }), (route) => false);
+          MaterialPageRoute(builder: (context) {
+            return Login();
+          }),
+          (route) => false,
+        );
       }).catchError((e) {
         print(e);
       });
@@ -453,10 +447,10 @@ class _DrawerCodeState extends State<DrawerCode> {
 
   void sendComplaintMail() async {
     Email email = Email(
-        recipients: ['sisodiasuraj2000@gmail.com'],
-        subject: 'Regarding DSC App',
-        isHTML: false);
-
+      recipients: ['sisodiasuraj2000@gmail.com'],
+      subject: 'Regarding DSC App',
+      isHTML: false,
+    );
     await FlutterEmailSender.send(email);
   }
 }

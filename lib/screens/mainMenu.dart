@@ -36,28 +36,73 @@ class _MainMenuState extends State<MainMenu> {
   }
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
+    SizeConfig().init(context);
     return [
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.home),
-        title: "Home",
+        icon: Container(
+          alignment: Alignment.centerLeft,
+          width: SizeConfig.screenWidth * 0.15,
+          child: Column(children: [
+            Icon(Icons.home),
+            Text(
+              "Home",
+              style: TextStyle(
+                fontSize: SizeConfig.screenWidth * 11 / 360,
+              ),
+            ),
+          ]),
+        ),
         activeColor: mc,
         inactiveColor: textColor,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.notifications),
-        title: ("Notifications"),
+        icon: Container(
+          alignment: Alignment.center,
+          width: SizeConfig.screenWidth * 0.25,
+          child: Column(children: [
+            Icon(Icons.notifications),
+            Text(
+              "Notifcations",
+              style: TextStyle(
+                fontSize: SizeConfig.screenWidth * 11 / 360,
+              ),
+            ),
+          ]),
+        ),
         activeColor: mc,
         inactiveColor: textColor,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.settings),
-        title: ("Settings"),
+        icon: Container(
+          alignment: Alignment.center,
+          width: SizeConfig.screenWidth * 0.3,
+          child: Column(children: [
+            Icon(Icons.settings),
+            Text(
+              "Settings",
+              style: TextStyle(
+                fontSize: SizeConfig.screenWidth * 11 / 360,
+              ),
+            ),
+          ]),
+        ),
         activeColor: mc,
         inactiveColor: textColor,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.person),
-        title: ("Profile"),
+        icon: Container(
+          alignment: Alignment.centerRight,
+          width: SizeConfig.screenWidth * 0.15,
+          child: Column(children: [
+            Icon(Icons.person),
+            Text(
+              "Profile",
+              style: TextStyle(
+                fontSize: SizeConfig.screenWidth * 11 / 360,
+              ),
+            ),
+          ]),
+        ),
         activeColor: mc,
         inactiveColor: textColor,
       ),
