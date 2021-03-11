@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gur/models/currentUser.dart';
 import 'package:gur/screens/authScreens/login.dart';
-import 'package:gur/screens/mainMenu.dart';
 import 'package:gur/screens/authScreens/otpPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/SizeConfig.dart';

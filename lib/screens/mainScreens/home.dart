@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gur/dialogboxes/dialogBoxDonate.dart';
 import 'package:gur/drawer.dart';
+import 'package:gur/screens/authScreens/signUp.dart';
+import 'package:gur/screens/authScreens/signUpOrg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
@@ -46,11 +48,22 @@ class _HomePageState extends State<HomePage> {
       drawer: DrawerCode(),
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: b * 16),
-          child: Column(children: [
-            sh(25),
-            Row(
+        child: Column(children: [
+          Container(
+            height: h * 60,
+            padding: EdgeInsets.symmetric(horizontal: b * 20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.07),
+                  blurRadius: b * 4,
+                  spreadRadius: 0,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Row(
               children: [
                 Builder(
                   builder: (BuildContext context) {
@@ -62,7 +75,7 @@ class _HomePageState extends State<HomePage> {
                         height: h * 30,
                         width: b * 30,
                         decoration: BoxDecoration(
-                          border: Border.all(color: mc, width: 2),
+                          border: Border.all(color: mc, width: b * 1.5),
                           borderRadius: BorderRadius.circular(b * 12),
                         ),
                         child:
@@ -77,220 +90,230 @@ class _HomePageState extends State<HomePage> {
                   style: txtS(mc, 20, FontWeight.w600),
                 ),
                 Spacer(),
-                Icon(MdiIcons.send, color: mc),
+                InkWell(
+                  onTap: () {
+                    print('Amit');
+                    SignUp();
+                  },
+                  child: Icon(MdiIcons.send, color: mc),
+                ),
               ],
             ),
-            Expanded(
-              child: ListView(physics: BouncingScrollPhysics(), children: [
-                sh(20),
-                InkWell(
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: b * 374,
-                    padding: EdgeInsets.symmetric(vertical: h * 12),
-                    decoration: BoxDecoration(
-                      color: Color(0xfff0f0f0),
-                      borderRadius: BorderRadius.circular(b * 49),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.search, color: textColor, size: b * 22),
-                        SizedBox(width: b * 5),
-                        Text(
-                          'Search NGOs',
-                          style: txtS(textColor, 16, FontWeight.w500),
-                        ),
-                      ],
-                    ),
+          ),
+          Expanded(
+            child: ListView(physics: BouncingScrollPhysics(), children: [
+              sh(20),
+              InkWell(
+                child: Container(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.symmetric(horizontal: b * 20),
+                  padding: EdgeInsets.symmetric(vertical: h * 12),
+                  decoration: BoxDecoration(
+                    color: Color(0xfff0f0f0),
+                    borderRadius: BorderRadius.circular(b * 49),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.search, color: textColor, size: b * 22),
+                      SizedBox(width: b * 5),
+                      Text(
+                        'Search NGOs',
+                        style: txtS(textColor, 16, FontWeight.w500),
+                      ),
+                    ],
                   ),
                 ),
-                sh(20),
-                Container(
-                  width: b * 350,
-                  height: h * 145,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    physics: BouncingScrollPhysics(),
-                    padding: EdgeInsets.zero,
-                    itemCount: 15,
-                    itemBuilder: (BuildContext ctxt, int index) {
+              ),
+              sh(20),
+              Container(
+                width: b * 375,
+                height: h * 145,
+                margin: EdgeInsets.only(left: b * 20),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  physics: BouncingScrollPhysics(),
+                  padding: EdgeInsets.zero,
+                  itemCount: 15,
+                  itemBuilder: (BuildContext ctxt, int index) {
+                    return Container(
+                      margin: EdgeInsets.symmetric(
+                          horizontal: b * 6.5, vertical: h * 9),
+                      width: b * 165,
+                      height: h * 122,
+                      decoration: BoxDecoration(
+                        color: gc,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.25),
+                            offset: Offset(0, 0),
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(b * 6),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              sh(24),
+              Container(
+                width: b * 375,
+                height: h * 90,
+                padding: EdgeInsets.only(left: b * 13.5),
+                color: Color(0xfffff2e1),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  physics: BouncingScrollPhysics(),
+                  padding: EdgeInsets.zero,
+                  itemCount: 4,
+                  itemBuilder: (BuildContext ctxt, int index) {
+                    return Container(
+                      margin: EdgeInsets.symmetric(
+                          horizontal: b * 6.5, vertical: h * 11),
+                      padding: EdgeInsets.symmetric(horizontal: b * 10),
+                      width: b * 168,
+                      height: h * 122,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                          color: Color(0xffffddb1),
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(b * 6),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            headingItems[index],
+                            style: txtS(textColor, 14, FontWeight.w600),
+                          ),
+                          Text(
+                            midItems[index],
+                            style: txtS(gc, 10, FontWeight.w400),
+                          ),
+                          Text(
+                            summaryItems[index],
+                            style: txtS(mc, 14, FontWeight.w400),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+              sh(20),
+              CarouselSlider(
+                options: CarouselOptions(
+                  viewportFraction: 0.8,
+                  enlargeCenterPage: true,
+                  scrollDirection: Axis.horizontal,
+                  height: h * 130,
+                  autoPlay: true,
+                ),
+                items: quoteItems.map((i) {
+                  return Builder(
+                    builder: (BuildContext context) {
                       return Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: b * 6.5, vertical: h * 9),
-                        width: b * 165,
-                        height: h * 122,
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.symmetric(vertical: h * 10),
+                        padding: EdgeInsets.symmetric(horizontal: b * 40),
                         decoration: BoxDecoration(
-                          color: gc,
+                          color: Colors.white,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.25),
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 8,
                               offset: Offset(0, 0),
                             ),
                           ],
-                          borderRadius: BorderRadius.circular(b * 6),
+                        ),
+                        child: Text(
+                          '$i',
+                          textAlign: TextAlign.center,
+                          style: txtS(textColor, 14, FontWeight.w500),
                         ),
                       );
                     },
-                  ),
-                ),
-                sh(24),
-                Container(
-                  width: b * 350,
-                  height: h * 90,
-                  color: Color(0xfffff2e1),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    physics: BouncingScrollPhysics(),
-                    padding: EdgeInsets.zero,
-                    itemCount: 4,
-                    itemBuilder: (BuildContext ctxt, int index) {
-                      return Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: b * 6.5, vertical: h * 11),
-                        padding: EdgeInsets.symmetric(horizontal: b * 10),
-                        width: b * 168,
-                        height: h * 122,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: Color(0xffffddb1),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(b * 6),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              headingItems[index],
-                              style: txtS(textColor, 14, FontWeight.w600),
-                            ),
-                            Text(
-                              midItems[index],
-                              style: txtS(gc, 10, FontWeight.w400),
-                            ),
-                            Text(
-                              summaryItems[index],
-                              style: txtS(mc, 14, FontWeight.w400),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                sh(20),
-                CarouselSlider(
-                  options: CarouselOptions(
-                    viewportFraction: 0.85,
-                    enlargeCenterPage: true,
-                    scrollDirection: Axis.horizontal,
-                    height: h * 160,
-                    autoPlay: true,
-                  ),
-                  items: quoteItems.map((i) {
-                    return Builder(
-                      builder: (BuildContext context) {
-                        return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.symmetric(vertical: h * 3),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: b * 40, vertical: h * 22),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
-                                      blurRadius: 8,
-                                      offset: Offset(0, 0),
-                                    ),
-                                  ],
-                                ),
-                                child: Text(
-                                  '$i',
-                                  textAlign: TextAlign.center,
-                                  style: txtS(textColor, 14, FontWeight.w500),
-                                ),
-                              ),
-                            ]);
-                      },
-                    );
-                  }).toList(),
-                ),
-                Text(
+                  );
+                }).toList(),
+              ),
+              sh(10),
+              Padding(
+                padding: EdgeInsets.only(left: b * 20),
+                child: Text(
                   'NGOs Near Me',
                   style: txtS(textColor, 16, FontWeight.w600),
                 ),
-                sh(2),
-                Container(
-                  width: b * 350,
-                  height: h * 119,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    physics: BouncingScrollPhysics(),
-                    padding: EdgeInsets.zero,
-                    itemCount: 15,
-                    itemBuilder: (BuildContext ctxt, int index) {
-                      return Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: b * 6.5, vertical: h * 9),
-                        width: b * 102,
-                        height: h * 101,
-                        decoration: BoxDecoration(
-                          color: gc,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.25),
-                              offset: Offset(0, 0),
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(b * 6),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                sh(20),
-                InkWell(
-                  onTap: () {
-                    dialogBoxDonate(context);
+              ),
+              sh(2),
+              Container(
+                width: b * 375,
+                margin: EdgeInsets.only(left: b * 13.5),
+                height: h * 120,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  physics: BouncingScrollPhysics(),
+                  padding: EdgeInsets.zero,
+                  itemCount: 15,
+                  itemBuilder: (BuildContext ctxt, int index) {
+                    return Container(
+                      margin: EdgeInsets.symmetric(
+                          horizontal: b * 6.5, vertical: h * 9),
+                      width: b * 102,
+                      height: h * 101,
+                      decoration: BoxDecoration(
+                        color: gc,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.25),
+                            offset: Offset(0, 0),
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(b * 6),
+                      ),
+                    );
                   },
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(
-                      vertical: h * 15,
-                    ),
-                    width: b * 374,
-                    decoration: BoxDecoration(
-                      color: mc,
-                      boxShadow: [
-                        BoxShadow(
-                          color: mc.withOpacity(0.2),
-                          blurRadius: 8,
-                          spreadRadius: 2,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                      borderRadius: BorderRadius.circular(b * 46),
-                    ),
-                    child: Text(
-                      'Donate',
-                      style: txtS(Colors.white, 16, FontWeight.w700),
-                    ),
+                ),
+              ),
+              sh(20),
+              InkWell(
+                onTap: () {
+                  dialogBoxDonate(context);
+                },
+                child: Container(
+                  margin: EdgeInsets.only(left: b * 20, right: b * 20),
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.symmetric(
+                    vertical: h * 15,
+                  ),
+                  width: b * 374,
+                  decoration: BoxDecoration(
+                    color: mc,
+                    boxShadow: [
+                      BoxShadow(
+                        color: mc.withOpacity(0.2),
+                        blurRadius: 8,
+                        spreadRadius: 2,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(b * 46),
+                  ),
+                  child: Text(
+                    'Donate',
+                    style: txtS(Colors.white, 16, FontWeight.w700),
                   ),
                 ),
-                sh(140),
-              ]),
-            ),
-          ]),
-        ),
+              ),
+              sh(140),
+            ]),
+          ),
+        ]),
       ),
     );
   }

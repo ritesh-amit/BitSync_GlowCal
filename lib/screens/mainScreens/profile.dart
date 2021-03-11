@@ -13,6 +13,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   SharedPreferences preferences;
 
   TextEditingController addressController = TextEditingController();
@@ -65,53 +66,62 @@ class _ProfileState extends State<Profile> {
     SizeConfig().init(context);
     var b = SizeConfig.screenWidth / 414;
     var h = SizeConfig.screenHeight / 896;
-    //GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
     return Scaffold(
+        key: _scaffoldKey,
         drawer: DrawerCode(),
         backgroundColor: Colors.white,
         body: SafeArea(
           child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             child: Container(
               child: Column(
                 children: [
-                  sh(40),
-                  Row(
-                    children: [
-                      SizedBox(width: b * 20),
-                      Builder(
-                        builder: (BuildContext context) {
-                          return InkWell(
-                            onTap: () {
-                              Scaffold.of(context).openDrawer();
-                            },
-                            child: Container(
-                              height: h * 30,
-                              width: b * 30,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: mc,
-                                  width: 2,
+                  Container(
+                    height: h * 60,
+                    padding: EdgeInsets.symmetric(horizontal: b * 20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.07),
+                          blurRadius: b * 4,
+                          spreadRadius: 0,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Builder(
+                          builder: (BuildContext context) {
+                            return InkWell(
+                              onTap: () {
+                                _scaffoldKey.currentState.openDrawer();
+                              },
+                              child: Container(
+                                height: h * 30,
+                                width: b * 30,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: mc, width: b * 1.5),
+                                  borderRadius: BorderRadius.circular(b * 12),
                                 ),
-                                borderRadius: BorderRadius.circular(b * 12),
+                                child: Icon(MdiIcons.sortVariant,
+                                    color: mc, size: b * 20),
                               ),
-                              child: Icon(
-                                MdiIcons.sortVariant,
-                                color: mc,
-                                size: b * 20,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      SizedBox(width: b * 133),
-                      Text(
-                        'Profile',
-                        style: txtS(mc, 20, FontWeight.w600),
-                      ),
-                    ],
+                            );
+                          },
+                        ),
+                        Spacer(),
+                        Text(
+                          'Profile',
+                          style: txtS(mc, 20, FontWeight.w600),
+                        ),
+                        Spacer(),
+                        Icon(MdiIcons.send, color: mc),
+                      ],
+                    ),
                   ),
-                  sh(35),
+                  sh(23),
                   Container(
                     padding: EdgeInsets.symmetric(
                         horizontal: b * 17, vertical: h * 11),
@@ -243,39 +253,14 @@ class _ProfileState extends State<Profile> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              !isEmail ? 'Email' : "Update Email",
-                              style: txtS(!isEmail ? rc : textColor, 14,
-                                  FontWeight.w500),
+                              'Email',
+                              style: txtS(rc, 14, FontWeight.w500),
                             ),
                             sh(6),
-                            !isEmail
-                                ? Text(
-                                    email,
-                                    style: txtS(textColor, 16, FontWeight.w500),
-                                  )
-                                : Container(
-                                    width: b * 270,
-                                    child: TextField(
-                                      style:
-                                          txtS(textColor, 14, FontWeight.w500),
-                                      decoration: dec('Your Email ID'),
-                                    ),
-                                  ),
-                            isEmail ? butt(null) : SizedBox(),
-                          ],
-                        ),
-                        Spacer(),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  isEmail = !isEmail;
-                                });
-                              },
-                              child: ediB(),
-                            ),
+                            Text(
+                              email,
+                              style: txtS(textColor, 16, FontWeight.w500),
+                            )
                           ],
                         ),
                       ],
@@ -305,15 +290,13 @@ class _ProfileState extends State<Profile> {
                               style: txtS(!isPass ? rc : textColor, 14,
                                   FontWeight.w500),
                             ),
-                            sh(15),
+                            sh(6),
                             !isPass
                                 ? Text(
                                     '**************',
                                     style: txtS(textColor, 16, FontWeight.w500),
                                   )
-                                : SizedBox(),
-                            isPass
-                                ? Container(
+                                : Container(
                                     width: b * 270,
                                     child: TextFormField(
                                       controller: oldPwdController,
@@ -323,8 +306,7 @@ class _ProfileState extends State<Profile> {
                                           txtS(textColor, 16, FontWeight.w500),
                                       decoration: deco('Your Old Password', 1),
                                     ),
-                                  )
-                                : SizedBox(),
+                                  ),
                             isPass ? sh(10) : SizedBox(),
                             isPass
                                 ? Container(
@@ -354,7 +336,6 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   )
                                 : SizedBox(),
-                            sh(11),
                             isPass
                                 ? Padding(
                                     padding: EdgeInsets.only(left: b * 180),
@@ -373,6 +354,7 @@ class _ProfileState extends State<Profile> {
                                         }
                                       },
                                       child: Container(
+                                        margin: EdgeInsets.only(top: h * 11),
                                         padding: EdgeInsets.symmetric(
                                             horizontal: b * 17,
                                             vertical: h * 7),
@@ -438,7 +420,7 @@ class _ProfileState extends State<Profile> {
                               style: txtS(!isAddress ? rc : textColor, 14,
                                   FontWeight.w500),
                             ),
-                            sh(10),
+                            sh(6),
                             !isAddress
                                 ? Container(
                                     width: b * 235,
@@ -476,7 +458,6 @@ class _ProfileState extends State<Profile> {
                                       ),
                                     ),
                                   ),
-                            sh(10),
                             isAddress
                                 ? Padding(
                                     padding: EdgeInsets.only(left: b * 180),
@@ -490,6 +471,7 @@ class _ProfileState extends State<Profile> {
                                         });
                                       },
                                       child: Container(
+                                        margin: EdgeInsets.only(top: h * 10),
                                         padding: EdgeInsets.symmetric(
                                             horizontal: b * 17,
                                             vertical: h * 7),
@@ -608,7 +590,7 @@ class _ProfileState extends State<Profile> {
       enabledBorder: under(),
       focusedBorder: under(),
       hintText: hi,
-      hintStyle: txtS(textColor, 14, FontWeight.w500),
+      hintStyle: txtS(textColor, 14, FontWeight.w400),
       suffixIconConstraints: BoxConstraints(
         minWidth: SizeConfig.screenWidth / 414 * 16,
         minHeight: SizeConfig.screenHeight / 896 * 12,
@@ -687,7 +669,7 @@ class _ProfileState extends State<Profile> {
     return BoxDecoration(
       border: Border.all(
         color: rc,
-        width: SizeConfig.screenWidth * 2 / 414,
+        width: SizeConfig.screenWidth * 1 / 414,
       ),
       borderRadius: BorderRadius.circular(SizeConfig.screenWidth / 414 * 8),
     );

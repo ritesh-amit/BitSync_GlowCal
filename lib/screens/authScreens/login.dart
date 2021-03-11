@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gur/main.dart';
 import 'package:gur/screens/authScreens/forgotPassword.dart';
 import 'package:gur/screens/authScreens/signUp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,7 +11,6 @@ import 'package:toast/toast.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../mainMenu.dart';
 import '../../slidePage.dart';
 
 class Login extends StatefulWidget {
@@ -321,9 +321,11 @@ class _LoginState extends State<Login> {
       preferences.setBool('isLoggedIn', true);
       getUserDataFromDb(credential.user.uid);
 
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return MainMenu();
-      }));
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) {
+          return Home();
+        }),
+      );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         Toast.show("User not found", context,
@@ -363,7 +365,7 @@ class _LoginState extends State<Login> {
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       preferences.setBool('isLoggedIn', true);
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return MainMenu();
+        return Home();
       }));
     } catch (e) {
       print(e);
