@@ -79,6 +79,7 @@ class _DrawerCodeState extends State<DrawerCode> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // User Name
             SizedBox(
               height: SizeConfig.screenHeight * 107 / 896,
             ),
@@ -90,6 +91,7 @@ class _DrawerCodeState extends State<DrawerCode> {
                 fontSize: SizeConfig.screenWidth * 30 / 414,
               ),
             ),
+            // Designation
             SizedBox(
               height: SizeConfig.screenHeight * 21 / 896,
             ),
@@ -101,6 +103,7 @@ class _DrawerCodeState extends State<DrawerCode> {
                 fontSize: SizeConfig.screenWidth * 16 / 414,
               ),
             ),
+            // Mobile Number
             SizedBox(
               height: SizeConfig.screenHeight * 11 / 896,
             ),
@@ -122,6 +125,7 @@ class _DrawerCodeState extends State<DrawerCode> {
                 ],
               ),
             ),
+            // Line spacing
             SizedBox(
               height: SizeConfig.screenHeight * 18 / 896,
             ),
@@ -130,6 +134,8 @@ class _DrawerCodeState extends State<DrawerCode> {
               color: rc,
               height: SizeConfig.screenHeight * 1 / 896,
             ),
+
+            // Complaints
             SizedBox(
               height: SizeConfig.screenHeight * 50 / 896,
             ),
@@ -170,6 +176,8 @@ class _DrawerCodeState extends State<DrawerCode> {
                 ),
               ),
             ),
+
+            // Suggestions
             SizedBox(
               height: SizeConfig.screenHeight * 10 / 896,
             ),
@@ -177,6 +185,7 @@ class _DrawerCodeState extends State<DrawerCode> {
               onTap: () {
                 setState(() {
                   isSuggest = !isSuggest;
+                  sendSuggestionMail();
                 });
               },
               child: Container(
@@ -447,10 +456,19 @@ class _DrawerCodeState extends State<DrawerCode> {
 
   void sendComplaintMail() async {
     Email email = Email(
-      recipients: ['sisodiasuraj2000@gmail.com'],
-      subject: 'Regarding DSC App',
-      isHTML: false,
-    );
+        recipients: ['sisodiasuraj2000@gmail.com'],
+        subject: 'Complaint regarding DSC App',
+        isHTML: false);
+
+    await FlutterEmailSender.send(email);
+  }
+
+  void sendSuggestionMail() async {
+    Email email = Email(
+        recipients: ['sisodiasuraj2000@gmail.com'],
+        subject: 'Suggestion regarding DSC App',
+        isHTML: false);
+
     await FlutterEmailSender.send(email);
   }
 }
