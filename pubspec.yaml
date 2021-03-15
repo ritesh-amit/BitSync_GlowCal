@@ -37,6 +37,7 @@ dependencies:
   toast: ^0.1.5
   carousel_slider: ^3.0.0
   bubble: ^1.2.1
+  titled_navigation_bar: ^4.1.0
   
 
 dev_dependencies:
