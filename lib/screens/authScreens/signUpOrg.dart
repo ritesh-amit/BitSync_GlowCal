@@ -11,14 +11,16 @@ import '../../Utils/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toast/toast.dart';
 
-class SignUp extends StatefulWidget {
-  _SignUpState createState() => _SignUpState();
+class SignUpOrg extends StatefulWidget {
+  _SignUpOrgState createState() => _SignUpOrgState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _SignUpOrgState extends State<SignUpOrg> {
   bool isVisible = false;
   bool isVisible2 = false;
   TextEditingController nameController = TextEditingController();
+  TextEditingController designationController = TextEditingController();
+  TextEditingController orgController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController pwdController = TextEditingController();
   TextEditingController confirmPwdController = TextEditingController();
@@ -47,7 +49,7 @@ class _SignUpState extends State<SignUp> {
                   transform: Matrix4.translationValues(-b * 0, h * 270, 0),
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: b * 53),
-                    height: h * 740,
+                    //height: h * 740,
                     width: b * 414,
                     decoration: BoxDecoration(
                       color: gc,
@@ -73,14 +75,38 @@ class _SignUpState extends State<SignUp> {
                         ),
                         sh(35),
                         Text(
-                          'Name',
+                          'Designation',
+                          style: txtS(textColor, 18, FontWeight.w500),
+                        ),
+                        Container(
+                          child: TextField(
+                            controller: designationController,
+                            style: txtS(Color(0xffbde5e6), 16, FontWeight.w500),
+                            decoration: dec('Your Designation'),
+                          ),
+                        ),
+                        sh(30),
+                        Text(
+                          'Name of Organization',
+                          style: txtS(textColor, 18, FontWeight.w500),
+                        ),
+                        Container(
+                          child: TextField(
+                            controller: orgController,
+                            style: txtS(Color(0xffbde5e6), 16, FontWeight.w500),
+                            decoration: dec('Organization\'s Name'),
+                          ),
+                        ),
+                        sh(30),
+                        Text(
+                          'Person in-charge',
                           style: txtS(textColor, 18, FontWeight.w500),
                         ),
                         Container(
                           child: TextField(
                             controller: nameController,
                             style: txtS(Color(0xffbde5e6), 16, FontWeight.w500),
-                            decoration: dec('Your Name'),
+                            decoration: dec('Name of incharge'),
                           ),
                         ),
                         sh(30),
@@ -93,7 +119,7 @@ class _SignUpState extends State<SignUp> {
                             controller: emailController,
                             keyboardType: TextInputType.emailAddress,
                             style: txtS(Color(0xffbde5e6), 16, FontWeight.w500),
-                            decoration: dec('Your Email Id'),
+                            decoration: dec('Email Id'),
                           ),
                         ),
                         sh(30),
@@ -281,7 +307,7 @@ class _SignUpState extends State<SignUp> {
                 ),
                 Transform(
                   transform:
-                      Matrix4.translationValues(-b * 80, -h * (896 - 230), 0),
+                      Matrix4.translationValues(-b * 80, -h * (896 - 90), 0),
                   child: Image.asset(
                     'images/girl.png',
                     height: h * 250,

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/drawer.dart';
@@ -8,11 +7,11 @@ import 'package:toast/toast.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 
-class Profile extends StatefulWidget {
-  _ProfileState createState() => _ProfileState();
+class ProfileOrg extends StatefulWidget {
+  _ProfileOrgState createState() => _ProfileOrgState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileOrgState extends State<ProfileOrg> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   SharedPreferences preferences;
 
@@ -28,7 +27,9 @@ class _ProfileState extends State<Profile> {
   bool isVisible3 = false;
   bool isName = false;
   bool isPhone = false;
+  bool isOrgName = false;
   bool isAddress = false;
+  bool isDes = false;
   String userName = "";
   String userPhone = "";
   String address = "";
@@ -47,10 +48,9 @@ class _ProfileState extends State<Profile> {
         userPhone = "Not Provided";
       }
 
-      if (preferences.containsKey('currentUserAddress')) {
+      if (preferences.containsKey('currentUserAddress'))
         address = preferences.getString('currentUserAddress');
-        addressController.text = address;
-      } else
+      else
         address = "Not Provided";
     });
   }
@@ -138,7 +138,63 @@ class _ProfileState extends State<Profile> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              isName ? 'Change Name' : 'Name',
+                              isOrgName
+                                  ? 'Change Organization Name'
+                                  : 'Organization Name',
+                              style: txtS(isOrgName ? textColor : rc, 14,
+                                  FontWeight.w500),
+                            ),
+                            sh(6),
+                            isOrgName
+                                ? Container(
+                                    width: b * 270,
+                                    child: TextField(
+                                      style:
+                                          txtS(textColor, 15, FontWeight.w500),
+                                      decoration: dec('Organization Name'),
+                                    ),
+                                  )
+                                : Text(
+                                    userName,
+                                    style: txtS(textColor, 16, FontWeight.w500),
+                                  ),
+                            isOrgName ? butt(null) : SizedBox(),
+                          ],
+                        ),
+                        Spacer(),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isOrgName = !isOrgName;
+                                });
+                              },
+                              child: ediB(),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  sh(9),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: b * 17, vertical: h * 11),
+                    width: b * 375,
+                    decoration: bord(),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ico(Icons.person),
+                        SizedBox(width: b * 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              isName ? 'Change Name' : 'Person Name',
                               style: txtS(
                                   isName ? textColor : rc, 14, FontWeight.w500),
                             ),
@@ -276,11 +332,7 @@ class _ProfileState extends State<Profile> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
-                          Icons.lock,
-                          color: !isPass ? rc : textColor,
-                          size: b * 18,
-                        ),
+                        ico(Icons.lock),
                         SizedBox(width: b * 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -410,6 +462,60 @@ class _ProfileState extends State<Profile> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        ico(Icons.person),
+                        SizedBox(width: b * 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              isDes ? 'Change Designation' : 'Designation',
+                              style: txtS(
+                                  isDes ? textColor : rc, 14, FontWeight.w500),
+                            ),
+                            sh(6),
+                            isDes
+                                ? Container(
+                                    width: b * 270,
+                                    child: TextField(
+                                      style:
+                                          txtS(textColor, 15, FontWeight.w500),
+                                      decoration: dec('Your Designation'),
+                                    ),
+                                  )
+                                : Text(
+                                    userName,
+                                    style: txtS(textColor, 16, FontWeight.w500),
+                                  ),
+                            isDes ? butt(null) : SizedBox(),
+                          ],
+                        ),
+                        Spacer(),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isDes = !isDes;
+                                });
+                              },
+                              child: ediB(),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  sh(9),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: b * 17, vertical: h * 11),
+                    width: b * 375,
+                    decoration: bord(),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         ico(Icons.location_on),
                         SizedBox(width: b * 10),
                         Column(
@@ -433,7 +539,7 @@ class _ProfileState extends State<Profile> {
                                   )
                                 : Container(
                                     width: b * 270,
-                                    child: TextFormField(
+                                    child: TextField(
                                       controller: addressController,
                                       style:
                                           txtS(textColor, 16, FontWeight.w500),
@@ -470,8 +576,6 @@ class _ProfileState extends State<Profile> {
                                         setState(() {
                                           isAddress = !isAddress;
                                         });
-                                        addressChangeRequest(
-                                            addressController.text.trim());
                                       },
                                       child: Container(
                                         margin: EdgeInsets.only(top: h * 10),
@@ -682,7 +786,7 @@ class _ProfileState extends State<Profile> {
     return SizedBox(height: SizeConfig.screenHeight * h / 896);
   }
 
-  pwdChangeRequest(String pwd, String newPwd) {
+  void pwdChangeRequest(String pwd, String newPwd) {
     FirebaseAuth auth = FirebaseAuth.instance;
 
     EmailAuthCredential credential =
@@ -703,22 +807,5 @@ class _ProfileState extends State<Profile> {
         });
       });
     });
-  }
-
-  addressChangeRequest(String adr) {
-    String userUID = preferences.getString("currentUserUID");
-
-    try {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(userUID)
-          .update({'address': adr}).then((value) {
-        setState(() {
-          preferences.setString('currentUserAddress', adr);
-        });
-      });
-    } catch (e) {
-      print(e);
-    }
   }
 }

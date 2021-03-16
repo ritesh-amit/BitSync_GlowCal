@@ -28,7 +28,16 @@ packages:
       name: boolean_selector
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0-nullsafety.1"
+
+    version: "2.1.0"
+  bubble:
+    dependency: "direct main"
+    description:
+      name: bubble
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.1"
+
   carousel_slider:
     dependency: "direct main"
     description:
@@ -489,7 +498,15 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.19-nullsafety.2"
+    version: "0.2.19"
+  titled_navigation_bar:
+    dependency: "direct main"
+    description:
+      name: titled_navigation_bar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.1.0"
+
   toast:
     dependency: "direct main"
     description:
@@ -540,5 +557,6 @@ packages:
     source: hosted
     version: "2.2.1"
 sdks:
+
   dart: ">=2.10.0-110 <2.11.0"
   flutter: ">=1.17.0 <2.0.0"

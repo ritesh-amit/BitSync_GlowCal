@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gur/screens/mainMenu.dart';
+import 'package:gur/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
@@ -76,7 +76,7 @@ class _OtpPageState extends State<OtpPage> {
                             'currentUserPhone', widget.phoneNo);
                         Navigator.pushAndRemoveUntil(
                             context,
-                            MaterialPageRoute(builder: (context) => MainMenu()),
+                            MaterialPageRoute(builder: (context) => Home()),
                             (route) => false);
                       } else {
                         _scaffoldkey.currentState.showSnackBar(SnackBar(
@@ -113,7 +113,7 @@ class _OtpPageState extends State<OtpPage> {
               preferences.setString('currentUserPhone', widget.phoneNo);
               Navigator.pushAndRemoveUntil(context,
                   MaterialPageRoute(builder: (context) {
-                return MainMenu();
+                return Home();
               }), (route) => false);
             }
           });
