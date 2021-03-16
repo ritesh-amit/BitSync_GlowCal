@@ -1,15 +1,33 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/dialogboxes/donateDoneDialog.dart';
+import 'package:gur/models/foodPacket.dart';
+import 'package:location/location.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 import '../Utils/SizeConfig.dart';
 import '../Utils/constants.dart';
 
 class DialogBoxRemark extends StatefulWidget {
+  final String foodAmount;
+  DialogBoxRemark(this.foodAmount);
   _DialogBoxRemarkState createState() => _DialogBoxRemarkState();
 }
 
 class _DialogBoxRemarkState extends State<DialogBoxRemark> {
   final ScrollController _scrollController = ScrollController();
+  TextEditingController remarkController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
+  double latitude;
+  double longitude;
+
   bool rad = true;
+
+  Location location = Location();
+  bool serviceEnabled;
+  PermissionStatus permissionStatus;
+  LocationData locationData;
+
   void toNavigate(double qwer) {
     _scrollController.animateTo(SizeConfig.screenHeight * qwer / 896,
         curve: Curves.easeOut, duration: const Duration(microseconds: 100));
@@ -52,6 +70,7 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
                     borderRadius: BorderRadius.circular(b * 18),
                   ),
                   child: TextField(
+                    controller: remarkController,
                     onTap: () {
                       toNavigate(60);
                     },
@@ -72,7 +91,7 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
                   children: [
                     SizedBox(width: b * 20),
                     Text(
-                      'Use Gelocation for Address',
+                      'Use Geolocation for Address',
                       style: txtS(textColor, 18, FontWeight.w600),
                     ),
                     Spacer(),
@@ -80,7 +99,9 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
                       onTap: () {
                         setState(() {
                           rad = !rad;
+                          locationController.text = "";
                         });
+                        currentLocation();
                       },
                       child: Container(
                         padding: EdgeInsets.all(2.5),
@@ -128,12 +149,17 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
                     alignment: Alignment.center,
                     width: b * 300,
                     child: TextFormField(
+                      controller: locationController,
                       keyboardType: TextInputType.text,
                       onFieldSubmitted: (String qwert) {
                         toNavigate(0);
                       },
                       onTap: () {
+                        setState(() {
+                          rad = !rad;
+                        });
                         toNavigate(500);
+                        currentLocation();
                       },
                       style: txtS(textColor, 18, FontWeight.w600),
                       decoration: InputDecoration(
@@ -151,6 +177,7 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
                 InkWell(
                   onTap: () {
                     Navigator.pop(context);
+                    uploadDonationToDB();
                     dialogBoxDonateDone(context);
                   },
                   child: Container(
@@ -174,6 +201,63 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
       ),
     );
   }
+
+  currentLocation() async {
+    serviceEnabled = await location.serviceEnabled();
+    bool permissionsOK;
+
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (serviceEnabled)
+        permissionsOK = true;
+      else
+        permissionsOK = false;
+    } else
+      permissionsOK = true;
+
+    permissionStatus = await location.hasPermission();
+    if (permissionStatus == PermissionStatus.denied) {
+      permissionStatus = await location.requestPermission();
+
+      if (permissionStatus == PermissionStatus.denied ||
+          permissionStatus == PermissionStatus.deniedForever) {
+        permissionsOK = false;
+        Toast.show("Permission Required", context);
+      } else
+        permissionsOK = true;
+    } else if (permissionStatus == PermissionStatus.deniedForever)
+      Toast.show("Permission Required", context);
+    else
+      permissionsOK = true;
+
+    if (permissionsOK) {
+      locationData = await location.getLocation();
+      latitude = locationData.latitude;
+      longitude = locationData.longitude;
+    } else
+      Toast.show("Insufficient Permission", context);
+  }
+
+  uploadDonationToDB() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    FoodPacket foodPacket = FoodPacket(
+        amount: widget.foodAmount,
+        donor: preferences.getString('currentUserName'),
+        latitude: latitude,
+        longitude: longitude,
+        remark: remarkController.text,
+        dateTime: Timestamp.now().millisecondsSinceEpoch.toString());
+
+    var map = foodPacket.toMap();
+
+    FirebaseFirestore.instance.collection('donations').add(map).then((value) {
+      Toast.show("Donated with Love", context, duration: Toast.LENGTH_LONG);
+    }).catchError((error) {
+      print(error);
+      Toast.show("Error Encountered", context);
+    });
+  }
 }
 
 TextStyle txtS(Color col, double siz, FontWeight wg) {
@@ -188,7 +272,7 @@ SizedBox sh(double h) {
   return SizedBox(height: SizeConfig.screenHeight * h / 896);
 }
 
-void dialogBoxRemark(BuildContext context) {
+void dialogBoxRemark(BuildContext context, String foodWeightCode) {
   showGeneralDialog(
     barrierLabel: "Label",
     barrierDismissible: true,
@@ -196,7 +280,7 @@ void dialogBoxRemark(BuildContext context) {
     transitionDuration: Duration(milliseconds: 350),
     context: context,
     pageBuilder: (context, anim1, anim2) {
-      return DialogBoxRemark();
+      return DialogBoxRemark(foodWeightCode);
     },
     transitionBuilder: (context, anim1, anim2, child) {
       return SlideTransition(

@@ -26,9 +26,9 @@ class _HomePageState extends State<HomePage> {
       'Global Summary'
     ];
     List midItems = [
-      'Amount Dontaed',
+      'Amount Donated',
       'No. of times donated',
-      'Total amount dontaed',
+      'Total amount donated',
       'Total donations'
     ];
     List summaryItems = ['140 Kg', '7', '2000 Kg', '1900'];
@@ -214,9 +214,11 @@ class _HomePageState extends State<HomePage> {
                   height: h * 130,
                   autoPlay: true,
                 ),
+
                 items: quoteItems.map((i) {
                   return Builder(
                     builder: (BuildContext context) {
+
                       return Container(
                         alignment: Alignment.center,
                         margin: EdgeInsets.symmetric(vertical: h * 10),
