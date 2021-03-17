@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gur/screens/authScreens/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/mainMenu.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,6 +13,13 @@ void main() async {
   await Firebase.initializeApp();
   FirebaseAuth auth = FirebaseAuth.instance;
   User user = auth.currentUser;
+  SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.light,
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark,
+      systemNavigationBarDividerColor: Colors.transparent);
 
   if (user == null)
     isLoggedIn = false;
