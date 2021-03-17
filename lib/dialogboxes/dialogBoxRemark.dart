@@ -298,7 +298,7 @@ void dialogBoxRemark(BuildContext context, String foodWeightCode) {
     barrierLabel: "Label",
     barrierDismissible: true,
     barrierColor: Colors.black.withOpacity(0.5),
-    transitionDuration: Duration(milliseconds: 600),
+    transitionDuration: Duration(milliseconds: 350),
     context: context,
     pageBuilder: (context, anim1, anim2) {
       return DialogBoxRemark(foodWeightCode);

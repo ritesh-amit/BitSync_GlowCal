@@ -3,11 +3,11 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 
-class AboutNgo extends StatefulWidget {
-  _AboutNgoState createState() => _AboutNgoState();
+class NgoHome extends StatefulWidget {
+  _NgoHomeState createState() => _NgoHomeState();
 }
 
-class _AboutNgoState extends State<AboutNgo> {
+class _NgoHomeState extends State<NgoHome> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -73,36 +73,65 @@ class _AboutNgoState extends State<AboutNgo> {
             child: ListView(physics: BouncingScrollPhysics(), children: [
               sh(30),
               Row(children: [
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: b * 20),
-                  width: b * 144,
-                  height: h * 177,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.25),
-                        blurRadius: 24,
-                        spreadRadius: -7,
-                        offset: Offset(0, 6),
+                Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: b * 20),
+                      width: b * 145,
+                      height: h * 175,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.25),
+                            blurRadius: 24,
+                            spreadRadius: -7,
+                            offset: Offset(0, 6),
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(b * 12),
                       ),
-                    ],
-                    borderRadius: BorderRadius.circular(b * 12),
-                  ),
+                    ),
+                    Positioned(
+                      right: b * 30,
+                      bottom: h * 7,
+                      child: InkWell(
+                        onTap: () {},
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: b * 26,
+                          height: h * 26,
+                          decoration: BoxDecoration(
+                            color: gc,
+                            borderRadius: BorderRadius.circular(b * 6),
+                          ),
+                          child: Icon(MdiIcons.imageEdit,
+                              color: Colors.white, size: b * 14),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(width: b * 25),
+                SizedBox(width: b * 20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: b * 144,
-                      child: FittedBox(
-                        child: Text(
-                          'Raam Puri NGO ',
-                          overflow: TextOverflow.ellipsis,
-                          style: txtS(textColor, 20, FontWeight.w600),
+                    Row(
+                      children: [
+                        Container(
+                          width: b * 144,
+                          child: Text(
+                            'Raam Puri Ram Puri',
+                            overflow: TextOverflow.ellipsis,
+                            style: txtS(textColor, 20, FontWeight.w600),
+                          ),
                         ),
-                      ),
+                        InkWell(
+                          child: Icon(MdiIcons.squareEditOutline,
+                              color: rc, size: b * 20),
+                        ),
+                      ],
                     ),
                     sh(20),
                     Row(
@@ -175,21 +204,43 @@ class _AboutNgoState extends State<AboutNgo> {
                 ),
               ]),
               sh(30),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: b * 20),
-                height: h * 125,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.25),
-                      blurRadius: 24,
-                      spreadRadius: -7,
-                      offset: Offset(0, 6),
+              Stack(
+                children: [
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: b * 20),
+                    height: h * 125,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.25),
+                          blurRadius: 24,
+                          spreadRadius: -7,
+                          offset: Offset(0, 6),
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(b * 12),
                     ),
-                  ],
-                  borderRadius: BorderRadius.circular(b * 12),
-                ),
+                  ),
+                  Positioned(
+                    right: b * 30,
+                    bottom: h * 7,
+                    child: InkWell(
+                      onTap: () {},
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: b * 26,
+                        height: h * 26,
+                        decoration: BoxDecoration(
+                          color: gc,
+                          borderRadius: BorderRadius.circular(b * 6),
+                        ),
+                        child: Icon(MdiIcons.imageEdit,
+                            color: Colors.white, size: b * 14),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               sh(25),
               Container(
@@ -197,9 +248,18 @@ class _AboutNgoState extends State<AboutNgo> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'About',
-                      style: txtS(textColor, 20, FontWeight.w600),
+                    Row(
+                      children: [
+                        Text(
+                          'About',
+                          style: txtS(textColor, 20, FontWeight.w600),
+                        ),
+                        Spacer(),
+                        InkWell(
+                          child: Icon(MdiIcons.squareEditOutline,
+                              color: rc, size: b * 20),
+                        ),
+                      ],
                     ),
                     sh(10),
                     Text(
