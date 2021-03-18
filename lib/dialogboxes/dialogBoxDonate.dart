@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gur/dialogboxes/dialogBoxRemark.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../Utils/SizeConfig.dart';
 import '../Utils/constants.dart';
 
@@ -8,9 +9,11 @@ class DialogBoxDonate extends StatefulWidget {
 }
 
 class _DialogBoxDonateState extends State<DialogBoxDonate> {
+  TextEditingController manualAmountController = TextEditingController();
   List weight = [false, false, false, false];
   List weightGap = ["5-10", "10-15", "15-20", "Above 20"];
   ScrollController _scrollController = ScrollController();
+
   void toNavigate(double qwer) {
     _scrollController.animateTo(SizeConfig.screenHeight * qwer / 896,
         curve: Curves.easeOut, duration: const Duration(microseconds: 100));
@@ -136,6 +139,7 @@ class _DialogBoxDonateState extends State<DialogBoxDonate> {
                     alignment: Alignment.center,
                     width: b * 150,
                     child: TextFormField(
+                      controller: manualAmountController,
                       onFieldSubmitted: (String qwert) {
                         toNavigate(0);
                       },
@@ -165,7 +169,19 @@ class _DialogBoxDonateState extends State<DialogBoxDonate> {
                 InkWell(
                   onTap: () {
                     Navigator.pop(context);
-                    dialogBoxRemark(context);
+                    String foodWeightCode;
+                    if (weight[0] == true)
+                      foodWeightCode = "5-10 Kg";
+                    else if (weight[1])
+                      foodWeightCode = "10-15 Kg";
+                    else if (weight[2])
+                      foodWeightCode = "15-20 Kg";
+                    else if (weight[3])
+                      foodWeightCode = "Above 2- Kg";
+                    else
+                      foodWeightCode = manualAmountController.text;
+
+                    dialogBoxRemark(context, foodWeightCode);
                   },
                   child: Container(
                     height: h * 50,

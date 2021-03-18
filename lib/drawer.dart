@@ -189,6 +189,7 @@ class _DrawerCodeState extends State<DrawerCode> {
       }).catchError((e) {
         print(e);
       });
+      googleSignIn.signOut();
     } on FirebaseAuthException catch (e) {
       print(e);
     } catch (e) {

@@ -31,9 +31,9 @@ class _HomePageState extends State<HomePage> {
       'Global Summary'
     ];
     List midItems = [
-      'Amount Dontaed',
+      'Amount Donated',
       'No. of times donated',
-      'Total amount dontaed',
+      'Total amount donated',
       'Total donations'
     ];
     List summaryItems = ['140 Kg', '7', '2000 Kg', '1900'];

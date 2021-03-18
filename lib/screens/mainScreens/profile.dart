@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/drawer.dart';
@@ -47,9 +48,10 @@ class _ProfileState extends State<Profile> {
         userPhone = "Not Provided";
       }
 
-      if (preferences.containsKey('currentUserAddress'))
+      if (preferences.containsKey('currentUserAddress')) {
         address = preferences.getString('currentUserAddress');
-      else
+        addressController.text = address;
+      } else
         address = "Not Provided";
     });
   }
@@ -428,7 +430,7 @@ class _ProfileState extends State<Profile> {
                                   )
                                 : Container(
                                     width: b * 270,
-                                    child: TextField(
+                                    child: TextFormField(
                                       controller: addressController,
                                       style:
                                           txtS(textColor, 16, FontWeight.w500),
@@ -465,6 +467,8 @@ class _ProfileState extends State<Profile> {
                                         setState(() {
                                           isAddress = !isAddress;
                                         });
+                                        addressChangeRequest(
+                                            addressController.text.trim());
                                       },
                                       child: Container(
                                         margin: EdgeInsets.only(top: h * 10),
@@ -693,7 +697,7 @@ class _ProfileState extends State<Profile> {
     return SizedBox(height: SizeConfig.screenHeight * h / 896);
   }
 
-  void pwdChangeRequest(String pwd, String newPwd) {
+  pwdChangeRequest(String pwd, String newPwd) {
     FirebaseAuth auth = FirebaseAuth.instance;
 
     EmailAuthCredential credential =
@@ -714,5 +718,22 @@ class _ProfileState extends State<Profile> {
         });
       });
     });
+  }
+
+  addressChangeRequest(String adr) {
+    String userUID = preferences.getString("currentUserUID");
+
+    try {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(userUID)
+          .update({'address': adr}).then((value) {
+        setState(() {
+          preferences.setString('currentUserAddress', adr);
+        });
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 }
