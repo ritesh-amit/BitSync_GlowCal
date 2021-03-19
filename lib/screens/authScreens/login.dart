@@ -322,13 +322,12 @@ class _LoginState extends State<Login> {
         getUserDataFromDb(credential.user.uid);
         preferences.setString('currentUserUID', credential.user.uid);
 
-
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) {
-          return Home();
-        }),
-      );
-
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) {
+            return Home();
+          }),
+        );
+      });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         Toast.show("User not found", context,
@@ -375,7 +374,7 @@ class _LoginState extends State<Login> {
           preferences.setString('currentUserUID', value.user.uid);
 
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return MainMenu();
+            return Home();
           }));
         }
       });
@@ -386,19 +385,17 @@ class _LoginState extends State<Login> {
         List<String> userSignInMethods =
             await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
 
-
-      Toast.show("Login Successfull", context,
-          duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-      preferences.setBool('isLoggedIn', true);
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return Home();
-      }));
+        Toast.show("Login Successfull", context,
+            duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+        preferences.setBool('isLoggedIn', true);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return Home();
+        }));
 
         print(userSignInMethods);
       } else {
         print(e.message);
       }
-
     } catch (e) {
       print(e);
     }

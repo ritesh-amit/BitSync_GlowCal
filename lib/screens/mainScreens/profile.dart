@@ -38,7 +38,11 @@ class _ProfileState extends State<Profile> {
   loadData() async {
     preferences = await SharedPreferences.getInstance();
     setState(() {
-      userName = preferences.getString("currentUserName");
+      if (preferences.containsKey("currentUserName"))
+        userName = preferences.getString("currentUserName");
+      else
+        userName = "Not Provided";
+
       email = preferences.getString("currentUserEmail");
 
       if (preferences.containsKey("currentUserPhone")) {
@@ -59,7 +63,7 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
 
-    loadData();
+    //loadData();
   }
 
   @override

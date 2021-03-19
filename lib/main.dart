@@ -4,20 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:gur/Utils/SizeConfig.dart';
 import 'package:gur/messageScreen.dart';
 import 'package:gur/screens/authScreens/login.dart';
-import 'package:gur/screens/authScreens/signUpOrg.dart';
 import 'package:gur/screens/mainScreens/ngoHome.dart';
-import 'package:gur/screens/mainScreens/profileOrg.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-<<<<<<< HEAD
-import 'screens/mainMenu.dart';
-import 'package:flutter/services.dart';
-=======
-import 'package:gur/screens/mainScreens/aboutNgo.dart';
-import 'package:gur/screens/mainScreens/home.dart';
 import 'package:gur/screens/mainScreens/profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:gur/screens/mainScreens/home.dart';
 import 'Utils/constants.dart';
-import 'package:titled_navigation_bar/titled_navigation_bar.dart';
->>>>>>> f7a914e345ff4583f10d9cf3c6109c62dfc48143
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -74,7 +66,7 @@ List<Widget> _widgetOptions = <Widget>[
   HomePage(),
   NgoHome(),
   MessageScreen(),
-  ProfileOrg(),
+  Profile()
 ];
 
 class _HomeState extends State<Home> {

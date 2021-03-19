@@ -23,8 +23,8 @@ class DrawerCode extends StatefulWidget {
 
 class _DrawerCodeState extends State<DrawerCode> {
   SharedPreferences preferences;
-  String userName = "";
-  String userPhone = "";
+  String userName = "User";
+  String userPhone = "12345xxxxx";
   String address = "";
   String email = "";
 
@@ -47,7 +47,7 @@ class _DrawerCodeState extends State<DrawerCode> {
   void initState() {
     super.initState();
 
-    loadData();
+    //loadData();
   }
 
   @override
