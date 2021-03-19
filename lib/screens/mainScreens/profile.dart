@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Profile extends StatefulWidget {
   _ProfileState createState() => _ProfileState();
@@ -93,24 +94,20 @@ class _ProfileState extends State<Profile> {
                     ),
                     child: Row(
                       children: [
-                        Builder(
-                          builder: (BuildContext context) {
-                            return InkWell(
-                              onTap: () {
-                                _scaffoldKey.currentState.openDrawer();
-                              },
-                              child: Container(
-                                height: h * 30,
-                                width: b * 30,
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: mc, width: b * 1.5),
-                                  borderRadius: BorderRadius.circular(b * 12),
-                                ),
-                                child: Icon(MdiIcons.sortVariant,
-                                    color: mc, size: b * 20),
-                              ),
-                            );
+                        InkWell(
+                          onTap: () {
+                            _scaffoldKey.currentState.openDrawer();
                           },
+                          child: Container(
+                            height: h * 30,
+                            width: b * 30,
+                            child: SvgPicture.asset(
+                              'images/Chart.svg',
+                              allowDrawingOutsideViewBox: true,
+                              width: h * 20,
+                              height: b * 20,
+                            ),
+                          ),
                         ),
                         Spacer(),
                         Text(
@@ -118,7 +115,19 @@ class _ProfileState extends State<Profile> {
                           style: txtS(mc, 20, FontWeight.w600),
                         ),
                         Spacer(),
-                        Icon(MdiIcons.send, color: mc),
+                        InkWell(
+                          onTap: () {},
+                          child: Container(
+                            height: h * 30,
+                            width: b * 30,
+                            child: SvgPicture.asset(
+                              'images/SendColor.svg',
+                              allowDrawingOutsideViewBox: true,
+                              width: h * 20,
+                              height: b * 20,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -131,7 +140,7 @@ class _ProfileState extends State<Profile> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ico(Icons.person),
+                        ico('images/Group 23.svg'),
                         SizedBox(width: b * 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,11 +194,7 @@ class _ProfileState extends State<Profile> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
-                          Icons.phone,
-                          color: rc,
-                          size: b * 18,
-                        ),
+                        ico('images/Call.svg'),
                         SizedBox(width: b * 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -243,11 +248,7 @@ class _ProfileState extends State<Profile> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
-                          Icons.mail,
-                          color: !isEmail ? rc : textColor,
-                          size: b * 18,
-                        ),
+                        ico('images/Message.svg'),
                         SizedBox(width: b * 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -276,11 +277,7 @@ class _ProfileState extends State<Profile> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
-                          Icons.lock,
-                          color: !isPass ? rc : textColor,
-                          size: b * 18,
-                        ),
+                        ico('images/Password.svg'),
                         SizedBox(width: b * 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -410,7 +407,7 @@ class _ProfileState extends State<Profile> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ico(Icons.location_on),
+                        ico('images/Location.svg'),
                         SizedBox(width: b * 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -563,11 +560,20 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Icon ediB() {
-    return Icon(
-      Icons.edit,
-      color: rc,
-      size: SizeConfig.screenWidth / 414 * 22,
+  Container ediB() {
+    SizeConfig().init(context);
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
+
+    return Container(
+      height: h * 20,
+      width: b * 20,
+      child: SvgPicture.asset(
+        'images/edit.svg',
+        allowDrawingOutsideViewBox: true,
+        width: h * 20,
+        height: b * 20,
+      ),
     );
   }
 
@@ -634,11 +640,20 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Icon ico(m) {
-    return Icon(
-      m,
-      color: rc,
-      size: SizeConfig.screenWidth / 414 * 18,
+  Container ico(String qwerty) {
+    SizeConfig().init(context);
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
+
+    return Container(
+      height: h * 20,
+      width: b * 20,
+      child: SvgPicture.asset(
+        qwerty,
+        allowDrawingOutsideViewBox: true,
+        width: h * 20,
+        height: b * 20,
+      ),
     );
   }
 

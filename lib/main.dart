@@ -13,6 +13,7 @@ import 'package:gur/screens/mainScreens/home.dart';
 import 'package:gur/screens/mainScreens/profile.dart';
 import 'Utils/constants.dart';
 import 'package:titled_navigation_bar/titled_navigation_bar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,7 +61,7 @@ int _selectedIndex = 0;
 
 List<Widget> _widgetOptions = <Widget>[
   HomePage(),
-  NgoHome(),
+  AboutNgo(),
   MessageScreen(),
   ProfileOrg(),
 ];

@@ -351,7 +351,6 @@ class _LoginState extends State<Login> {
       print(e);
     }
   }
-
   void googleSignIn() async {
     final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
     final GoogleSignInAuthentication googleAuth =
@@ -375,8 +374,8 @@ class _LoginState extends State<Login> {
           preferences.setString('currentUserUID', value.user.uid);
 
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return MainMenu();
-          }));
+            return Login();
+          }),);
         }
       });
     } on FirebaseAuthException catch (e) {
@@ -420,4 +419,5 @@ class _LoginState extends State<Login> {
       }
     });
   }
+}
 }
