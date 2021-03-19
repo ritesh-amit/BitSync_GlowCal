@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/drawer.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 import '../../Utils/SizeConfig.dart';
@@ -39,14 +38,20 @@ class _ProfileState extends State<Profile> {
   loadData() async {
     preferences = await SharedPreferences.getInstance();
     setState(() {
-      userName = preferences.getString("currentUserName");
-      email = preferences.getString("currentUserEmail");
+      if (preferences.containsKey("currentUserName"))
+        userName = preferences.getString("currentUserName");
+      else
+        userName = "Not Provided";
 
-      if (preferences.containsKey("currentUserPhone")) {
+      if (preferences.containsKey('currentUserEmail'))
+        email = preferences.getString("currentUserEmail");
+      else
+        email = preferences.getString('currentUserEmail');
+
+      if (preferences.containsKey("currentUserPhone"))
         userPhone = preferences.getString("currentUserPhone");
-      } else {
+      else
         userPhone = "Not Provided";
-      }
 
       if (preferences.containsKey('currentUserAddress')) {
         address = preferences.getString('currentUserAddress');
@@ -60,7 +65,7 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
 
-    loadData();
+    //loadData();
   }
 
   @override

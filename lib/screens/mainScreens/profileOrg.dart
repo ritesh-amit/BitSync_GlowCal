@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/drawer.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 import '../../Utils/SizeConfig.dart';

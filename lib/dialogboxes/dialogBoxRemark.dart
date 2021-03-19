@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/dialogboxes/donateDoneDialog.dart';
 import 'package:gur/models/foodPacket.dart';
-import 'package:location/location.dart';
+import 'package:location/location.dart' as loc;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 import '../Utils/SizeConfig.dart';
@@ -23,10 +23,10 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
 
   bool rad = true;
 
-  Location location = Location();
+  loc.Location location = loc.Location();
   bool serviceEnabled;
-  PermissionStatus permissionStatus;
-  LocationData locationData;
+  loc.PermissionStatus permissionStatus;
+  loc.LocationData locationData;
 
   void toNavigate(double qwer) {
     _scrollController.animateTo(SizeConfig.screenHeight * qwer / 896,
@@ -154,12 +154,21 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
                       onFieldSubmitted: (String qwert) {
                         toNavigate(0);
                       },
-                      onTap: () {
+                      onTap: () async {
                         setState(() {
-                          rad = !rad;
+                          rad = false;
                         });
                         toNavigate(500);
-                        currentLocation();
+                        // Prediction p = await PlacesAutocomplete.show(
+                        //     context: context,
+                        //     apiKey: 'AIzaSyBqPMJnoCEmXMLkSiHcVAyEvU4TxRh1Y-E',
+                        //     language: 'en',
+                        //     components: [Component(Component.country, 'in')],
+                        //     hint: "Search",
+                        //     mode: Mode.fullscreen,
+                        //     onError: (valeu) {
+                        //       print(valeu.errorMessage);
+                        //     });
                       },
                       style: txtS(textColor, 18, FontWeight.w600),
                       decoration: InputDecoration(
@@ -178,7 +187,6 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
                   onTap: () {
                     Navigator.pop(context);
                     uploadDonationToDB();
-                    dialogBoxDonateDone(context);
                   },
                   child: Container(
                     height: h * 48,
@@ -216,16 +224,16 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
       permissionsOK = true;
 
     permissionStatus = await location.hasPermission();
-    if (permissionStatus == PermissionStatus.denied) {
+    if (permissionStatus == loc.PermissionStatus.denied) {
       permissionStatus = await location.requestPermission();
 
-      if (permissionStatus == PermissionStatus.denied ||
-          permissionStatus == PermissionStatus.deniedForever) {
+      if (permissionStatus == loc.PermissionStatus.denied ||
+          permissionStatus == loc.PermissionStatus.deniedForever) {
         permissionsOK = false;
         Toast.show("Permission Required", context);
       } else
         permissionsOK = true;
-    } else if (permissionStatus == PermissionStatus.deniedForever)
+    } else if (permissionStatus == loc.PermissionStatus.deniedForever)
       Toast.show("Permission Required", context);
     else
       permissionsOK = true;
@@ -240,19 +248,30 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
 
   uploadDonationToDB() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
+    FoodPacket foodPacket;
 
-    FoodPacket foodPacket = FoodPacket(
-        amount: widget.foodAmount,
-        donor: preferences.getString('currentUserName'),
-        latitude: latitude,
-        longitude: longitude,
-        remark: remarkController.text,
-        dateTime: Timestamp.now().millisecondsSinceEpoch.toString());
+    if (!rad) {
+      foodPacket = FoodPacket(
+          amount: widget.foodAmount,
+          donor: preferences.getString('currentUserName'),
+          remark: remarkController.text,
+          dateTime: Timestamp.now().millisecondsSinceEpoch.toString(),
+          manualAddress: locationController.text.trim());
+    } else {
+      foodPacket = FoodPacket(
+          amount: widget.foodAmount,
+          donor: preferences.getString('currentUserName'),
+          latitude: latitude,
+          longitude: longitude,
+          remark: remarkController.text.trim(),
+          dateTime: Timestamp.now().millisecondsSinceEpoch.toString());
+    }
 
     var map = foodPacket.toMap();
 
     FirebaseFirestore.instance.collection('donations').add(map).then((value) {
       Toast.show("Donated with Love", context, duration: Toast.LENGTH_LONG);
+      dialogBoxDonateDone(context);
     }).catchError((error) {
       print(error);
       Toast.show("Error Encountered", context);

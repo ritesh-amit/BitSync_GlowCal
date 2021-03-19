@@ -5,6 +5,7 @@ class FoodPacket {
   double longitude;
   String dateTime;
   String donor;
+  String manualAddress;
 
   FoodPacket(
       {this.amount,
@@ -12,7 +13,8 @@ class FoodPacket {
       this.donor,
       this.latitude,
       this.longitude,
-      this.remark});
+      this.remark,
+      this.manualAddress});
 
   Map toMap() {
     var map = Map<String, dynamic>();
@@ -23,6 +25,7 @@ class FoodPacket {
     map['latitude'] = this.latitude;
     map['longitude'] = this.longitude;
     map['timeStamp'] = this.dateTime;
+    map['manualAddress'] = this.manualAddress;
 
     return map;
   }

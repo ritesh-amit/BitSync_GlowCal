@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:gur/dialogBoxSearch.dart';
 import 'package:gur/dialogboxes/dialogBoxDonate.dart';
 import 'package:gur/drawer.dart';
+import 'package:gur/messageScreen.dart';
 import 'package:gur/screens/authScreens/signUp.dart';
-import 'package:gur/screens/authScreens/signUpOrg.dart';
-import 'package:gur/searchNgo.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:ui' as ui;
 
 class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
@@ -98,8 +95,10 @@ class _HomePageState extends State<HomePage> {
                   Spacer(),
                   InkWell(
                     onTap: () {
-                      print('Amit');
-                      SignUp();
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return MessageScreen();
+                      }));
                     },
                     child: Container(
                       height: h * 30,
