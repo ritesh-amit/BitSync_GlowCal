@@ -2,15 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/Utils/SizeConfig.dart';
-import 'package:gur/messageScreen.dart';
-import 'package:gur/screens/authScreens/login.dart';
 import 'package:gur/screens/mainScreens/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gur/screens/mainScreens/home.dart';
 import 'Utils/constants.dart';
 import 'package:flutter/services.dart';
-
 import 'screens/mainScreens/aboutNgo.dart';
+import 'screens/authScreens/login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +45,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'DSC Challenge',
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        primarySwatch: Colors.orange,
       ),
       home: isLoggedIn == true ? Home() : Login(),
     );
@@ -66,7 +64,7 @@ int _selectedIndex = 0;
 List<Widget> _widgetOptions = <Widget>[
   HomePage(),
   AboutNgo(),
-  MessageScreen(),
+  AboutNgo(),
   Profile()
 ];
 
