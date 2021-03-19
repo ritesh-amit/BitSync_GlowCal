@@ -4,8 +4,10 @@ class CurrentUser {
   String phone;
   String uid;
   String token;
+  String address;
 
-  CurrentUser({this.name, this.email, this.phone, this.uid, this.token});
+  CurrentUser(
+      {this.name, this.email, this.phone, this.uid, this.token, this.address});
 
   Map toMap() {
     var map = Map<String, dynamic>();
@@ -14,16 +16,18 @@ class CurrentUser {
     map['phone'] = this.phone;
     map['uid'] = this.uid;
     map['token'] = this.token;
+    map['address'] = this.address;
     return map;
   }
 
   CurrentUser fromMap(Map<String, dynamic> map) {
-    CurrentUser _message = CurrentUser();
-    _message.name = map['name'];
-    _message.email = map['email'];
-    _message.phone = map['phone'];
-    _message.uid = map['uid'];
-    _message.token = map['token'];
-    return _message;
+    CurrentUser _currentUser = CurrentUser();
+    _currentUser.name = map['name'];
+    _currentUser.email = map['email'];
+    _currentUser.phone = map['phone'];
+    _currentUser.uid = map['uid'];
+    _currentUser.token = map['token'];
+    _currentUser.address = map['address'];
+    return _currentUser;
   }
 }

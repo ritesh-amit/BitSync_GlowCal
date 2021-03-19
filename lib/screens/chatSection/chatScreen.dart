@@ -7,8 +7,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 
 import 'package:bubble/bubble.dart';
-import 'Utils/constants.dart';
-import 'Utils/SizeConfig.dart';
+import '../../Utils/constants.dart';
+import '../../Utils/SizeConfig.dart';
 
 class ChatScreen extends StatefulWidget {
   String name;
