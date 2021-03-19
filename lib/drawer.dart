@@ -6,6 +6,7 @@ import 'package:gur/screens/authScreens/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Utils/SizeConfig.dart';
 import 'Utils/constants.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class DrawerCode extends StatefulWidget {
   final String userName;
@@ -79,7 +80,17 @@ class _DrawerCodeState extends State<DrawerCode> {
             InkWell(
               child: Row(
                 children: [
-                  Icon(Icons.call_outlined, color: textColor, size: b * 18),
+                  Container(
+                    height: h * 20,
+                    width: b * 20,
+                    child: SvgPicture.asset(
+                      'images/Call.svg',
+                      allowDrawingOutsideViewBox: true,
+                      width: h * 20,
+                      height: b * 20,
+                      color: Colors.black,
+                    ),
+                  ),
                   SizedBox(width: b * 10),
                   Text(
                     userPhone, // this.phoneNumber
@@ -94,26 +105,29 @@ class _DrawerCodeState extends State<DrawerCode> {
                 color: rc,
                 height: h * 1),
             sh(50),
-            row(Icons.share, 'Complaints', sendComplaintMail),
-            row(Icons.share, 'Suggestions', sendSuggestionMail),
-            row(Icons.flag, 'Mission', null),
-            row(Icons.info, 'About the App', null),
-            row(Icons.share, 'My Coupons', null),
-            row(Icons.logout, 'Log Out', logOut),
+            row('images/Document.svg', 'Complaints', sendComplaintMail),
+            row('images/Chat.svg', 'Suggestions', sendSuggestionMail),
+            row('images/Heart.svg', 'Mission', null),
+            row('images/Info Square.svg', 'About the App', null),
+            row('images/Ticket.svg', 'My Coupons', null),
+            row('images/Logout.svg', 'Log Out', logOut),
             sh(100),
             Container(
                 margin: EdgeInsets.only(right: b * 20),
                 color: rc,
                 height: h * 1),
-            row(Icons.share, 'Share the App', null),
-            row(Icons.biotech, 'Version', null),
+            row('images/Send.svg', 'Share the App', null),
+            row('images/group.svg', 'Version', null),
           ],
         ),
       ),
     );
   }
 
-  InkWell row(ic, String tit, Function fn) {
+  InkWell row(String ic, String tit, Function fn) {
+    SizeConfig().init(context);
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
     return InkWell(
       splashColor: mc,
       onTap: () {
@@ -124,8 +138,12 @@ class _DrawerCodeState extends State<DrawerCode> {
         child: Row(
           children: [
             SizedBox(width: SizeConfig.screenWidth * 12 / 414),
-            Icon(ic,
-                color: Colors.grey, size: SizeConfig.screenWidth * 20 / 414),
+            SvgPicture.asset(
+              ic,
+              allowDrawingOutsideViewBox: true,
+              width: h * 20,
+              height: b * 20,
+            ),
             SizedBox(width: SizeConfig.screenWidth * 25 / 375),
             Text(
               tit,

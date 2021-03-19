@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:gur/Utils/SizeConfig.dart';
 import 'package:gur/messageScreen.dart';
 import 'package:gur/screens/authScreens/login.dart';
-import 'package:gur/screens/mainScreens/ngoHome.dart';
 import 'package:gur/screens/mainScreens/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gur/screens/mainScreens/home.dart';
 import 'Utils/constants.dart';
 import 'package:flutter/services.dart';
+
+import 'screens/mainScreens/aboutNgo.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,7 +65,7 @@ int _selectedIndex = 0;
 
 List<Widget> _widgetOptions = <Widget>[
   HomePage(),
-  NgoHome(),
+  AboutNgo(),
   MessageScreen(),
   Profile()
 ];
@@ -73,8 +74,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    var h = SizeConfig.screenHeight / 896;
-    var b = SizeConfig.screenWidth / 412;
+    //var h = SizeConfig.screenHeight / 896;
+    //var b = SizeConfig.screenWidth / 412;
 
     return SafeArea(
       child: Scaffold(
@@ -90,19 +91,19 @@ class _HomeState extends State<Home> {
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              title: Text('Home'),
+              label: 'Home',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.notifications),
-              title: Text('Notifications'),
+              label: 'Notifications',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings),
-              title: Text('Settings'),
+              label: 'Settings',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
-              title: Text('Profile'),
+              label: 'Profile',
             ),
           ],
           onTap: (index) {

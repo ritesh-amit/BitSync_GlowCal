@@ -1,15 +1,11 @@
 import 'dart:io';
 import 'package:flutter/rendering.dart';
 import 'package:gur/Utils/SizeConfig.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-//import 'package:new_chat/models/message.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
-//import 'package:image_picker/image_picker.dart';
-//import 'package:file_picker/file_picker.dart';
-import 'package:path_provider/path_provider.dart';
+
 import 'package:bubble/bubble.dart';
 import 'Utils/constants.dart';
 import 'Utils/SizeConfig.dart';
