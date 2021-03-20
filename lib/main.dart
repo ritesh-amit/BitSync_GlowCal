@@ -3,6 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/Utils/SizeConfig.dart';
 import 'package:gur/newAuthScreens/login.dart';
+import 'package:gur/screens/mainScreens/ngoHome.dart';
+import 'package:gur/screens/mainScreens/ngoProfile.dart';
+import 'package:gur/screens/mainScreens/notifications.dart';
 import 'package:gur/screens/mainScreens/profile.dart';
 import 'package:gur/screens/mainScreens/profileOrg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -69,9 +72,9 @@ class _HomeState extends State<Home> {
 
   List<Widget> _widgetOptionsInd = <Widget>[
     HomePage(),
+    NgoHome(),
     AboutNgo(),
-    AboutNgo(),
-    Profile()
+    NgoProfile(),
   ];
 
   List<Widget> _widgetOptionsOrg = <Widget>[
@@ -98,8 +101,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    //var h = SizeConfig.screenHeight / 896;
-    //var b = SizeConfig.screenWidth / 412;
 
     return SafeArea(
       child: Scaffold(
