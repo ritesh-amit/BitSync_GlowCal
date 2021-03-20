@@ -5,7 +5,6 @@ import 'package:gur/main.dart';
 import 'package:gur/models/currentUser.dart';
 import 'package:gur/screens/authScreens/forgotPassword.dart';
 import 'package:gur/screens/authScreens/signUp.dart';
-import 'package:gur/screens/authScreens/signUpOrg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:toast/toast.dart';
@@ -30,113 +29,123 @@ class _LoginState extends State<Login> {
     SizeConfig().init(context);
     var b = SizeConfig.screenWidth / 414;
     var h = SizeConfig.screenHeight / 896;
-    return Scaffold(
-      backgroundColor: Color(0xffe5e5e5),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            child: Column(
-              children: [
-                Transform(
-                  transform: Matrix4.translationValues(-b * 0, h * 280, 0),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: b * 53),
-                    height: h * 585,
-                    width: b * 414,
-                    decoration: BoxDecoration(
-                      color: gc,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(b * 30),
-                        topRight: Radius.circular(b * 30),
+    return WillPopScope(
+      onWillPop: () {
+        SystemNavigator.pop();
+      },
+      child: Scaffold(
+        backgroundColor: Color(0xffe5e5e5),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Container(
+              child: Column(
+                children: [
+                  Transform(
+                    transform: Matrix4.translationValues(-b * 0, h * 280, 0),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: b * 53),
+                      height: h * 585,
+                      width: b * 414,
+                      decoration: BoxDecoration(
+                        color: gc,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(b * 30),
+                          topRight: Radius.circular(b * 30),
+                        ),
                       ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        sh(49),
-                        Transform(
-                          transform: Matrix4.translationValues(-b * 21, 0, 0),
-                          child: Text(
-                            'Log-in',
-                            style: GoogleFonts.playfairDisplay(
-                              color: textColor,
-                              fontWeight: FontWeight.w700,
-                              fontSize: b * 40,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          sh(49),
+                          Transform(
+                            transform: Matrix4.translationValues(-b * 21, 0, 0),
+                            child: Text(
+                              'Log-in',
+                              style: GoogleFonts.playfairDisplay(
+                                color: textColor,
+                                fontWeight: FontWeight.w700,
+                                fontSize: b * 40,
+                              ),
                             ),
                           ),
-                        ),
-                        sh(30),
-                        Text(
-                          'Email',
-                          style: txtS(textColor, 18, FontWeight.w500),
-                        ),
-                        Container(
-                          child: TextField(
-                            controller: emailTextController,
-                            style: txtS(Color(0xffb5e8e9), 16, FontWeight.w500),
-                            decoration: dec('Your Email Id'),
+                          sh(30),
+                          Text(
+                            'Email',
+                            style: txtS(textColor, 18, FontWeight.w500),
                           ),
-                        ),
-                        sh(20),
-                        Text(
-                          'Password',
-                          style: txtS(textColor, 18, FontWeight.w500),
-                        ),
-                        Container(
-                          child: TextField(
-                            controller: pwdEditingController,
-                            obscuringCharacter: '*',
-                            obscureText: !isVisible,
-                            style: txtS(Color(0xffb5e8e9), 16, FontWeight.w500),
-                            decoration: InputDecoration(
-                              enabledBorder: bor(),
-                              focusedBorder: bor(),
-                              suffixIconConstraints: BoxConstraints(
-                                  minWidth: b * 16, minHeight: h * 12),
-                              suffixIcon: Padding(
-                                padding: EdgeInsets.only(right: b * 15),
-                                child: InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      isVisible = !isVisible;
-                                    });
-                                  },
-                                  child: Icon(
-                                    isVisible
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
-                                    color: Colors.black,
-                                    size: b * 16,
+                          Container(
+                            child: TextField(
+                              controller: emailTextController,
+                              style:
+                                  txtS(Color(0xffb5e8e9), 16, FontWeight.w500),
+                              decoration: dec('Your Email Id'),
+                            ),
+                          ),
+                          sh(20),
+                          Text(
+                            'Password',
+                            style: txtS(textColor, 18, FontWeight.w500),
+                          ),
+                          Container(
+                            child: TextField(
+                              controller: pwdEditingController,
+                              obscuringCharacter: '*',
+                              obscureText: !isVisible,
+                              style:
+                                  txtS(Color(0xffb5e8e9), 16, FontWeight.w500),
+                              decoration: InputDecoration(
+                                enabledBorder: bor(),
+                                focusedBorder: bor(),
+                                suffixIconConstraints: BoxConstraints(
+                                    minWidth: b * 16, minHeight: h * 12),
+                                suffixIcon: Padding(
+                                  padding: EdgeInsets.only(right: b * 15),
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        isVisible = !isVisible;
+                                      });
+                                    },
+                                    child: Icon(
+                                      isVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: Colors.black,
+                                      size: b * 16,
+                                    ),
                                   ),
                                 ),
+                                hintText: 'Password',
+                                hintStyle: txtS(
+                                    Color(0xffb5e8e9), 12, FontWeight.w400),
+                                isDense: true,
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: h * 9),
                               ),
-                              hintText: 'Password',
-                              hintStyle:
-                                  txtS(Color(0xffb5e8e9), 12, FontWeight.w400),
-                              isDense: true,
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: h * 9),
                             ),
                           ),
-                        ),
-                        sh(8),
-                        Row(
-                          children: [
-                            Text(''),
-                            Spacer(),
-                            InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (context) {
-                                    return ForgotPassword();
-                                  }),
-                                );
-                              },
-                              child: Text(
-                                'Forgot Password?',
-                                style: txtS(
-                                    Color(0xffb5e8e9), 14, FontWeight.w700),
+                          sh(8),
+                          Row(
+                            children: [
+                              Text(''),
+                              Spacer(),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (context) {
+                                      return ForgotPassword();
+                                    }),
+                                  );
+                                },
+                                child: Text(
+                                  'Forgot Password?',
+                                  style: txtS(
+                                      Color(0xffb5e8e9), 14, FontWeight.w700),
+                                ),
                               ),
+
+                            ],
+
                             ),
                           ],
                         ),
@@ -162,104 +171,116 @@ class _LoginState extends State<Login> {
                           color: mc,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(b * 35),
+
                           ),
-                          elevation: 0,
-                          height: h * 48,
-                          minWidth: b * 304,
-                          child: Text(
-                            'Login',
-                            style: txtS(Colors.white, 18, FontWeight.w500),
+                          sh(25),
+                          MaterialButton(
+                            onPressed: () {
+                              print('Add Session');
+                              //   login();
+                            },
+                            color: mc,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(b * 35),
+                            ),
+                            elevation: 0,
+                            height: h * 48,
+                            minWidth: b * 304,
+                            child: Text(
+                              'Login',
+                              style: txtS(Colors.white, 18, FontWeight.w500),
+                            ),
                           ),
-                        ),
-                        sh(11),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Don\'t have an account ? ',
-                              style:
-                                  txtS(Color(0xffb5e8e9), 14, FontWeight.w400),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.of(context)
-                                    .push(SlideRightRoute(page: SignUp()));
-                              },
-                              child: Text(
-                                'Sign-up',
+                          sh(11),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Don\'t have an account ? ',
                                 style: txtS(
-                                    Color(0xffb5e8e9), 14, FontWeight.w700),
+                                    Color(0xffb5e8e9), 14, FontWeight.w400),
                               ),
-                            ),
-                          ],
-                        ),
-                        sh(23),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              color: Color(0xffb5e8e9),
-                              height: h * 1,
-                              width: b * 100,
-                            ),
-                            InkWell(
-                              onTap: null,
-                              child: Text(
-                                'Or login with',
-                                style: txtS(
-                                    Color(0xffb5e8e9), 14, FontWeight.w500),
-                              ),
-                            ),
-                            Container(
-                              color: Color(0xffb5e8e9),
-                              height: h * 1,
-                              width: b * 100,
-                            ),
-                          ],
-                        ),
-                        sh(23),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                print("Google Sign In");
-                                googleSignIn();
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.20),
-                                      blurRadius: 24,
-                                      spreadRadius: -7,
-                                      offset: Offset(0, 12),
-                                    ),
-                                  ],
-                                ),
-                                child: CircleAvatar(
-                                  child: Image.asset('images/google.png'),
-                                  radius: b * 24,
-                                  backgroundColor: Colors.white,
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context)
+                                      .push(SlideRightRoute(page: SignUp()));
+                                },
+                                child: Text(
+                                  'Sign-up',
+                                  style: txtS(
+                                      Color(0xffb5e8e9), 14, FontWeight.w700),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        sh(30),
-                      ],
+                            ],
+                          ),
+                          sh(23),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                color: Color(0xffb5e8e9),
+                                height: h * 1,
+                                width: b * 100,
+                              ),
+                              InkWell(
+                                onTap: null,
+                                child: Text(
+                                  'Or login with',
+                                  style: txtS(
+                                      Color(0xffb5e8e9), 14, FontWeight.w500),
+                                ),
+                              ),
+                              Container(
+                                color: Color(0xffb5e8e9),
+                                height: h * 1,
+                                width: b * 100,
+                              ),
+                            ],
+                          ),
+                          sh(23),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  print("Google Sign In");
+                                  googleSignIn();
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.20),
+                                        blurRadius: 24,
+                                        spreadRadius: -7,
+                                        offset: Offset(0, 12),
+                                      ),
+                                    ],
+                                  ),
+                                  child: CircleAvatar(
+                                    child: Image.asset('images/google.png'),
+                                    radius: b * 24,
+                                    backgroundColor: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          sh(30),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Transform(
-                  transform:
-                      Matrix4.translationValues(-b * 80, -h * (896 - 390), 0),
-                  child: Image.asset(
-                    'images/girl.png',
-                    height: h * 250,
+                  Transform(
+                    transform:
+                        Matrix4.translationValues(-b * 80, -h * (896 - 390), 0),
+                    child: Image.asset(
+                      'images/girl.png',
+                      height: h * 250,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -393,11 +414,13 @@ class _LoginState extends State<Login> {
 
           preferences.setString('currentUserUID', value.user.uid);
 
+
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) {
             return Home();
           }), (route) => false);
         });
+
       });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'account-exists-with-different-credential') {

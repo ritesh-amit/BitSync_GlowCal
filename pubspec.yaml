@@ -40,6 +40,7 @@ dependencies:
   titled_navigation_bar: ^4.1.0
   location: ^3.2.4
   flutter_svg: ^0.19.3
+  otp_text_field: ^1.1.0
 
 dev_dependencies:
   flutter_test:
