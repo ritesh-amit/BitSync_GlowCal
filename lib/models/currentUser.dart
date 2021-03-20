@@ -5,9 +5,16 @@ class CurrentUser {
   String uid;
   String token;
   String address;
+  String userType;
 
   CurrentUser(
-      {this.name, this.email, this.phone, this.uid, this.token, this.address});
+      {this.name,
+      this.email,
+      this.phone,
+      this.uid,
+      this.token,
+      this.address,
+      this.userType});
 
   Map toMap() {
     var map = Map<String, dynamic>();
@@ -17,6 +24,7 @@ class CurrentUser {
     map['uid'] = this.uid;
     map['token'] = this.token;
     map['address'] = this.address;
+    map['userType'] = this.userType;
     return map;
   }
 
@@ -28,6 +36,7 @@ class CurrentUser {
     _currentUser.uid = map['uid'];
     _currentUser.token = map['token'];
     _currentUser.address = map['address'];
+    _currentUser.userType = map['userType'];
     return _currentUser;
   }
 }

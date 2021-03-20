@@ -2,9 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:gur/main.dart';
+import 'package:gur/newAuthScreens/choice.dart';
 import 'package:gur/newAuthScreens/forgotPass.dart';
 import 'package:gur/models/currentUser.dart';
 import 'package:gur/newAuthScreens/signup.dart';
+import 'package:gur/slidePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Utils/SizeConfig.dart';
 import '../Utils/constants.dart';
@@ -142,7 +146,9 @@ class _LoginState extends State<Login> {
                       sh(25),
                       Container(
                         child: MaterialButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            login();
+                          },
                           color: mc,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(b * 10),
@@ -161,6 +167,7 @@ class _LoginState extends State<Login> {
                                     allowDrawingOutsideViewBox: true,
                                     width: h * 20,
                                     height: b * 20,
+                                    color: Colors.white,
                                   ),
                                 ),
                                 Text(
@@ -181,11 +188,10 @@ class _LoginState extends State<Login> {
                           ),
                           InkWell(
                             onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: (context) {
-                                  return SignUp();
-                                }),
-                              );
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (context) {
+                                return Choice();
+                              }));
                             },
                             child: Text(
                               'Sign-up',
@@ -232,5 +238,141 @@ class _LoginState extends State<Login> {
 
   SizedBox sh(double h) {
     return SizedBox(height: SizeConfig.screenHeight * h / 896);
+  }
+
+  void login() async {
+    String email = emailController.text;
+    String pwd = pwdController.text;
+    preferences = await SharedPreferences.getInstance();
+
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: pwd)
+          .then((credential) {
+        Toast.show("Login Succesfull", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+        preferences.setBool('isLoggedIn', true);
+        getUserDataFromDb(credential.user.uid);
+        preferences.setString('currentUserUID', credential.user.uid);
+
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) {
+          return Home();
+        }), (route) => false);
+      });
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        Toast.show("User not found", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      } else if (e.code == 'account-exists-with-different-credential') {
+        String email = e.email;
+
+        List<String> userSignInMethods =
+            await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+
+        print(userSignInMethods);
+      } else if (e.code == 'wrong-password') {
+        Toast.show("Wrong Password", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      } else {
+        Toast.show("Failure, Kindly login after sometime", context,
+            duration: Toast.LENGTH_LONG);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void googleSignIn() async {
+    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+    final GoogleAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+
+    preferences = await SharedPreferences.getInstance();
+
+    try {
+      bool newUser = false;
+
+      await FirebaseAuth.instance
+          .fetchSignInMethodsForEmail(googleUser.email)
+          .then((signMethodList) {
+        if (signMethodList.isEmpty)
+          newUser = true;
+        else
+          newUser = false;
+      }).then((x) async {
+        await FirebaseAuth.instance
+            .signInWithCredential(credential)
+            .then((value) async {
+          if (value.user != null) {
+            if (newUser)
+              setUserDataToDb(googleUser, value.user.uid);
+            else
+              getUserDataFromDb(value.user.uid);
+          }
+
+          Toast.show("Login Succesfull", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          preferences.setBool('isLoggedIn', true);
+
+          preferences.setString('currentUserUID', value.user.uid);
+
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) {
+            return Home();
+          }), (route) => false);
+        });
+      });
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'account-exists-with-different-credential') {
+        String email = e.email;
+
+        List<String> userSignInMethods =
+            await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+
+        Toast.show("Login Successfull", context,
+            duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+        preferences.setBool('isLoggedIn', true);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return Home();
+        }));
+
+        print(userSignInMethods);
+      } else {
+        print(e.message);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void getUserDataFromDb(String userUid) {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    firestore.collection('users').doc(userUid).snapshots().listen((snapshot) {
+      preferences.setString('currentUserName', snapshot.data()['name']);
+      preferences.setString('currentUserEmail', snapshot.data()['email']);
+      preferences.setString('currentUserType', snapshot.data()['userType']);
+
+      if (snapshot.data()['phone'] != null) {
+        preferences.setString('currentUserPhone', snapshot.data()['phone']);
+      }
+      preferences.setString('currentUserPhone', snapshot.data()['phone']);
+      if (snapshot.data()['address'] != null) {
+        preferences.setString('currentUserAddress', snapshot.data()['address']);
+      }
+    });
+  }
+
+  setUserDataToDb(googleUser, userId) {
+    CurrentUser currentUser = CurrentUser(
+        name: googleUser.displayName, email: googleUser.email, uid: userId);
+    var map = currentUser.toMap();
+    FirebaseFirestore.instance.collection('users').doc(userId).set(map);
+
+    preferences.setString('currentUserName', googleUser.displayName);
+    preferences.setString('currentUserEmail', googleUser.email);
   }
 }

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gur/models/currentUser.dart';
+import 'package:gur/newAuthScreens/otp.dart';
 import 'login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Utils/SizeConfig.dart';
@@ -11,13 +12,16 @@ import 'package:toast/toast.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SignUp extends StatefulWidget {
+  final String userType;
+  SignUp(this.userType);
   _SignUpState createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignUp> {
+  String uType = 'ind';
   bool isVisible = false;
   bool isVisible2 = false;
-  bool isIndividual = false;
+  bool isIndividual = true;
   bool isOrg = false;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -59,85 +63,100 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                       sh(20),
-                      Text(
-                        'Donor Type',
-                        style: TextStyle(
-                          letterSpacing: 1,
-                          color: textColor,
-                          fontWeight: FontWeight.w700,
-                          fontSize: b * 18,
-                        ),
-                      ),
+                      widget.userType == '0'
+                          ? Text(
+                              'NGO',
+                              style: TextStyle(
+                                letterSpacing: 1,
+                                color: textColor,
+                                fontWeight: FontWeight.w700,
+                                fontSize: b * 18,
+                              ),
+                            )
+                          : Text(
+                              'Donor Type',
+                              style: TextStyle(
+                                letterSpacing: 1,
+                                color: textColor,
+                                fontWeight: FontWeight.w700,
+                                fontSize: b * 18,
+                              ),
+                            ),
                       sh(25),
-                      Row(
-                        children: [
-                          Row(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    isIndividual = !isIndividual;
-                                    isOrg = !isIndividual;
-                                  });
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.all(2.5),
-                                  height: h * 22,
-                                  width: b * 22,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border:
-                                        Border.all(color: mc, width: b * 1.5),
-                                  ),
-                                  child: CircleAvatar(
-                                      radius: b * 7,
-                                      backgroundColor: isIndividual == false
-                                          ? mc
-                                          : Colors.white),
+                      widget.userType == '0'
+                          ? SizedBox()
+                          : Row(
+                              children: [
+                                Row(
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          isIndividual = true;
+                                          isOrg = false;
+                                        });
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(2.5),
+                                        height: h * 22,
+                                        width: b * 22,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              color: mc, width: b * 1.5),
+                                        ),
+                                        child: CircleAvatar(
+                                            radius: b * 7,
+                                            backgroundColor: isIndividual
+                                                ? mc
+                                                : Colors.white),
+                                      ),
+                                    ),
+                                    SizedBox(width: b * 10),
+                                    Text(
+                                      'Individual',
+                                      style:
+                                          txtS(textColor, 16, FontWeight.w600),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              SizedBox(width: b * 10),
-                              Text(
-                                'Individual',
-                                style: txtS(textColor, 16, FontWeight.w600),
-                              ),
-                            ],
-                          ),
-                          SizedBox(width: b * 30),
-                          Row(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    isOrg = !isOrg;
-                                    isIndividual = !isOrg;
-                                  });
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.all(2.5),
-                                  height: h * 22,
-                                  width: b * 22,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border:
-                                        Border.all(color: mc, width: b * 1.5),
-                                  ),
-                                  child: CircleAvatar(
-                                    radius: b * 7,
-                                    backgroundColor:
-                                        isOrg == false ? mc : Colors.white,
-                                  ),
+                                SizedBox(width: b * 30),
+                                Row(
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          isOrg = true;
+                                          isIndividual = false;
+                                          uType = 'org';
+                                        });
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(2.5),
+                                        height: h * 22,
+                                        width: b * 22,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              color: mc, width: b * 1.5),
+                                        ),
+                                        child: CircleAvatar(
+                                          radius: b * 7,
+                                          backgroundColor:
+                                              isOrg ? mc : Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: b * 10),
+                                    Text(
+                                      'Organization',
+                                      style:
+                                          txtS(textColor, 16, FontWeight.w600),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              SizedBox(width: b * 10),
-                              Text(
-                                'Organization',
-                                style: txtS(textColor, 16, FontWeight.w600),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                              ],
+                            ),
                       sh(35),
                       Container(
                         height: h * 65,
@@ -150,7 +169,7 @@ class _SignUpState extends State<SignUp> {
                           controller: nameController,
                           style: txtS(tc, 16, FontWeight.w500),
                           decoration:
-                              dec(isOrg ? 'Name' : 'Name of Organization'),
+                              dec(isOrg ? 'Name of Organization' : 'Name'),
                         ),
                       ),
                       sh(13),
@@ -290,7 +309,7 @@ class _SignUpState extends State<SignUp> {
                           },
                           controller: phoneController,
                           keyboardType: TextInputType.phone,
-                          style: txtS(Color(0xffbde5e6), 16, FontWeight.w500),
+                          style: txtS(tc, 16, FontWeight.w500),
                           decoration: dec('Mobile Number'),
                         ),
                       ),
@@ -298,9 +317,7 @@ class _SignUpState extends State<SignUp> {
                       Container(
                         child: MaterialButton(
                           onPressed: () {
-                            print('Add Session');
-                            if (pwdController.text !=
-                                confirmPwdController.text) {}
+                            if (fieldValidation()) signUpEmail();
                           },
                           color: mc,
                           shape: RoundedRectangleBorder(
@@ -320,6 +337,7 @@ class _SignUpState extends State<SignUp> {
                                     allowDrawingOutsideViewBox: true,
                                     width: h * 20,
                                     height: b * 20,
+                                    color: Colors.white,
                                   ),
                                 ),
                                 Text(
@@ -340,11 +358,10 @@ class _SignUpState extends State<SignUp> {
                           ),
                           InkWell(
                             onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: (context) {
-                                  return Login();
-                                }),
-                              );
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(builder: (context) {
+                                return Login();
+                              }), (route) => false);
                             },
                             child: Text(
                               'Login',
@@ -402,7 +419,47 @@ class _SignUpState extends State<SignUp> {
     return SizedBox(height: SizeConfig.screenHeight * h / 896);
   }
 
-  /*void signUpEmail() async {
+  bool fieldValidation() {
+    if (pwdController.text != confirmPwdController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Password Mismatch"),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ));
+      return false;
+    } else if (nameController.text == "") {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Name can't be empty"),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ));
+      return false;
+    } else if (emailController.text == "") {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Invalid Email"),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ));
+      return false;
+    } else if (pwdController.text == '') {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Password can't be empty"),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ));
+      return false;
+    } else if (phoneController.text.length != 10) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Invalid Phone no."),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ));
+      return false;
+    } else
+      return true;
+  }
+
+  void signUpEmail() async {
     String userName = nameController.text;
     String email = emailController.text;
     String pwd = pwdController.text;
@@ -414,35 +471,39 @@ class _SignUpState extends State<SignUp> {
     print(
         'User Name: $userName \nEmail: $email \nPassword: $pwd \nPhone: $phone');
 
-    try {
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: pwd)
-          .then((value) {
-        uid = value.user.uid;
-        userToken = 'NA';
-      });
+    bool newUser;
+    await FirebaseAuth.instance
+        .fetchSignInMethodsForEmail(email)
+        .then((authList) {
+      if (authList.isEmpty) {
+        print("New User");
+        newUser = true;
+      } else {
+        print("Already Registered");
+        newUser = false;
+      }
+    });
 
-      preferences.setBool('isLoggedIn', true);
-      Toast.show('Welcome $userName', context,
-          duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-      addUsertoDB(userName, email, pwd, phone);
+    String type;
+    if (widget.userType == '0')
+      type = 'ngo';
+    else
+      type = uType;
+
+    if (!newUser) {
+      Toast.show("Already Registered", context, duration: Toast.LENGTH_LONG);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) {
+        return Login();
+      }), (route) => false);
+    } else {
+      CurrentUser currentUser = CurrentUser(
+          name: userName, email: email, phone: phone, userType: type);
 
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return OtpPage(phone);
+        return Otp(phone, currentUser, pwd, widget.userType);
       }));
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'email-already-in-use') {
-        Toast.show('The account already exists for that email', context,
-            duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-      } else {
-        print(e);
-      }
-    } catch (e) {
-      print(e);
     }
-
-    preferences.setString('currentUserName', userName);
-    preferences.setString('currentUserEmail', email);
   }
 
   void addUsertoDB(String userName, String email, String pwd, String phone) {
@@ -464,5 +525,5 @@ class _SignUpState extends State<SignUp> {
     } catch (e) {
       print(e);
     }
-  }*/
+  }
 }

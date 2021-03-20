@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:gur/screens/authScreens/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Utils/SizeConfig.dart';
 import 'Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'newAuthScreens/login.dart';
 
 class DrawerCode extends StatefulWidget {
   final String userName;
@@ -173,6 +173,7 @@ class _DrawerCodeState extends State<DrawerCode> {
         preferences.remove('currentUserName');
         preferences.remove('currentUserPhone');
         preferences.remove('currentUserEmail');
+        preferences.remove('currentUserAddress');
         print("Signed Out");
         Navigator.of(context).pop();
         Navigator.of(context).pushAndRemoveUntil(
