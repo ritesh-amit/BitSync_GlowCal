@@ -65,7 +65,7 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
 
-    //loadData();
+    loadData();
   }
 
   @override
@@ -735,6 +735,7 @@ class _ProfileState extends State<Profile> {
           .update({'address': adr}).then((value) {
         setState(() {
           preferences.setString('currentUserAddress', adr);
+          address = adr;
         });
       });
     } catch (e) {

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gur/main.dart';
+import 'package:gur/models/currentUser.dart';
 import 'package:gur/screens/authScreens/forgotPassword.dart';
 import 'package:gur/screens/authScreens/signUp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -143,7 +143,35 @@ class _LoginState extends State<Login> {
                                       Color(0xffb5e8e9), 14, FontWeight.w700),
                                 ),
                               ),
+
                             ],
+
+                            ),
+                          ],
+                        ),
+                        sh(25),
+                        MaterialButton(
+                          onPressed: () {
+                            print('Add Session');
+                            if (emailTextController.text == '')
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text("Email field can't be empty"),
+                                backgroundColor: Colors.red,
+                              ));
+                            else if (pwdEditingController.text == '')
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text("Password field can't be empty"),
+                                backgroundColor: Colors.red,
+                              ));
+                            else
+                              login();
+                          },
+                          color: mc,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(b * 35),
+
                           ),
                           sh(25),
                           MaterialButton(
@@ -360,24 +388,39 @@ class _LoginState extends State<Login> {
     preferences = await SharedPreferences.getInstance();
 
     try {
+      bool newUser = false;
+
       await FirebaseAuth.instance
-          .signInWithCredential(credential)
-          .then((value) {
-        if (value.user != null) {
-          getUserDataFromDb(value.user.uid);
+          .fetchSignInMethodsForEmail(googleUser.email)
+          .then((signMethodList) {
+        if (signMethodList.isEmpty)
+          newUser = true;
+        else
+          newUser = false;
+      }).then((x) async {
+        await FirebaseAuth.instance
+            .signInWithCredential(credential)
+            .then((value) async {
+          if (value.user != null) {
+            if (newUser)
+              setUserDataToDb(googleUser, value.user.uid);
+            else
+              getUserDataFromDb(value.user.uid);
+          }
 
           Toast.show("Login Succesfull", context,
               duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
           preferences.setBool('isLoggedIn', true);
-          getUserDataFromDb(value.user.uid);
+
           preferences.setString('currentUserUID', value.user.uid);
 
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) {
-              return Home();
-            }),
-          );
-        }
+
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) {
+            return Home();
+          }), (route) => false);
+        });
+
       });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'account-exists-with-different-credential') {
@@ -417,5 +460,15 @@ class _LoginState extends State<Login> {
         preferences.setString('currentUserAddress', snapshot.data()['address']);
       }
     });
+  }
+
+  setUserDataToDb(googleUser, userId) {
+    CurrentUser currentUser = CurrentUser(
+        name: googleUser.displayName, email: googleUser.email, uid: userId);
+    var map = currentUser.toMap();
+    FirebaseFirestore.instance.collection('users').doc(userId).set(map);
+
+    preferences.setString('currentUserName', googleUser.displayName);
+    preferences.setString('currentUserEmail', googleUser.email);
   }
 }

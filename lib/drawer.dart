@@ -24,23 +24,18 @@ class DrawerCode extends StatefulWidget {
 
 class _DrawerCodeState extends State<DrawerCode> {
   SharedPreferences preferences;
-  String userName = "User";
-  String userPhone = "12345xxxxx";
-  String address = "";
-  String email = "";
+  String userName = "Not Provided";
+  String userPhone = "Not Provided";
 
   loadData() async {
     preferences = await SharedPreferences.getInstance();
 
     setState(() {
-      userName = preferences.getString("currentUserName");
-      email = preferences.getString("currentUserEmail");
+      if (preferences.containsKey('currentUserName'))
+        userName = preferences.getString("currentUserName");
 
-      if (preferences.containsKey("currentUserPhone")) {
+      if (preferences.containsKey("currentUserPhone"))
         userPhone = preferences.getString("currentUserPhone");
-      } else {
-        userPhone = "Not Provided";
-      }
     });
   }
 
@@ -48,7 +43,7 @@ class _DrawerCodeState extends State<DrawerCode> {
   void initState() {
     super.initState();
 
-    //loadData();
+    loadData();
   }
 
   @override

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:gur/chatScreen.dart';
-import 'Utils/SizeConfig.dart';
-import 'Utils/constants.dart';
+import 'package:gur/screens/chatSection/chatScreen.dart';
+import '../../Utils/SizeConfig.dart';
+import '../../Utils/constants.dart';
 
 class MessageScreen extends StatelessWidget {
   @override

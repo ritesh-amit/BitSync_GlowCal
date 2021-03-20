@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gur/searchNgo.dart';
-import 'Utils/SizeConfig.dart';
+import '../Utils/SizeConfig.dart';
 
 class DialogBoxSearch extends StatefulWidget {
   _DialogBoxSearchState createState() => _DialogBoxSearchState();
