@@ -3,7 +3,6 @@ import 'package:gur/dialogboxes/dialogBoxSearch.dart';
 import 'package:gur/dialogboxes/dialogBoxDonate.dart';
 import 'package:gur/drawer.dart';
 import 'package:gur/screens/chatSection/messageScreen.dart';
-import 'package:gur/screens/authScreens/signUp.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';

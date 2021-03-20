@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:gur/newAuthScreens/signup.dart';
 import '../Utils/SizeConfig.dart';
 import '../Utils/constants.dart';
 
@@ -41,7 +42,13 @@ class _ChoiceState extends State<Choice> {
                 ),
                 child: MaterialButton(
                   splashColor: Colors.orange[800],
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return SignUp('0');
+                    }));
+                  },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(b * 10),
                   ),
@@ -61,7 +68,13 @@ class _ChoiceState extends State<Choice> {
                   border: Border.all(color: mc, width: b * 1),
                 ),
                 child: MaterialButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return SignUp('1');
+                    }));
+                  },
                   splashColor: Colors.orange[800],
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(b * 10),
