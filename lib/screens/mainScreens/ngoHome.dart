@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gur/drawer.dart';
 
 class NgoHome extends StatefulWidget {
   _NgoHomeState createState() => _NgoHomeState();
 }
 
 class _NgoHomeState extends State<NgoHome> {
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  TextEditingController aboutController = TextEditingController();
+  bool isAbout = false;
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -15,6 +21,8 @@ class _NgoHomeState extends State<NgoHome> {
     var b = SizeConfig.screenWidth / 412;
 
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: DrawerCode(),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(children: [
@@ -37,18 +45,17 @@ class _NgoHomeState extends State<NgoHome> {
                 Builder(
                   builder: (BuildContext context) {
                     return InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        _scaffoldKey.currentState.openDrawer();
+                      },
                       child: Container(
                         height: h * 30,
                         width: b * 30,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: mc, width: b * 1.5),
-                          borderRadius: BorderRadius.circular(b * 12),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.only(left: b * 5),
-                          child: Icon(Icons.arrow_back_ios,
-                              color: mc, size: b * 16),
+                        child: SvgPicture.asset(
+                          'images/Chart.svg',
+                          allowDrawingOutsideViewBox: true,
+                          width: h * 20,
+                          height: b * 20,
                         ),
                       ),
                     );
@@ -56,22 +63,29 @@ class _NgoHomeState extends State<NgoHome> {
                 ),
                 Spacer(),
                 Text(
-                  'NGO Name',
+                  'Home',
                   style: txtS(mc, 20, FontWeight.w600),
                 ),
                 Spacer(),
                 InkWell(
-                  onTap: () {
-                    print('Amit');
-                  },
-                  child: Icon(MdiIcons.send, color: mc),
+                  onTap: () {},
+                  child: Container(
+                    height: h * 30,
+                    width: b * 30,
+                    child: SvgPicture.asset(
+                      'images/SendColor.svg',
+                      allowDrawingOutsideViewBox: true,
+                      width: h * 20,
+                      height: b * 20,
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
           Expanded(
             child: ListView(physics: BouncingScrollPhysics(), children: [
-              sh(30),
+              sh(20),
               Row(children: [
                 Stack(
                   alignment: Alignment.bottomRight,
@@ -103,7 +117,7 @@ class _NgoHomeState extends State<NgoHome> {
                           width: b * 26,
                           height: h * 26,
                           decoration: BoxDecoration(
-                            color: gc,
+                            color: mc,
                             borderRadius: BorderRadius.circular(b * 6),
                           ),
                           child: Icon(MdiIcons.imageEdit,
@@ -117,21 +131,13 @@ class _NgoHomeState extends State<NgoHome> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: b * 144,
-                          child: Text(
-                            'Raam Puri Ram Puri',
-                            overflow: TextOverflow.ellipsis,
-                            style: txtS(textColor, 20, FontWeight.w600),
-                          ),
-                        ),
-                        InkWell(
-                          child: Icon(MdiIcons.squareEditOutline,
-                              color: rc, size: b * 20),
-                        ),
-                      ],
+                    Container(
+                      width: b * 180,
+                      child: Text(
+                        'Raam Puri Ram Puri',
+                        overflow: TextOverflow.ellipsis,
+                        style: txtS(textColor, 20, FontWeight.w600),
+                      ),
                     ),
                     sh(20),
                     Row(
@@ -142,17 +148,9 @@ class _NgoHomeState extends State<NgoHome> {
                           height: h * 26,
                           decoration: BoxDecoration(
                             color: mc,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0xffff9001),
-                                blurRadius: 24,
-                                spreadRadius: -9,
-                                offset: Offset(0, 8),
-                              ),
-                            ],
                             borderRadius: BorderRadius.circular(b * 6),
                           ),
-                          child: Icon(Icons.food_bank,
+                          child: Icon(Icons.restaurant,
                               color: Colors.white, size: b * 14),
                         ),
                         SizedBox(width: b * 10),
@@ -179,15 +177,7 @@ class _NgoHomeState extends State<NgoHome> {
                           width: b * 26,
                           height: h * 26,
                           decoration: BoxDecoration(
-                            color: gc,
-                            boxShadow: [
-                              BoxShadow(
-                                color: gc,
-                                blurRadius: 24,
-                                spreadRadius: -9,
-                                offset: Offset(0, 8),
-                              ),
-                            ],
+                            color: Color(0xff28797c),
                             borderRadius: BorderRadius.circular(b * 6),
                           ),
                           child: Icon(Icons.verified,
@@ -208,18 +198,10 @@ class _NgoHomeState extends State<NgoHome> {
                 children: [
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: b * 20),
-                    height: h * 125,
+                    height: h * 147,
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.25),
-                          blurRadius: 24,
-                          spreadRadius: -7,
-                          offset: Offset(0, 6),
-                        ),
-                      ],
-                      borderRadius: BorderRadius.circular(b * 12),
+                      color: gc,
+                      borderRadius: BorderRadius.circular(b * 6),
                     ),
                   ),
                   Positioned(
@@ -232,7 +214,7 @@ class _NgoHomeState extends State<NgoHome> {
                         width: b * 26,
                         height: h * 26,
                         decoration: BoxDecoration(
-                          color: gc,
+                          color: mc,
                           borderRadius: BorderRadius.circular(b * 6),
                         ),
                         child: Icon(MdiIcons.imageEdit,
@@ -256,17 +238,50 @@ class _NgoHomeState extends State<NgoHome> {
                         ),
                         Spacer(),
                         InkWell(
+                          onTap: () {
+                            print(isAbout);
+                            isAbout = !isAbout;
+                          },
                           child: Icon(MdiIcons.squareEditOutline,
                               color: rc, size: b * 20),
                         ),
                       ],
                     ),
                     sh(10),
-                    Text(
-                      'About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About ',
-                      style: txtS(Color(0xff828282), 14, FontWeight.w500),
+                    Container(
+                      width: b * 375,
+                      child: isAbout
+                          ? Text(
+                              'Contact',
+                              style: txtS(textColor, 20, FontWeight.w600),
+                            )
+                          : Container(
+                              width: b * 375,
+                              height: h * 105,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Color(0xffb9b9b9),
+                                  width: b * 1,
+                                ),
+                                borderRadius: BorderRadius.circular(b * 6),
+                              ),
+                              child: TextField(
+                                controller: aboutController,
+                                style: txtS(textColor, 16, FontWeight.w500),
+                                decoration: InputDecoration(
+                                  enabledBorder: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  hintText: 'Enter About',
+                                  hintStyle: txtS(
+                                      Color(0xff828282), 14, FontWeight.w500),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: b * 10, vertical: h * 5),
+                                ),
+                                maxLines: 6,
+                              ),
+                            ),
                     ),
-                    sh(30),
+                    sh(20),
                     Text(
                       'Contact',
                       style: txtS(textColor, 20, FontWeight.w600),
@@ -274,17 +289,20 @@ class _NgoHomeState extends State<NgoHome> {
                     sh(20),
                     Row(children: [
                       Container(
-                        width: b * 250,
+                        width: b * 210,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Row(
                               children: [
-                                Icon(
-                                  Icons.email_outlined,
-                                  color: rc,
-                                  size: b * 20,
+                                Container(
+                                  height: h * 22,
+                                  width: b * 22,
+                                  child: SvgPicture.asset(
+                                    'images/Message.svg',
+                                    allowDrawingOutsideViewBox: true,
+                                  ),
                                 ),
                                 SizedBox(width: b * 7),
                                 Text(
@@ -297,13 +315,14 @@ class _NgoHomeState extends State<NgoHome> {
                             Text(
                               'ritesh.shuklalmp2018@gmail.com',
                               overflow: TextOverflow.ellipsis,
-                              style: txtS(textColor, 13, FontWeight.w600),
+                              style: txtS(textColor, 14, FontWeight.w600),
                             ),
                           ],
                         ),
                       ),
+                      Spacer(),
                       Container(
-                        width: b * 100,
+                        width: b * 150,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -311,10 +330,13 @@ class _NgoHomeState extends State<NgoHome> {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Icon(
-                                  Icons.phone_outlined,
-                                  color: rc,
-                                  size: b * 15 * 1.3,
+                                Container(
+                                  height: h * 22,
+                                  width: b * 22,
+                                  child: SvgPicture.asset(
+                                    'images/Call.svg',
+                                    allowDrawingOutsideViewBox: true,
+                                  ),
                                 ),
                                 SizedBox(width: b * 7),
                                 Text(
@@ -326,39 +348,78 @@ class _NgoHomeState extends State<NgoHome> {
                             sh(2),
                             Text(
                               '6387246025',
-                              style: txtS(textColor, 13, FontWeight.w600),
+                              style: txtS(textColor, 16, FontWeight.w600),
                             ),
                           ],
                         ),
                       ),
                     ]),
-                    sh(30),
-                    Container(
-                      width: b * 300,
-                      child: Column(
+                    sh(20),
+                    Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.location_on_outlined,
-                                color: rc,
-                              ),
-                              SizedBox(width: b * 7),
-                              Text(
-                                'Address',
-                                style: txtS(rc, 14, FontWeight.w500),
-                              ),
-                            ],
+                          Container(
+                            width: b * 210,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      height: h * 22,
+                                      width: b * 22,
+                                      child: SvgPicture.asset(
+                                        'images/Location.svg',
+                                        allowDrawingOutsideViewBox: true,
+                                      ),
+                                    ),
+                                    SizedBox(width: b * 7),
+                                    Text(
+                                      'Address',
+                                      style: txtS(rc, 14, FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                                sh(2),
+                                Text(
+                                  'adresss Address Adress Adress adress adresss',
+                                  style: txtS(textColor, 14, FontWeight.w600),
+                                ),
+                              ],
+                            ),
                           ),
-                          sh(3),
-                          Text(
-                            'Shastri Nagar, ghoshiyana road, near chitra medical center, lakhimpur kheri',
-                            style: txtS(textColor, 13, FontWeight.w600),
+                          Spacer(),
+                          Container(
+                            width: b * 150,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      height: h * 22,
+                                      width: b * 22,
+                                      child: SvgPicture.asset(
+                                        'images/Calendar.svg',
+                                        allowDrawingOutsideViewBox: true,
+                                      ),
+                                    ),
+                                    SizedBox(width: b * 2),
+                                    Text(
+                                      'Date of Registration',
+                                      style: txtS(rc, 14, FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                                sh(2),
+                                Text(
+                                  '21-11-2020',
+                                  style: txtS(textColor, 16, FontWeight.w600),
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
+                        ]),
                   ],
                 ),
               ),
