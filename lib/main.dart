@@ -78,7 +78,7 @@ class _HomeState extends State<Home> {
     HomePage(),
     AboutNgo(),
     AboutNgo(),
-    Profile()
+    ProfileOrg()
   ];
 
   @override

@@ -94,6 +94,7 @@ class _SignUpState extends State<SignUp> {
                                         setState(() {
                                           isIndividual = true;
                                           isOrg = false;
+                                          uType = 'ind';
                                         });
                                       },
                                       child: Container(
@@ -501,7 +502,7 @@ class _SignUpState extends State<SignUp> {
           name: userName, email: email, phone: phone, userType: type);
 
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return Otp(phone, currentUser, pwd, widget.userType);
+        return Otp(phone, currentUser, pwd);
       }));
     }
   }

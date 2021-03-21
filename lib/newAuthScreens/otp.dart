@@ -16,8 +16,7 @@ class Otp extends StatefulWidget {
   final String phoneNo;
   final CurrentUser currentUser;
   final String pwd;
-  final String userType;
-  Otp(this.phoneNo, this.currentUser, this.pwd, this.userType);
+  Otp(this.phoneNo, this.currentUser, this.pwd);
   _OtpState createState() => _OtpState();
 }
 
@@ -220,7 +219,7 @@ class _OtpState extends State<Otp> {
         email: email,
         phone: phone,
         uid: uid,
-        userType: widget.userType);
+        userType: widget.currentUser.userType);
 
     Map<String, dynamic> map = currentUser.toMap();
 
@@ -236,6 +235,6 @@ class _OtpState extends State<Otp> {
     preferences.setString('currentUserEmail', email);
     preferences.setString('currentUserPhone', phone);
     preferences.setString('currentUserPhone', widget.phoneNo);
-    preferences.setString('currentUserType', widget.userType);
+    preferences.setString('currentUserType', widget.currentUser.userType);
   }
 }
