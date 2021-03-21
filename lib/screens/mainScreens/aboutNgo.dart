@@ -42,14 +42,9 @@ class _AboutNgoState extends State<AboutNgo> {
                         child: Container(
                           height: h * 30,
                           width: b * 30,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: mc, width: b * 1.5),
-                            borderRadius: BorderRadius.circular(b * 12),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: b * 5),
-                            child: Icon(Icons.arrow_back_ios,
-                                color: mc, size: b * 16),
+                          child: SvgPicture.asset(
+                            'images/Arrow1.svg',
+                            allowDrawingOutsideViewBox: true,
                           ),
                         ),
                       );
@@ -69,8 +64,6 @@ class _AboutNgoState extends State<AboutNgo> {
                       child: SvgPicture.asset(
                         'images/SendColor.svg',
                         allowDrawingOutsideViewBox: true,
-                        width: h * 20,
-                        height: b * 20,
                       ),
                     ),
                   ),
@@ -225,14 +218,16 @@ class _AboutNgoState extends State<AboutNgo> {
                           width: b * 250,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Row(
                                 children: [
-                                  Icon(
-                                    Icons.email_outlined,
-                                    color: rc,
-                                    size: b * 20,
+                                  Container(
+                                    height: h * 25,
+                                    width: b * 25,
+                                    child: SvgPicture.asset(
+                                      'images/Message.svg',
+                                      allowDrawingOutsideViewBox: true,
+                                    ),
                                   ),
                                   SizedBox(width: b * 7),
                                   Text(
@@ -254,15 +249,17 @@ class _AboutNgoState extends State<AboutNgo> {
                           width: b * 100,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Icon(
-                                    Icons.phone_outlined,
-                                    color: rc,
-                                    size: b * 15 * 1.3,
+                                  Container(
+                                    height: h * 25,
+                                    width: b * 25,
+                                    child: SvgPicture.asset(
+                                      'images/Call.svg',
+                                      allowDrawingOutsideViewBox: true,
+                                    ),
                                   ),
                                   SizedBox(width: b * 7),
                                   Text(
@@ -288,9 +285,13 @@ class _AboutNgoState extends State<AboutNgo> {
                           children: [
                             Row(
                               children: [
-                                Icon(
-                                  Icons.location_on_outlined,
-                                  color: rc,
+                                Container(
+                                  height: h * 25,
+                                  width: b * 25,
+                                  child: SvgPicture.asset(
+                                    'images/Location.svg',
+                                    allowDrawingOutsideViewBox: true,
+                                  ),
                                 ),
                                 SizedBox(width: b * 7),
                                 Text(
