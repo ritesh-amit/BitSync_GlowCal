@@ -48,7 +48,6 @@ class _NgoProfileState extends State<NgoProfile> {
   bool getImage3 = false;
   bool getImage4 = false;
   bool isLocation = false;
-  String email = "NA";
   String designation = "NA";
 
   loadData() async {
