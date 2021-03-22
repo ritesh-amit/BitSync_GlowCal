@@ -65,7 +65,8 @@ class _OtpState extends State<Otp> {
                       style: txtS(textColor, 18, FontWeight.w400),
                     ),
                     Text(
-                      ' e-mail@gmail.com and number ending with ***7654',
+                      ' your phone number ending with ******' +
+                          widget.phoneNo.substring(9),
                       textAlign: TextAlign.center,
                       style: txtS(textColor, 18, FontWeight.w600),
                     ),
@@ -231,6 +232,7 @@ class _OtpState extends State<Otp> {
       print(e);
     }
 
+    preferences.setString('currentUserUID', uid);
     preferences.setString('currentUserName', userName);
     preferences.setString('currentUserEmail', email);
     preferences.setString('currentUserPhone', phone);

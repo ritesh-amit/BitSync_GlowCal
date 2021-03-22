@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/dialogboxes/donateDoneDialog.dart';
 import 'package:gur/models/foodPacket.dart';
+import 'package:gur/nearbyNGO.dart';
 import 'package:location/location.dart' as loc;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
@@ -186,7 +187,14 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
                 InkWell(
                   onTap: () {
                     Navigator.pop(context);
-                    uploadDonationToDB();
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return NearbyNGO(
+                        userLat: latitude,
+                        userLong: longitude,
+                      );
+                    }));
+                    //uploadDonationToDB();
                   },
                   child: Container(
                     height: h * 48,

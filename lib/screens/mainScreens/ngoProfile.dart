@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/drawer.dart';
@@ -20,6 +21,10 @@ class _NgoProfileState extends State<NgoProfile> {
   TextEditingController oldPwdController = TextEditingController();
   TextEditingController newPwdController = TextEditingController();
   TextEditingController newConfirmPwdController = TextEditingController();
+  TextEditingController designationController = TextEditingController();
+  TextEditingController inChargeNameController = TextEditingController();
+  TextEditingController summaryController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
 
   bool isEmail = false;
   bool isPass = false;
@@ -32,11 +37,12 @@ class _NgoProfileState extends State<NgoProfile> {
   bool isAddress = false;
   bool isDes = false;
   bool isSumm = false;
-  String userName = "";
-  String userPhone = "";
-  String address = "";
+  String userName = "NA";
+  String userPhone = "NA";
+  String address = "NA";
   bool suraj = false;
-  String email = "";
+  String email = "NA";
+  String designation = "NA";
 
   loadData() async {
     preferences = await SharedPreferences.getInstance();
@@ -44,16 +50,14 @@ class _NgoProfileState extends State<NgoProfile> {
       userName = preferences.getString("currentUserName");
       email = preferences.getString("currentUserEmail");
 
-      if (preferences.containsKey("currentUserPhone")) {
+      if (preferences.containsKey("currentUserPhone"))
         userPhone = preferences.getString("currentUserPhone");
-      } else {
-        userPhone = "Not Provided";
-      }
 
       if (preferences.containsKey('currentUserAddress'))
         address = preferences.getString('currentUserAddress');
-      else
-        address = "Not Provided";
+
+      if (preferences.containsKey('currentUserDesignation'))
+        designation = preferences.getString('currentUserDesignation');
     });
   }
 
@@ -166,7 +170,12 @@ class _NgoProfileState extends State<NgoProfile> {
                                   userName,
                                   style: txtS(textColor, 16, FontWeight.w500),
                                 ),
-                          isNgoName ? butt(null) : SizedBox(),
+                          isNgoName
+                              ? butt(
+                                  fn: userDetailChange(
+                                      'name', "NGO name can't be change"),
+                                  visibleBool: isName)
+                              : SizedBox(),
                         ],
                       ),
                       Spacer(),
@@ -363,6 +372,7 @@ class _NgoProfileState extends State<NgoProfile> {
                               ? Container(
                                   width: b * 270,
                                   child: TextField(
+                                    controller: phoneController,
                                     style: txtS(textColor, 15, FontWeight.w500),
                                     decoration: dec('Phone Number'),
                                   ),
@@ -371,7 +381,12 @@ class _NgoProfileState extends State<NgoProfile> {
                                   userPhone,
                                   style: txtS(textColor, 16, FontWeight.w500),
                                 ),
-                          isPhone ? butt(null) : SizedBox(),
+                          isPhone
+                              ? butt(
+                                  fn: userDetailChange(
+                                      'phone', phoneController.text.trim()),
+                                  visibleBool: isPhone)
+                              : SizedBox(),
                         ],
                       ),
                       Spacer(),
@@ -416,6 +431,7 @@ class _NgoProfileState extends State<NgoProfile> {
                               ? Container(
                                   width: b * 270,
                                   child: TextField(
+                                    controller: inChargeNameController,
                                     style: txtS(textColor, 15, FontWeight.w500),
                                     decoration: dec('Name of In-Charge'),
                                   ),
@@ -424,7 +440,12 @@ class _NgoProfileState extends State<NgoProfile> {
                                   userName,
                                   style: txtS(textColor, 16, FontWeight.w500),
                                 ),
-                          isName ? butt(null) : SizedBox(),
+                          isName
+                              ? butt(
+                                  fn: userDetailChange('inChargeName',
+                                      inChargeNameController.text.trim()),
+                                  visibleBool: isName)
+                              : SizedBox(),
                         ],
                       ),
                       Spacer(),
@@ -470,14 +491,21 @@ class _NgoProfileState extends State<NgoProfile> {
                                   width: b * 270,
                                   child: TextField(
                                     style: txtS(textColor, 15, FontWeight.w500),
-                                    decoration: dec('Your Name'),
+                                    controller: designationController,
+                                    decoration:
+                                        dec('Person-In-Charge Designation'),
                                   ),
                                 )
                               : Text(
-                                  "Chumtiya",
+                                  designation,
                                   style: txtS(textColor, 16, FontWeight.w500),
                                 ),
-                          isDes ? butt(null) : SizedBox(),
+                          isDes
+                              ? butt(
+                                  fn: userDetailChange('designation',
+                                      designationController.text.trim()),
+                                  visibleBool: isDes)
+                              : SizedBox(),
                         ],
                       ),
                       Spacer(),
@@ -559,8 +587,7 @@ class _NgoProfileState extends State<NgoProfile> {
                                   padding: EdgeInsets.only(left: b * 180),
                                   child: InkWell(
                                     onTap: () {
-                                      preferences.setString(
-                                          'currentUserAddress',
+                                      userDetailChange('address',
                                           addressController.text.trim());
                                       setState(() {
                                         isAddress = !isAddress;
@@ -645,7 +672,7 @@ class _NgoProfileState extends State<NgoProfile> {
                                   "Some random Summary",
                                   style: txtS(textColor, 16, FontWeight.w500),
                                 ),
-                          isSumm ? butt(null) : SizedBox(),
+                          isSumm ? butt() : SizedBox(),
                         ],
                       ),
                       Spacer(),
@@ -715,13 +742,18 @@ class _NgoProfileState extends State<NgoProfile> {
     );
   }
 
-  Padding butt(Function fn) {
+  Padding butt({Future<dynamic> fn, bool visibleBool}) {
     return Padding(
       padding: EdgeInsets.only(
           left: SizeConfig.screenWidth / 414 * 180,
           top: SizeConfig.screenHeight / 896 * 10),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          fn;
+          setState(() {
+            visibleBool = !visibleBool;
+          });
+        },
         child: Container(
           padding: EdgeInsets.symmetric(
             horizontal: SizeConfig.screenWidth / 414 * 17,
@@ -890,6 +922,23 @@ class _NgoProfileState extends State<NgoProfile> {
           isPass = !isPass;
         });
       });
+    });
+  }
+
+  userDetailChange(String field, data) async {
+    print(data);
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String uid = pref.getString('currentUserUID');
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .update({field: data});
+
+    setState(() {
+      if (field == 'address')
+        pref.setString('currentUserAddress', data);
+      else if (field == 'designation')
+        pref.setString('currentUserDesignation', data);
     });
   }
 }
