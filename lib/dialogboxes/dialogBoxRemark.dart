@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 import '../Utils/SizeConfig.dart';
 import '../Utils/constants.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 class DialogBoxRemark extends StatefulWidget {
   final String foodAmount;
@@ -300,20 +301,14 @@ SizedBox sh(double h) {
 }
 
 void dialogBoxRemark(BuildContext context, String foodWeightCode) {
-  showGeneralDialog(
-    barrierLabel: "Label",
-    barrierDismissible: true,
-    barrierColor: Colors.black.withOpacity(0.5),
-    transitionDuration: Duration(milliseconds: 350),
+  showAnimatedDialog(
     context: context,
-    pageBuilder: (context, anim1, anim2) {
+    barrierDismissible: true,
+    builder: (BuildContext context) {
       return DialogBoxRemark(foodWeightCode);
     },
-    transitionBuilder: (context, anim1, anim2, child) {
-      return SlideTransition(
-        position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
-        child: child,
-      );
-    },
+    animationType: DialogTransitionType.slideFromBottomFade,
+    curve: Curves.fastOutSlowIn,
+    duration: Duration(milliseconds: 250),
   );
 }

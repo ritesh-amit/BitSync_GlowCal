@@ -41,6 +41,13 @@ class _NgoProfileState extends State<NgoProfile> {
   String userPhone = "NA";
   String address = "NA";
   bool suraj = false;
+
+  String email = "";
+  bool getImage1 = false;
+  bool getImage2 = false;
+  bool getImage3 = false;
+  bool getImage4 = false;
+  bool isLocation = false;
   String email = "NA";
   String designation = "NA";
 
@@ -692,7 +699,52 @@ class _NgoProfileState extends State<NgoProfile> {
                     ],
                   ),
                 ),
-                sh(9),
+                sh(10),
+                Text(
+                  "NGO Pics",
+                  style: txtS(rc, 16, FontWeight.w700),
+                ),
+                sh(5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    getImageCont(false, null),
+                    getImageCont(true, null),
+                    getImageCont(false, null),
+                    getImageCont(true, null),
+                  ],
+                ),
+                sh(20),
+                Row(
+                  children: [
+                    Text(
+                      "Record NGO\'s Geolocation",
+                      style: txtS(textColor, 16, FontWeight.w700),
+                    ),
+                    Spacer(),
+                    MaterialButton(
+                      height: h * 30,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(b * 6),
+                      ),
+                      color: !isLocation ? mc : Color(0xff28797c),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      onPressed: () {
+                        setState(() {
+                          isLocation = !isLocation;
+                        });
+                      },
+                      child: Container(
+                        color: !isLocation ? mc : Color(0xff28797c),
+                        child: Text(
+                          !isLocation ? "Get location" : "Done",
+                          style: txtS(Colors.white, 10, FontWeight.w500),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                sh(25),
                 Container(
                   decoration: bord(),
                   height: h * 63,
@@ -721,6 +773,37 @@ class _NgoProfileState extends State<NgoProfile> {
           ),
         ]),
       ),
+    );
+  }
+
+  InkWell getImageCont(bool isImage, Function getImage) {
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
+
+    return InkWell(
+      splashColor: mc,
+      onTap: () {
+        //function
+      },
+      child: isImage
+          ? Container(
+              height: h * 80,
+              width: b * 80,
+              decoration: BoxDecoration(
+                border: Border.all(color: rc),
+                borderRadius: BorderRadius.circular(b * 5),
+              ),
+              child: Image.asset('images/ill2.png'),
+            )
+          : Container(
+              height: h * 80,
+              width: b * 80,
+              decoration: BoxDecoration(
+                border: Border.all(color: rc),
+                borderRadius: BorderRadius.circular(b * 5),
+              ),
+              child: Icon(Icons.add, color: rc),
+            ),
     );
   }
 

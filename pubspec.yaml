@@ -42,6 +42,7 @@ dependencies:
   pinput: ^1.0.0
   shared_preferences: ^2.0.5
   titled_navigation_bar: ^4.1.0
+  flutter_animated_dialog: ^2.0.0
   toast: ^0.1.5
 
 dev_dependencies:
