@@ -41,6 +41,7 @@ class _NgoProfileState extends State<NgoProfile> {
   String userPhone = "NA";
   String address = "NA";
   bool suraj = false;
+  String designation = "NA";
 
   String email = "";
   bool getImage1 = false;
@@ -48,8 +49,6 @@ class _NgoProfileState extends State<NgoProfile> {
   bool getImage3 = false;
   bool getImage4 = false;
   bool isLocation = false;
-  String email = "NA";
-  String designation = "NA";
 
   loadData() async {
     preferences = await SharedPreferences.getInstance();
