@@ -23,32 +23,34 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cloud_firestore: any
+  bubble: ^1.1.9+1
+  carousel_slider: ^3.0.0
+  cloud_firestore: ^1.0.1
   cupertino_icons: ^1.0.0
-  firebase_auth: ^0.20.1
-  firebase_core: ^0.7.0
+  firebase_auth: ^1.0.1
+  firebase_core: ^1.0.1
+  firebase_messaging: ^9.0.0
   flutter_email_sender: ^4.0.0
-  google_fonts: ^1.1.2
+  flutter_svg: ^0.21.0-nullsafety.0
+  geolocator: ^7.0.1
+  google_fonts: ^2.0.0
   google_sign_in: ^4.5.9
+  location: ">=1.0.0 <=4.0.0"
   material_design_icons_flutter: null
+  otp_text_field: ^1.1.0
   persistent_bottom_nav_bar: null
   pinput: ^1.0.0
-  shared_preferences: ^0.5.12+4
-  toast: ^0.1.5
-  carousel_slider: ^3.0.0
-  bubble: ^1.1.9+1
+  shared_preferences: ^2.0.5
   titled_navigation_bar: ^4.1.0
-  location: ^3.2.4
-  flutter_svg: ^0.19.3
-  otp_text_field: ^1.1.0
   flutter_animated_dialog: ^2.0.0
   url_launcher: ^6.0.2
+  toast:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_launcher_icons: ^0.8.1
+  flutter_launcher_icons: ^0.9.0
 
 flutter_icons:
   android: true
