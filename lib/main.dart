@@ -63,9 +63,8 @@ class Home extends StatefulWidget {
   }
 }
 
-int _selectedIndex = 0;
-
 class _HomeState extends State<Home> {
+  int _selectedIndex = 0;
   SharedPreferences preferences;
   Widget profileSel;
   String type = "";
@@ -81,7 +80,14 @@ class _HomeState extends State<Home> {
     HomePage(),
     AboutNgo(),
     AboutNgo(),
-    Profile()
+    ProfileOrg()
+  ];
+
+  List<Widget> _widgetOptionsNGO = <Widget>[
+    NgoHome(),
+    AboutNgo(),
+    AboutNgo(),
+    NgoProfile(),
   ];
 
   @override
@@ -137,9 +143,11 @@ class _HomeState extends State<Home> {
             });
           },
         ),
-        body: type == 'org'
-            ? _widgetOptionsOrg.elementAt(_selectedIndex)
-            : _widgetOptionsInd.elementAt(_selectedIndex),
+        body: type == 'ngo'
+            ? _widgetOptionsNGO.elementAt(_selectedIndex)
+            : type == 'ind'
+                ? _widgetOptionsInd.elementAt(_selectedIndex)
+                : _widgetOptionsOrg.elementAt(_selectedIndex),
       ),
     );
   }

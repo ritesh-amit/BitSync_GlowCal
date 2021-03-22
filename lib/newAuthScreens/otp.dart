@@ -16,8 +16,7 @@ class Otp extends StatefulWidget {
   final String phoneNo;
   final CurrentUser currentUser;
   final String pwd;
-  final String userType;
-  Otp(this.phoneNo, this.currentUser, this.pwd, this.userType);
+  Otp(this.phoneNo, this.currentUser, this.pwd);
   _OtpState createState() => _OtpState();
 }
 
@@ -66,7 +65,8 @@ class _OtpState extends State<Otp> {
                       style: txtS(textColor, 18, FontWeight.w400),
                     ),
                     Text(
-                      ' e-mail@gmail.com and number ending with ***7654',
+                      ' your phone number ending with ******' +
+                          widget.phoneNo.substring(9),
                       textAlign: TextAlign.center,
                       style: txtS(textColor, 18, FontWeight.w600),
                     ),
@@ -220,7 +220,7 @@ class _OtpState extends State<Otp> {
         email: email,
         phone: phone,
         uid: uid,
-        userType: widget.userType);
+        userType: widget.currentUser.userType);
 
     Map<String, dynamic> map = currentUser.toMap();
 
@@ -232,10 +232,11 @@ class _OtpState extends State<Otp> {
       print(e);
     }
 
+    preferences.setString('currentUserUID', uid);
     preferences.setString('currentUserName', userName);
     preferences.setString('currentUserEmail', email);
     preferences.setString('currentUserPhone', phone);
     preferences.setString('currentUserPhone', widget.phoneNo);
-    preferences.setString('currentUserType', widget.userType);
+    preferences.setString('currentUserType', widget.currentUser.userType);
   }
 }
