@@ -2,9 +2,18 @@ import 'package:flutter/material.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AboutNgo extends StatefulWidget {
   _AboutNgoState createState() => _AboutNgoState();
+}
+
+void launchUrl(String url) async {
+  if (await canLaunch(url)) {
+    launch(url);
+  } else {
+    throw "Could not launch $url";
+  }
 }
 
 class _AboutNgoState extends State<AboutNgo> {
@@ -72,12 +81,12 @@ class _AboutNgoState extends State<AboutNgo> {
             ),
             Expanded(
               child: ListView(physics: BouncingScrollPhysics(), children: [
-                sh(30),
+                sh(29),
                 Row(children: [
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: b * 20),
-                    width: b * 144,
-                    height: h * 177,
+                    width: b * 150,
+                    height: h * 175,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       boxShadow: [
@@ -88,7 +97,36 @@ class _AboutNgoState extends State<AboutNgo> {
                           offset: Offset(0, 6),
                         ),
                       ],
-                      borderRadius: BorderRadius.circular(b * 12),
+                      borderRadius: BorderRadius.circular(b * 6),
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: b * 140,
+                          height: h * 140,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage('images/ill1.png'),
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: BorderRadius.circular(b * 6),
+                          ),
+                        ),
+                        Container(
+                          child: Column(
+                            children: [
+                              Text(
+                                'Working Since',
+                                style: txtS(textColor, 12, FontWeight.w400),
+                              ),
+                              Text(
+                                '21/08/2020',
+                                style: txtS(textColor, 12, FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(width: b * 25),
@@ -97,12 +135,10 @@ class _AboutNgoState extends State<AboutNgo> {
                     children: [
                       Container(
                         width: b * 144,
-                        child: FittedBox(
-                          child: Text(
-                            'Raam Puri NGO ',
-                            overflow: TextOverflow.ellipsis,
-                            style: txtS(textColor, 20, FontWeight.w600),
-                          ),
+                        child: Text(
+                          'Raam Puri NGO ',
+                          overflow: TextOverflow.ellipsis,
+                          style: txtS(textColor, 20, FontWeight.w600),
                         ),
                       ),
                       sh(20),
@@ -110,21 +146,13 @@ class _AboutNgoState extends State<AboutNgo> {
                         children: [
                           Container(
                             alignment: Alignment.center,
-                            width: b * 26,
-                            height: h * 26,
+                            width: b * 28,
+                            height: h * 28,
                             decoration: BoxDecoration(
                               color: mc,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xffff9001),
-                                  blurRadius: 24,
-                                  spreadRadius: -9,
-                                  offset: Offset(0, 8),
-                                ),
-                              ],
                               borderRadius: BorderRadius.circular(b * 6),
                             ),
-                            child: Icon(Icons.food_bank,
+                            child: Icon(Icons.restaurant,
                                 color: Colors.white, size: b * 14),
                           ),
                           SizedBox(width: b * 10),
@@ -151,15 +179,7 @@ class _AboutNgoState extends State<AboutNgo> {
                             width: b * 26,
                             height: h * 26,
                             decoration: BoxDecoration(
-                              color: gc,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: gc,
-                                  blurRadius: 24,
-                                  spreadRadius: -9,
-                                  offset: Offset(0, 8),
-                                ),
-                              ],
+                              color: Color(0xff28797c),
                               borderRadius: BorderRadius.circular(b * 6),
                             ),
                             child: Icon(Icons.verified,
@@ -189,7 +209,11 @@ class _AboutNgoState extends State<AboutNgo> {
                         offset: Offset(0, 6),
                       ),
                     ],
-                    borderRadius: BorderRadius.circular(b * 12),
+                    image: DecorationImage(
+                      image: AssetImage('images/ill1.png'),
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.circular(b * 6),
                   ),
                 ),
                 sh(25),
@@ -205,6 +229,8 @@ class _AboutNgoState extends State<AboutNgo> {
                       sh(10),
                       Text(
                         'About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About ',
+                        maxLines: 5,
+                        overflow: TextOverflow.ellipsis,
                         style: txtS(Color(0xff828282), 14, FontWeight.w500),
                       ),
                       sh(30),
@@ -214,66 +240,77 @@ class _AboutNgoState extends State<AboutNgo> {
                       ),
                       sh(20),
                       Row(children: [
-                        Container(
-                          width: b * 250,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    height: h * 25,
-                                    width: b * 25,
-                                    child: SvgPicture.asset(
-                                      'images/Message.svg',
-                                      allowDrawingOutsideViewBox: true,
+                        InkWell(
+                          onTap: () {
+                            launchUrl(
+                                "mailto:ritesh.shuklalmp2018.com?subject=Regarding Ngo Information&body=Can I get information regarding your employees");
+                          },
+                          child: Container(
+                            width: b * 250,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      height: h * 25,
+                                      width: b * 25,
+                                      child: SvgPicture.asset(
+                                        'images/Message.svg',
+                                        allowDrawingOutsideViewBox: true,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(width: b * 7),
-                                  Text(
-                                    'Email',
-                                    style: txtS(rc, 14, FontWeight.w500),
-                                  ),
-                                ],
-                              ),
-                              sh(2),
-                              Text(
-                                'ritesh.shuklalmp2018@gmail.com',
-                                overflow: TextOverflow.ellipsis,
-                                style: txtS(textColor, 13, FontWeight.w600),
-                              ),
-                            ],
+                                    SizedBox(width: b * 7),
+                                    Text(
+                                      'Email',
+                                      style: txtS(rc, 14, FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                                sh(2),
+                                Text(
+                                  'ritesh.shuklalmp2018@gmail.com',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: txtS(textColor, 13, FontWeight.w600),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        Container(
-                          width: b * 100,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    height: h * 25,
-                                    width: b * 25,
-                                    child: SvgPicture.asset(
-                                      'images/Call.svg',
-                                      allowDrawingOutsideViewBox: true,
+                        InkWell(
+                          onTap: () {
+                            launchUrl("tel:+916387246025");
+                          },
+                          child: Container(
+                            width: b * 100,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      height: h * 25,
+                                      width: b * 25,
+                                      child: SvgPicture.asset(
+                                        'images/Call.svg',
+                                        allowDrawingOutsideViewBox: true,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(width: b * 7),
-                                  Text(
-                                    'Phone',
-                                    style: txtS(rc, 14, FontWeight.w500),
-                                  ),
-                                ],
-                              ),
-                              sh(2),
-                              Text(
-                                '6387246025',
-                                style: txtS(textColor, 13, FontWeight.w600),
-                              ),
-                            ],
+                                    SizedBox(width: b * 7),
+                                    Text(
+                                      'Phone',
+                                      style: txtS(rc, 14, FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                                sh(2),
+                                Text(
+                                  '6387246025',
+                                  style: txtS(textColor, 13, FontWeight.w600),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ]),
