@@ -27,12 +27,12 @@ class DialogBoxDonateDone extends StatelessWidget {
                   height: h * 140,
                   width: b * 135,
                   decoration: BoxDecoration(
-                    color: gc,
+                    color: Color(0xff28797c),
                     boxShadow: [
                       BoxShadow(
-                        color: gc.withOpacity(0.5),
+                        color: Color(0xff28797c).withOpacity(0.5),
                         blurRadius: 10,
-                        spreadRadius: 7,
+                        spreadRadius: 5,
                         offset: Offset(0, 0),
                       ),
                     ],
@@ -48,7 +48,7 @@ class DialogBoxDonateDone extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: b * 36),
                   child: Text(
-                    'Thanks a lot for your Donate! Your Donate has been approved and we will send you an invoice soon',
+                    'Thanks a lot for your Donation! Your Donation has been made and we will send you an invoice soon',
                     textAlign: TextAlign.center,
                     style: txtS(textColor, 16, FontWeight.w600),
                   ),
@@ -59,7 +59,7 @@ class DialogBoxDonateDone extends StatelessWidget {
                   children: [
                     MaterialButton(
                       elevation: 5,
-                      color: gc,
+                      color: Color(0xff28797c),
                       padding: EdgeInsets.zero,
                       onPressed: () {
                         Navigator.pop(context);

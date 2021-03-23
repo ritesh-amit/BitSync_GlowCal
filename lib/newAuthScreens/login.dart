@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:gur/main.dart';
+import 'package:gur/homeMain.dart';
 import 'package:gur/newAuthScreens/choice.dart';
 import 'package:gur/newAuthScreens/forgotPass.dart';
 import 'package:gur/models/currentUser.dart';

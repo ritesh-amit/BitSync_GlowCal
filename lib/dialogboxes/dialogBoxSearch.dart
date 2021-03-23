@@ -2,29 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:gur/searchNgo.dart';
 import '../Utils/SizeConfig.dart';
 
-class DialogBoxSearch extends StatefulWidget {
-  _DialogBoxSearchState createState() => _DialogBoxSearchState();
-}
-
-class _DialogBoxSearchState extends State<DialogBoxSearch> {
-  ScrollController _scrollController = ScrollController();
-  void toNavigate(double qwer) {
-    _scrollController.animateTo(SizeConfig.screenHeight * qwer / 896,
-        curve: Curves.easeOut, duration: const Duration(microseconds: 100));
-  }
-
+class DialogBoxSearch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     var h = SizeConfig.screenHeight / 896;
     return Dialog(
       backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.only(top: h * 0, bottom: h * 200),
-      child: SingleChildScrollView(
-        padding: EdgeInsets.zero,
-        controller: _scrollController,
-        child: SearchScreen(),
-      ),
+      insetPadding: EdgeInsets.only(top: h * 10, bottom: h * 0),
+      child: SearchScreen(),
     );
   }
 }

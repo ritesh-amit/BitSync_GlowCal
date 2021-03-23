@@ -163,6 +163,10 @@ class _HomePageState extends State<HomePage> {
                               offset: Offset(0, 0),
                             ),
                           ],
+                          image: DecorationImage(
+                            image: AssetImage('images/ill2.png'),
+                            fit: BoxFit.cover,
+                          ),
                           borderRadius: BorderRadius.circular(b * 6),
                         ),
                       );
@@ -206,7 +210,8 @@ class _HomePageState extends State<HomePage> {
                             ),
                             Text(
                               midItems[index],
-                              style: txtS(gc, 10, FontWeight.w400),
+                              style:
+                                  txtS(Color(0xff28797c), 10, FontWeight.w400),
                             ),
                             Text(
                               summaryItems[index],
@@ -287,6 +292,10 @@ class _HomePageState extends State<HomePage> {
                               offset: Offset(0, 0),
                             ),
                           ],
+                          image: DecorationImage(
+                            image: AssetImage('images/ill1.png'),
+                            fit: BoxFit.cover,
+                          ),
                           borderRadius: BorderRadius.circular(b * 6),
                         ),
                       );
@@ -324,25 +333,264 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 sh(140),
+                /*collectionReq(),
+                sh(20),
+                acceptDetails(),
+                sh(20),
+                contactDetails(),*/
               ]),
             ),
           ]),
-          /*!isSearch
-              ? BackdropFilter(
-                  filter: ui.ImageFilter.blur(
-                    sigmaX: 5.0,
-                    sigmaY: 5.0,
-                  ),
-                  child: Container(
-                    height: h * 1000,
-                    width: b * 412,
-                    color: Colors.black.withOpacity(0.5),
-                    child: SearchScreen(),
-                  ),
-                )
-              : SizedBox(),*/
         ]),
       ),
+    );
+  }
+
+  Widget acceptDetails() {
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
+
+    return Container(
+      margin: EdgeInsets.only(right: b * 20, left: b * 20),
+      height: h * 335,
+      decoration: BoxDecoration(
+        color: Color(0xfff1f1f1),
+        borderRadius: BorderRadius.only(
+          bottomRight: Radius.circular(b * 30),
+          topLeft: Radius.circular(b * 30),
+          topRight: Radius.circular(b * 30),
+        ),
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Padding(
+          padding: EdgeInsets.fromLTRB(b * 25, h * 27, b * 60, h * 19),
+          child: Text(
+            'You Have accepted request from Person',
+            style: txtS(textColor, 20, FontWeight.w500),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(b * 25, h * 0, b * 0, h * 37),
+          child: Text(
+            'Share your Contact',
+            style: txtS(textColor, 14, FontWeight.w700),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(left: b * 25),
+          padding: EdgeInsets.symmetric(horizontal: b * 16),
+          height: h * 40,
+          width: 212 * b,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(b * 10),
+          ),
+          child: TextField(
+            // controller: titleController,
+            style: txtS(textColor, 15, FontWeight.w500),
+            decoration: dec('Name'),
+          ),
+        ),
+        sh(17),
+        Container(
+          margin: EdgeInsets.only(left: b * 25),
+          padding: EdgeInsets.symmetric(horizontal: b * 16),
+          height: h * 40,
+          width: 212 * b,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(b * 10),
+          ),
+          child: TextField(
+            keyboardType: TextInputType.number,
+            // controller: titleController,
+            style: txtS(textColor, 15, FontWeight.w500),
+            decoration: dec('Phone Number'),
+          ),
+        ),
+        sh(28),
+        InkWell(
+          child: Container(
+            alignment: Alignment.center,
+            margin: EdgeInsets.only(left: b * 25),
+            height: h * 40,
+            width: 212 * b,
+            decoration: BoxDecoration(
+              color: mc,
+              borderRadius: BorderRadius.circular(b * 10),
+            ),
+            child: Text(
+              'Send',
+              style: txtS(Colors.white, 14, FontWeight.w500),
+            ),
+          ),
+        ),
+      ]),
+    );
+  }
+
+  Widget contactDetails() {
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
+
+    return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+      Container(
+        padding: EdgeInsets.fromLTRB(b * 25, h * 15, b * 20, h * 19),
+        margin: EdgeInsets.only(right: b * 20),
+        height: h * 170,
+        width: b * 260,
+        decoration: BoxDecoration(
+          color: Color(0xfff1f1f1),
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(b * 30),
+            topLeft: Radius.circular(b * 30),
+            topRight: Radius.circular(b * 30),
+          ),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            'You Have accepted a request from UserName',
+            style: txtS(textColor, 14, FontWeight.w600),
+          ),
+          sh(15),
+          Text(
+            'Shared contact Details',
+            style: txtS(textColor, 14, FontWeight.w600),
+          ),
+          sh(10),
+          Row(
+            children: [
+              Text(
+                'Name:   ',
+                style: txtS(textColor, 14, FontWeight.w600),
+              ),
+              Text(
+                'Ngo Person Name',
+                style: txtS(textColor, 14, FontWeight.w400),
+              ),
+            ],
+          ),
+          sh(5),
+          Row(
+            children: [
+              Text(
+                'Phone:   ',
+                style: txtS(textColor, 14, FontWeight.w600),
+              ),
+              Text(
+                '6387246025',
+                style: txtS(textColor, 14, FontWeight.w400),
+              ),
+            ],
+          ),
+        ]),
+      ),
+    ]);
+  }
+
+  Widget collectionReq() {
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
+    return Container(
+      margin: EdgeInsets.only(right: b * 130, left: b * 20),
+      height: h * 170,
+      width: b * 260,
+      decoration: BoxDecoration(
+        color: Color(0xfffff2e1),
+        borderRadius: BorderRadius.only(
+          bottomRight: Radius.circular(b * 30),
+          topLeft: Radius.circular(b * 30),
+          topRight: Radius.circular(b * 30),
+        ),
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(b * 20, h * 17, b * 50, h * 19),
+            child: Text(
+              'You Have got a food collection request.',
+              style: txtS(textColor, 14, FontWeight.w600),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: b * 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                  child: Column(
+                    children: [
+                      Container(
+                        height: h * 30,
+                        width: b * 30,
+                        child: SvgPicture.asset(
+                          'images/map.svg',
+                          allowDrawingOutsideViewBox: true,
+                        ),
+                      ),
+                      sh(5),
+                      Text(
+                        'Get Location',
+                        style: txtS(textColor, 10, FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  children: [
+                    Container(
+                      height: h * 30,
+                      width: b * 30,
+                      child: SvgPicture.asset(
+                        'images/Tick Square.svg',
+                        allowDrawingOutsideViewBox: true,
+                      ),
+                    ),
+                    sh(5),
+                    Text(
+                      'Happy to Take it',
+                      style: txtS(textColor, 10, FontWeight.w500),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Container(
+                      height: h * 30,
+                      width: b * 30,
+                      child: SvgPicture.asset(
+                        'images/Close Square.svg',
+                        allowDrawingOutsideViewBox: true,
+                      ),
+                    ),
+                    sh(5),
+                    Text(
+                      'Cant\'t go Now',
+                      style: txtS(textColor, 10, FontWeight.w500),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  InputDecoration dec(String txt) {
+    return InputDecoration(
+      enabledBorder: InputBorder.none,
+      focusedBorder: InputBorder.none,
+      hintText: txt,
+      hintStyle: TextStyle(
+        color: Color(0xffb9b9b9),
+        fontSize: SizeConfig.screenWidth * 14 / 412,
+        fontWeight: FontWeight.w400,
+      ),
+      isDense: true,
+      contentPadding:
+          EdgeInsets.symmetric(vertical: SizeConfig.screenHeight * 11 / 896),
     );
   }
 

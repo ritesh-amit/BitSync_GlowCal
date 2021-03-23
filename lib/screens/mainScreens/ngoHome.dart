@@ -239,8 +239,10 @@ class _NgoHomeState extends State<NgoHome> {
                         Spacer(),
                         InkWell(
                           onTap: () {
+                            setState(() {
+                              isAbout = !isAbout;
+                            });
                             print(isAbout);
-                            isAbout = !isAbout;
                           },
                           child: Icon(MdiIcons.squareEditOutline,
                               color: rc, size: b * 20),
@@ -248,39 +250,38 @@ class _NgoHomeState extends State<NgoHome> {
                       ],
                     ),
                     sh(10),
-                    Container(
-                      width: b * 375,
-                      child: isAbout
-                          ? Text(
-                              'Contact',
-                              style: txtS(textColor, 20, FontWeight.w600),
-                            )
-                          : Container(
-                              width: b * 375,
-                              height: h * 105,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Color(0xffb9b9b9),
-                                  width: b * 1,
-                                ),
-                                borderRadius: BorderRadius.circular(b * 6),
+                    isAbout
+                        ? Text(
+                            'About this ngo and what not not About this ngo and what not not About this ngo and what not not Aboutthis ngo and what not not About this ngo and whatnot not About this ngo and what not not  About this ngo and what not not',
+                            maxLines: 5,
+                            overflow: TextOverflow.ellipsis,
+                            style: txtS(Color(0xff828282), 14, FontWeight.w500),
+                          )
+                        : Container(
+                            width: b * 375,
+                            height: h * 105,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Color(0xffb9b9b9),
+                                width: b * 1,
                               ),
-                              child: TextField(
-                                controller: aboutController,
-                                style: txtS(textColor, 16, FontWeight.w500),
-                                decoration: InputDecoration(
-                                  enabledBorder: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  hintText: 'Enter About',
-                                  hintStyle: txtS(
-                                      Color(0xff828282), 14, FontWeight.w500),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      horizontal: b * 10, vertical: h * 5),
-                                ),
-                                maxLines: 6,
-                              ),
+                              borderRadius: BorderRadius.circular(b * 6),
                             ),
-                    ),
+                            child: TextField(
+                              controller: aboutController,
+                              style: txtS(textColor, 16, FontWeight.w500),
+                              decoration: InputDecoration(
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                hintText: 'Enter About',
+                                hintStyle: txtS(
+                                    Color(0xff828282), 14, FontWeight.w500),
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: b * 10, vertical: h * 5),
+                              ),
+                              maxLines: 6,
+                            ),
+                          ),
                     sh(20),
                     Text(
                       'Contact',
