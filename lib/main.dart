@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:gur/screens/mainScreens/home.dart';
+import 'Utils/constants.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gur/Utils/SizeConfig.dart';
@@ -22,7 +24,6 @@ import 'package:get/get.dart';
 import 'screens/mainScreens/aboutNgo.dart';
 
 import 'homeMain.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -71,7 +72,6 @@ class MyApp extends StatelessWidget {
       // onGenerateRoute: Router.of(context),
     ); */
   }
-
 }
 
 class Home extends StatefulWidget {
@@ -170,4 +170,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-

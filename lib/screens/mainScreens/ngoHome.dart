@@ -87,8 +87,11 @@ class _NgoHomeState extends State<NgoHome> {
           .doc('lists')
           .collection(message.data['uid'])
           .doc(message.data['donorUid'])
-          .set({'uid': message.data['donorUid'], 'name': donorName}).then(
-              (value) {
+          .set({
+        'uid': message.data['donorUid'],
+        'name': donorName,
+        'isAccept': false
+      }).then((value) {
         uid = FirebaseAuth.instance.currentUser.uid;
 
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -101,7 +104,8 @@ class _NgoHomeState extends State<NgoHome> {
           .doc('lists')
           .collection(message.data['donorUid'])
           .doc(message.data['uid'])
-          .set({'uid': message.data['uid'], 'name': ngoName});
+          .set(
+              {'uid': message.data['uid'], 'name': ngoName, 'isAccept': false});
     });
   }
 

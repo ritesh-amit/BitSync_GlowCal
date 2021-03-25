@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:gur/dialogboxes/donateDoneDialog.dart';
 import 'package:gur/models/foodPacket.dart';
 import 'package:gur/nearbyNGO.dart';
@@ -252,16 +253,27 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
       } else
         permissionsOK = true;
     } else if (permissionStatus == loc.PermissionStatus.deniedForever)
-      Toast.show("Permission Required", context);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Insufficient Permission"),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ));
     else
       permissionsOK = true;
 
     if (permissionsOK) {
-      locationData = await location.getLocation();
-      latitude = locationData.latitude;
-      longitude = locationData.longitude;
+      await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.best)
+          .then((position) {
+        latitude = position.latitude;
+        longitude = position.longitude;
+      });
     } else
-      Toast.show("Insufficient Permission", context);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Insufficient Permission"),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ));
   }
 }
 
