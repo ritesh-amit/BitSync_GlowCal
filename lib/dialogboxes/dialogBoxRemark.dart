@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:gur/dialogboxes/donateDoneDialog.dart';
 import 'package:gur/models/foodPacket.dart';
 import 'package:gur/nearbyNGO.dart';
 import 'package:location/location.dart' as loc;

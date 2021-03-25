@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gur/homeMain.dart';
+import 'package:gur/main.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -47,7 +49,13 @@ class _AboutNgoState extends State<AboutNgo> {
                   Builder(
                     builder: (BuildContext context) {
                       return InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) {
+                              return Home();
+                            }),
+                          );
+                        },
                         child: Container(
                           height: h * 30,
                           width: b * 30,

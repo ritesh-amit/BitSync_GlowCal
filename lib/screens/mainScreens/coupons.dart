@@ -2,24 +2,29 @@ import 'package:flutter/material.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gur/drawer.dart';
 
-class Notifications extends StatefulWidget {
-  _NotificationsState createState() => _NotificationsState();
-}
-
-class _NotificationsState extends State<Notifications> {
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+class Coupons extends StatelessWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     var h = SizeConfig.screenHeight / 896;
     var b = SizeConfig.screenWidth / 412;
+    List images = [
+      'images/22.png',
+      'images/23.png',
+      'images/21.png',
+      'images/22.png',
+      'images/23.png',
+      'images/21.png',
+      'images/22.png',
+      'images/23.png',
+      'images/21.png',
+    ];
 
     return Scaffold(
       key: _scaffoldKey,
-      drawer: DrawerCode(),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(children: [
@@ -43,16 +48,14 @@ class _NotificationsState extends State<Notifications> {
                   builder: (BuildContext context) {
                     return InkWell(
                       onTap: () {
-                        _scaffoldKey.currentState.openDrawer();
+                        Navigator.pop(context);
                       },
                       child: Container(
                         height: h * 30,
                         width: b * 30,
                         child: SvgPicture.asset(
-                          'images/Chart.svg',
+                          'images/Arrow1.svg',
                           allowDrawingOutsideViewBox: true,
-                          width: h * 20,
-                          height: b * 20,
                         ),
                       ),
                     );
@@ -60,7 +63,7 @@ class _NotificationsState extends State<Notifications> {
                 ),
                 Spacer(),
                 Text(
-                  'Notifications',
+                  'My Coupons',
                   style: txtS(mc, 20, FontWeight.w600),
                 ),
                 Spacer(),
@@ -69,12 +72,6 @@ class _NotificationsState extends State<Notifications> {
                   child: Container(
                     height: h * 30,
                     width: b * 30,
-                    child: SvgPicture.asset(
-                      'images/SendColor.svg',
-                      allowDrawingOutsideViewBox: true,
-                      width: h * 20,
-                      height: b * 20,
-                    ),
                   ),
                 ),
               ],
@@ -86,28 +83,28 @@ class _NotificationsState extends State<Notifications> {
               padding: EdgeInsets.symmetric(horizontal: b * 20),
               shrinkWrap: true,
               physics: BouncingScrollPhysics(),
-              itemCount: 5,
+              itemCount: images.length,
               itemBuilder: (context, index) => Column(
                 children: <Widget>[
                   InkWell(
                     onTap: () {},
                     child: Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: b * 20, vertical: h * 10),
-                      margin: EdgeInsets.only(top: h * 12, bottom: h * 12),
+                      height: h * 111,
+                      width: b * 370,
+                      margin: EdgeInsets.only(bottom: h * 15),
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.13),
+                            color: Colors.black.withOpacity(0.25),
                             offset: Offset(0, 0),
                             blurRadius: 6,
                           ),
                         ],
                         image: DecorationImage(
-                          image: AssetImage('images/1.png'),
+                          image: AssetImage(images[index]),
                           fit: BoxFit.cover,
                         ),
-                        borderRadius: BorderRadius.circular(b * 12),
+                        borderRadius: BorderRadius.circular(b * 6),
                         color: Colors.white,
                       ),
                     ),
