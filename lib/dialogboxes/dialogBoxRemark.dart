@@ -223,7 +223,9 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
         latitude: latitude,
         longitude: longitude,
         remark: remarkController.text.trim(),
-        dateTime: Timestamp.now().millisecondsSinceEpoch.toString());
+        dateTime: Timestamp.now().millisecondsSinceEpoch.toString(),
+        isActive: true,
+        isAccept: false);
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return NearbyNGO(foodPacket);
     }));
