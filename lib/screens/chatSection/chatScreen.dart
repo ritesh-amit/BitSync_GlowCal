@@ -8,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
-
+import 'package:gur/homeMain.dart';
 import 'package:bubble/bubble.dart';
 import 'package:gur/Utils/messageUI.dart';
 import 'package:gur/main.dart';
