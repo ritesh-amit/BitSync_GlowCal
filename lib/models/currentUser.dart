@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class CurrentUser {
   String name;
   String email;
@@ -6,6 +8,7 @@ class CurrentUser {
   String token;
   String address;
   String userType;
+  FieldValue regDate;
 
   CurrentUser(
       {this.name,
@@ -14,7 +17,8 @@ class CurrentUser {
       this.uid,
       this.token,
       this.address,
-      this.userType});
+      this.userType,
+      this.regDate});
 
   Map toMap() {
     var map = Map<String, dynamic>();
@@ -25,6 +29,7 @@ class CurrentUser {
     map['token'] = this.token;
     map['address'] = this.address;
     map['userType'] = this.userType;
+    map['regDate'] = this.regDate;
     return map;
   }
 
@@ -37,6 +42,7 @@ class CurrentUser {
     _currentUser.token = map['token'];
     _currentUser.address = map['address'];
     _currentUser.userType = map['userType'];
+    _currentUser.regDate = map['regDate'];
     return _currentUser;
   }
 }

@@ -42,11 +42,13 @@ class _NgoProfileState extends State<NgoProfile> {
   bool isAddress = false;
   bool isDes = false;
   bool isSumm = false;
-  String userName = "NA";
+  String ngoName = "NA";
   String userPhone = "NA";
   String address = "NA";
   bool suraj = false;
   String designation = "NA";
+  String inChargeName = 'NA';
+  String summary = 'NA';
 
   String email = "";
   bool getImage1 = false;
@@ -55,13 +57,15 @@ class _NgoProfileState extends State<NgoProfile> {
   bool getImage4 = false;
   bool isLocation = false;
   bool isImageUpload = false;
+  bool isLocationUpload = false;
+  bool isLocationLoading = false;
 
   File image1File, image2File, image3File, image4File;
 
   loadData() async {
     preferences = await SharedPreferences.getInstance();
     setState(() {
-      userName = preferences.getString("currentUserName");
+      ngoName = preferences.getString("currentUserName");
       email = preferences.getString("currentUserEmail");
 
       if (preferences.containsKey("currentUserPhone"))
@@ -72,6 +76,18 @@ class _NgoProfileState extends State<NgoProfile> {
 
       if (preferences.containsKey('currentUserDesignation'))
         designation = preferences.getString('currentUserDesignation');
+
+      if (preferences.containsKey('currentInChargeName'))
+        inChargeName = preferences.getString('currentInChargeName');
+
+      if (preferences.containsKey('isProfileImageUploaded'))
+        isImageUpload = preferences.getBool('isProfileImageUploaded');
+
+      if (preferences.containsKey('currentUserSummary'))
+        summary = preferences.getString('currentUserSummary');
+
+      if (preferences.containsKey('isLocationGot'))
+        isLocationUpload = preferences.getBool('isLocationGot');
     });
   }
 
@@ -167,43 +183,15 @@ class _NgoProfileState extends State<NgoProfile> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            isNgoName ? 'Change NGO Name' : 'NGO Name',
-                            style: txtS(isNgoName ? textColor : rc, 14,
-                                FontWeight.w500),
+                            'NGO Name',
+                            style: txtS(rc, 14, FontWeight.w500),
                           ),
                           sh(6),
-                          isNgoName
-                              ? Container(
-                                  width: b * 270,
-                                  child: TextField(
-                                    style: txtS(textColor, 15, FontWeight.w500),
-                                    decoration: dec('NGO Name'),
-                                  ),
-                                )
-                              : Text(
-                                  userName,
-                                  style: txtS(textColor, 16, FontWeight.w500),
-                                ),
-                          isNgoName
-                              ? butt(
-                                  field: 'name',
-                                  value: "NGO name can't be change",
-                                  visibleBool: isName)
-                              : SizedBox(),
-                        ],
-                      ),
-                      Spacer(),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                isNgoName = !isNgoName;
-                              });
-                            },
-                            child: ediB(),
+                          Text(
+                            ngoName,
+                            style: txtS(textColor, 16, FontWeight.w500),
                           ),
+                          SizedBox(),
                         ],
                       ),
                     ],
@@ -377,44 +365,15 @@ class _NgoProfileState extends State<NgoProfile> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            isPhone ? 'Change Number' : 'Number',
-                            style: txtS(
-                                isPhone ? textColor : rc, 14, FontWeight.w500),
+                            'Number',
+                            style: txtS(rc, 14, FontWeight.w500),
                           ),
                           sh(6),
-                          isPhone
-                              ? Container(
-                                  width: b * 270,
-                                  child: TextField(
-                                    controller: phoneController,
-                                    style: txtS(textColor, 15, FontWeight.w500),
-                                    decoration: dec('Phone Number'),
-                                  ),
-                                )
-                              : Text(
-                                  userPhone,
-                                  style: txtS(textColor, 16, FontWeight.w500),
-                                ),
-                          isPhone
-                              ? butt(
-                                  field: 'phone',
-                                  value: phoneController.text.trim(),
-                                  visibleBool: isPhone)
-                              : SizedBox(),
-                        ],
-                      ),
-                      Spacer(),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                isPhone = !isPhone;
-                              });
-                            },
-                            child: ediB(),
+                          Text(
+                            userPhone,
+                            style: txtS(textColor, 16, FontWeight.w500),
                           ),
+                          SizedBox(),
                         ],
                       ),
                     ],
@@ -451,14 +410,13 @@ class _NgoProfileState extends State<NgoProfile> {
                                   ),
                                 )
                               : Text(
-                                  userName,
+                                  inChargeName,
                                   style: txtS(textColor, 16, FontWeight.w500),
                                 ),
                           isName
                               ? butt(
                                   field: 'inChargeName',
-                                  value: inChargeNameController.text.trim(),
-                                  visibleBool: isName)
+                                )
                               : SizedBox(),
                         ],
                       ),
@@ -514,12 +472,7 @@ class _NgoProfileState extends State<NgoProfile> {
                                   designation,
                                   style: txtS(textColor, 16, FontWeight.w500),
                                 ),
-                          isDes
-                              ? butt(
-                                  field: 'designation',
-                                  value: designationController.text.trim(),
-                                  visibleBool: isDes)
-                              : SizedBox(),
+                          isDes ? butt(field: 'designation') : SizedBox(),
                         ],
                       ),
                       Spacer(),
@@ -601,11 +554,7 @@ class _NgoProfileState extends State<NgoProfile> {
                                   padding: EdgeInsets.only(left: b * 180),
                                   child: InkWell(
                                     onTap: () {
-                                      userDetailChange('address',
-                                          addressController.text.trim());
-                                      setState(() {
-                                        isAddress = !isAddress;
-                                      });
+                                      userDetailChange('address');
                                     },
                                     child: Container(
                                       margin: EdgeInsets.only(top: h * 10),
@@ -684,15 +633,10 @@ class _NgoProfileState extends State<NgoProfile> {
                                   ),
                                 )
                               : Text(
-                                  "Some random Summary",
+                                  summary,
                                   style: txtS(textColor, 16, FontWeight.w500),
                                 ),
-                          isSumm
-                              ? butt(
-                                  field: 'summary',
-                                  value: designationController.text.trim(),
-                                  visibleBool: isSumm)
-                              : SizedBox(),
+                          isSumm ? butt(field: 'summary') : SizedBox(),
                         ],
                       ),
                       Spacer(),
@@ -755,35 +699,45 @@ class _NgoProfileState extends State<NgoProfile> {
                         ],
                       ),
                 sh(20),
-                Row(
-                  children: [
-                    Text(
-                      "Record NGO\'s Geolocation",
-                      style: txtS(textColor, 16, FontWeight.w700),
-                    ),
-                    Spacer(),
-                    MaterialButton(
-                      height: h * 30,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(b * 6),
+                isLocationUpload
+                    ? SizedBox()
+                    : Row(
+                        children: [
+                          Text(
+                            "Record NGO\'s Geolocation",
+                            style: txtS(textColor, 16, FontWeight.w700),
+                          ),
+                          Spacer(),
+                          MaterialButton(
+                            height: h * 30,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(b * 6),
+                            ),
+                            color: !isLocation ? mc : Color(0xff28797c),
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            onPressed: () {
+                              setState(() {
+                                isLocationLoading = true;
+                              });
+                              currentLocation();
+                            },
+                            child: Container(
+                              color: !isLocation ? mc : Color(0xff28797c),
+                              child: isLocationLoading
+                                  ? CircularProgressIndicator(
+                                      backgroundColor: Colors.white,
+                                      strokeWidth: 2,
+                                    )
+                                  : Text(
+                                      !isLocation ? "Get location" : "Done",
+                                      style: txtS(
+                                          Colors.white, 10, FontWeight.w500),
+                                    ),
+                            ),
+                          ),
+                        ],
                       ),
-                      color: !isLocation ? mc : Color(0xff28797c),
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      onPressed: () {
-                        setState(() {
-                          currentLocation();
-                        });
-                      },
-                      child: Container(
-                        color: !isLocation ? mc : Color(0xff28797c),
-                        child: Text(
-                          !isLocation ? "Get location" : "Done",
-                          style: txtS(Colors.white, 10, FontWeight.w500),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
                 sh(25),
                 Container(
                   decoration: bord(),
@@ -871,18 +825,50 @@ class _NgoProfileState extends State<NgoProfile> {
     );
   }
 
-  Padding butt({String field, String value, bool visibleBool}) {
+  Padding butt({String field}) {
     return Padding(
       padding: EdgeInsets.only(
           left: SizeConfig.screenWidth / 414 * 180,
           top: SizeConfig.screenHeight / 896 * 10),
       child: InkWell(
         onTap: () {
-          userDetailChange(field, value);
-          setState(() {
-            visibleBool = !visibleBool;
-          });
+          userDetailChange(field);
         },
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.screenWidth / 414 * 17,
+            vertical: SizeConfig.screenHeight / 896 * 7,
+          ),
+          width: SizeConfig.screenWidth / 414 * 90,
+          decoration: BoxDecoration(
+            color: mc,
+            borderRadius:
+                BorderRadius.circular(SizeConfig.screenWidth / 414 * 18),
+          ),
+          child: Row(children: [
+            Text(
+              'Save',
+              style: txtS(Colors.white, 12, FontWeight.w400),
+            ),
+            Spacer(),
+            Icon(
+              Icons.arrow_forward,
+              color: Colors.white,
+              size: SizeConfig.screenWidth / 414 * 18,
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  Padding nonEditableButt() {
+    return Padding(
+      padding: EdgeInsets.only(
+          left: SizeConfig.screenWidth / 414 * 180,
+          top: SizeConfig.screenHeight / 896 * 10),
+      child: InkWell(
+        onTap: () {},
         child: Container(
           padding: EdgeInsets.symmetric(
             horizontal: SizeConfig.screenWidth / 414 * 17,
@@ -1054,21 +1040,47 @@ class _NgoProfileState extends State<NgoProfile> {
     });
   }
 
-  userDetailChange(String field, data) async {
-    print(data);
+  userDetailChange(String field) async {
+    //print("Value Changed : $data");
+    String data = 'NA';
+
+    setState(() {
+      if (field == 'summary') {
+        data = summaryController.text.trim();
+      } else if (field == 'address') {
+        data = addressController.text.trim();
+      } else if (field == 'designation') {
+        data = designationController.text.trim();
+      } else if (field == 'inChargeName') {
+        data = inChargeNameController.text.trim();
+      }
+    });
+
     SharedPreferences pref = await SharedPreferences.getInstance();
     String uid = pref.getString('currentUserUID');
     FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
-        .update({field: data});
-
-    setState(() {
-      if (field == 'address')
-        pref.setString('currentUserAddress', data);
-      else if (field == 'designation')
-        pref.setString('currentUserDesignation', data);
-      else if (field == 'summary') pref.setString('currentUserSummary', data);
+        .update({field: data}).then((value) {
+      setState(() {
+        if (field == 'address') {
+          pref.setString('currentUserAddress', data);
+          address = data;
+          isAddress = false;
+        } else if (field == 'designation') {
+          pref.setString('currentUserDesignation', data);
+          designation = data;
+          isDes = false;
+        } else if (field == 'summary') {
+          pref.setString('currentUserSummary', data);
+          summary = data;
+          isSumm = false;
+        } else if (field == 'inChargeName') {
+          pref.setString('currentInChargeName', data);
+          inChargeName = data;
+          isName = false;
+        }
+      });
     });
   }
 
@@ -1213,8 +1225,17 @@ class _NgoProfileState extends State<NgoProfile> {
           .doc(preferences.getString('currentUserUID'))
           .update({'lon': longitude, 'lat': latitude}).then((value) {
         setState(() {
-          isLocation = true;
+          isLocationLoading = !isLocationLoading;
+          isLocation = !isLocation;
         });
+
+        Future.delayed(Duration(seconds: 3), () {
+          setState(() {
+            isLocationUpload = true;
+          });
+        });
+
+        preferences.setBool('isLocationGot', true);
       });
     } else
       Toast.show("Insufficient Permission", context);

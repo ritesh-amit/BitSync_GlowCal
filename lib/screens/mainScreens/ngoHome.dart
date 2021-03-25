@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -36,12 +37,22 @@ class _NgoHomeState extends State<NgoHome> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController aboutController = TextEditingController();
   bool isAbout = false;
-  SharedPreferences preferences;
   String uid = '';
+  String ngoName = 'NA';
+  String email = "NA";
+  String phone = 'NA';
+  String address = 'NA';
+  String photo = 'NA';
+  String headImageURL = '';
+  String regDate = "NA";
+  String summary = 'NA';
+
   @override
   void initState() {
     super.initState();
     fcmInit(context);
+
+    getDataFromLocalStorage();
   }
 
   fcmInit(ctx) async {
@@ -106,6 +117,24 @@ class _NgoHomeState extends State<NgoHome> {
           .doc(message.data['uid'])
           .set(
               {'uid': message.data['uid'], 'name': ngoName, 'isAccept': false});
+    });
+  }
+
+  getDataFromLocalStorage() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    setState(() {
+      ngoName = preferences.getString('currentUserName');
+      email = preferences.getString('currentUserEmail');
+      phone = preferences.getString('currentUserPhone');
+      if (preferences.containsKey('profileImageURL'))
+        headImageURL = preferences.getString('profileImageURL');
+      if (preferences.containsKey('currentUserAddress'))
+        address = preferences.getString('currentUserAddress');
+      if(preferences.containsKey('currentUserSummary'))
+        summary = preferences.getString('currentUserSummary');
+
+      regDate = preferences.getString('currentUserRegDate');
     });
   }
 
@@ -205,6 +234,9 @@ class _NgoHomeState extends State<NgoHome> {
                             offset: Offset(0, 6),
                           ),
                         ],
+                        image: DecorationImage(
+                            image: NetworkImage(headImageURL),
+                            fit: BoxFit.cover),
                         borderRadius: BorderRadius.circular(b * 12),
                       ),
                     ),
@@ -235,7 +267,7 @@ class _NgoHomeState extends State<NgoHome> {
                     Container(
                       width: b * 180,
                       child: Text(
-                        'Raam Puri Ram Puri',
+                        ngoName,
                         overflow: TextOverflow.ellipsis,
                         style: txtS(textColor, 20, FontWeight.w600),
                       ),
@@ -338,51 +370,15 @@ class _NgoHomeState extends State<NgoHome> {
                           style: txtS(textColor, 20, FontWeight.w600),
                         ),
                         Spacer(),
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              isAbout = !isAbout;
-                            });
-                            print(isAbout);
-                          },
-                          child: Icon(MdiIcons.squareEditOutline,
-                              color: rc, size: b * 20),
-                        ),
                       ],
                     ),
                     sh(10),
-                    isAbout
-                        ? Text(
-                            'About this ngo and what not not About this ngo and what not not About this ngo and what not not Aboutthis ngo and what not not About this ngo and whatnot not About this ngo and what not not  About this ngo and what not not',
-                            maxLines: 5,
-                            overflow: TextOverflow.ellipsis,
-                            style: txtS(Color(0xff828282), 14, FontWeight.w500),
-                          )
-                        : Container(
-                            width: b * 375,
-                            height: h * 105,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Color(0xffb9b9b9),
-                                width: b * 1,
-                              ),
-                              borderRadius: BorderRadius.circular(b * 6),
-                            ),
-                            child: TextField(
-                              controller: aboutController,
-                              style: txtS(textColor, 16, FontWeight.w500),
-                              decoration: InputDecoration(
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                hintText: 'Enter About',
-                                hintStyle: txtS(
-                                    Color(0xff828282), 14, FontWeight.w500),
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: b * 10, vertical: h * 5),
-                              ),
-                              maxLines: 6,
-                            ),
-                          ),
+                    Text(
+                      summary,
+                      maxLines: 5,
+                      overflow: TextOverflow.ellipsis,
+                      style: txtS(Color(0xff828282), 14, FontWeight.w500),
+                    ),
                     sh(20),
                     Text(
                       'Contact',
@@ -415,7 +411,7 @@ class _NgoHomeState extends State<NgoHome> {
                             ),
                             sh(2),
                             Text(
-                              'ritesh.shuklalmp2018@gmail.com',
+                              email,
                               overflow: TextOverflow.ellipsis,
                               style: txtS(textColor, 14, FontWeight.w600),
                             ),
@@ -449,7 +445,7 @@ class _NgoHomeState extends State<NgoHome> {
                             ),
                             sh(2),
                             Text(
-                              '6387246025',
+                              phone,
                               style: txtS(textColor, 16, FontWeight.w600),
                             ),
                           ],
@@ -484,7 +480,7 @@ class _NgoHomeState extends State<NgoHome> {
                                 ),
                                 sh(2),
                                 Text(
-                                  'adresss Address Adress Adress adress adresss',
+                                  address,
                                   style: txtS(textColor, 14, FontWeight.w600),
                                 ),
                               ],
@@ -515,7 +511,7 @@ class _NgoHomeState extends State<NgoHome> {
                                 ),
                                 sh(2),
                                 Text(
-                                  '21-11-2020',
+                                  regDate.substring(0, 10),
                                   style: txtS(textColor, 16, FontWeight.w600),
                                 ),
                               ],

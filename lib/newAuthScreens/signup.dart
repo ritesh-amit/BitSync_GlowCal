@@ -499,7 +499,7 @@ class _SignUpState extends State<SignUp> {
       }), (route) => false);
     } else {
       CurrentUser currentUser = CurrentUser(
-          name: userName, email: email, phone: phone, userType: type);
+          name: userName, email: email, phone: phone, userType: type, regDate: FieldValue.serverTimestamp());
 
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
         return Otp(phone, currentUser, pwd);

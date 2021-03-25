@@ -169,11 +169,7 @@ class _DrawerCodeState extends State<DrawerCode> {
 
     try {
       await firebaseAuth.signOut().then((value) {
-        preferences.setBool('isLoggedIn', false);
-        preferences.remove('currentUserName');
-        preferences.remove('currentUserPhone');
-        preferences.remove('currentUserEmail');
-        preferences.remove('currentUserAddress');
+        preferences.clear();
         print("Signed Out");
         Navigator.of(context).pop();
         Navigator.of(context).pushAndRemoveUntil(

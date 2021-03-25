@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -17,6 +19,30 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  List mainImageList = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> loadMainImageList() async {
+    FirebaseFirestore.instance
+        .collection('users')
+        .where('userType', isEqualTo: 'ngo')
+        .snapshots()
+        .listen((snapshot) {
+      List<QueryDocumentSnapshot> documentSnapshot = snapshot.docs;
+      mainImageList.clear();
+      setState(() {
+        for (var i in documentSnapshot) {
+          mainImageList.add(i.data()['image1']);
+        }
+      });
+    });
+
+    //return mainImageList;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,40 +167,44 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 sh(20),
-                Container(
-                  width: b * 375,
-                  height: h * 145,
-                  margin: EdgeInsets.only(left: b * 20),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    physics: BouncingScrollPhysics(),
-                    padding: EdgeInsets.zero,
-                    itemCount: 15,
-                    itemBuilder: (BuildContext ctxt, int index) {
+                FutureBuilder(
+                    future: loadMainImageList(),
+                    builder: (context, snapshot) {
                       return Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: b * 6.5, vertical: h * 9),
-                        width: b * 165,
-                        height: h * 122,
-                        decoration: BoxDecoration(
-                          color: gc,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.25),
-                              offset: Offset(0, 0),
-                            ),
-                          ],
-                          image: DecorationImage(
-                            image: AssetImage('images/ill2.png'),
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.circular(b * 6),
+                        width: b * 375,
+                        height: h * 145,
+                        margin: EdgeInsets.only(left: b * 20),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          physics: BouncingScrollPhysics(),
+                          padding: EdgeInsets.zero,
+                          itemCount: mainImageList.length,
+                          itemBuilder: (BuildContext ctxt, int index) {
+                            return Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: b * 6.5, vertical: h * 9),
+                              width: b * 165,
+                              height: h * 122,
+                              decoration: BoxDecoration(
+                                color: gc,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.25),
+                                    offset: Offset(0, 0),
+                                  ),
+                                ],
+                                borderRadius: BorderRadius.circular(b * 6),
+                              ),
+                              child: CachedNetworkImage(
+                                imageUrl: mainImageList[index],
+                                fit: BoxFit.cover,
+                              ),
+                            );
+                          },
                         ),
                       );
-                    },
-                  ),
-                ),
+                    }),
                 sh(24),
                 Container(
                   width: b * 375,
