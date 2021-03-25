@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:gur/screens/mainScreens/aboutNgo.dart';
 import 'Utils/SizeConfig.dart';
 import 'Utils/constants.dart';
 
@@ -9,7 +10,6 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController titleController = TextEditingController();
-  bool amit = false;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -19,7 +19,6 @@ class _SearchScreenState extends State<SearchScreen> {
       child: Container(
         margin: MediaQuery.of(context).viewInsets,
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-          amit ? sh(100) : sh(0),
           Container(
             padding: EdgeInsets.symmetric(horizontal: b * 23),
             height: h * 50,
@@ -52,7 +51,11 @@ class _SearchScreenState extends State<SearchScreen> {
                 children: <Widget>[
                   InkWell(
                     onTap: () {
-                      Navigator.pop(context);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) {
+                          return AboutNgo();
+                        }),
+                      );
                     },
                     child: Container(
                       margin: EdgeInsets.only(

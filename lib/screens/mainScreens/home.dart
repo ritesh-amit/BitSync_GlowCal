@@ -5,11 +5,13 @@ import 'package:gur/dialogboxes/dialogBoxSearch.dart';
 import 'package:gur/dialogboxes/dialogBoxDonate.dart';
 import 'package:gur/drawer.dart';
 import 'package:gur/screens/chatSection/messageScreen.dart';
+import 'package:gur/screens/mainScreens/aboutNgo.dart';
 import 'package:location/location.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
@@ -30,6 +32,25 @@ class _HomePageState extends State<HomePage> {
       'Global Summary',
       'Global Summary'
     ];
+    List images = [
+      'images/2.png',
+      'images/3.png',
+      'images/4.png',
+      'images/5.png',
+      'images/6.png',
+      'images/7.png',
+      'images/8.png',
+      'images/9.png',
+      'images/2.png',
+      'images/3.png',
+      'images/4.png',
+      'images/5.png',
+      'images/6.png',
+      'images/7.png',
+      'images/8.png',
+      'images/9.png',
+    ];
+
     List midItems = [
       'Amount Donated',
       'No. of times donated',
@@ -143,31 +164,22 @@ class _HomePageState extends State<HomePage> {
                 sh(20),
                 Container(
                   width: b * 375,
-                  height: h * 145,
-                  margin: EdgeInsets.only(left: b * 20),
+                  height: h * 140,
+                  margin: EdgeInsets.only(left: b * 10),
                   child: ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     physics: BouncingScrollPhysics(),
                     padding: EdgeInsets.zero,
-                    itemCount: 15,
+                    itemCount: images.length,
                     itemBuilder: (BuildContext ctxt, int index) {
                       return Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: b * 6.5, vertical: h * 9),
-                        width: b * 165,
-                        height: h * 122,
+                        width: b * 170,
                         decoration: BoxDecoration(
-                          color: gc,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.25),
-                              offset: Offset(0, 0),
-                            ),
-                          ],
+                          color: Colors.white,
                           image: DecorationImage(
-                            image: AssetImage('images/ill2.png'),
-                            fit: BoxFit.cover,
+                            image: AssetImage(images[index]),
+                            fit: BoxFit.fill,
                           ),
                           borderRadius: BorderRadius.circular(b * 6),
                         ),
@@ -281,24 +293,33 @@ class _HomePageState extends State<HomePage> {
                     padding: EdgeInsets.zero,
                     itemCount: 15,
                     itemBuilder: (BuildContext ctxt, int index) {
-                      return Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: b * 6.5, vertical: h * 9),
-                        width: b * 102,
-                        height: h * 101,
-                        decoration: BoxDecoration(
-                          color: gc,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.25),
-                              offset: Offset(0, 0),
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) {
+                              return AboutNgo();
+                            }),
+                          );
+                        },
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: b * 6.5, vertical: h * 9),
+                          width: b * 102,
+                          height: h * 101,
+                          decoration: BoxDecoration(
+                            color: gc,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.25),
+                                offset: Offset(0, 0),
+                              ),
+                            ],
+                            image: DecorationImage(
+                              image: AssetImage('images/ill1.png'),
+                              fit: BoxFit.cover,
                             ),
-                          ],
-                          image: DecorationImage(
-                            image: AssetImage('images/ill1.png'),
-                            fit: BoxFit.cover,
+                            borderRadius: BorderRadius.circular(b * 6),
                           ),
-                          borderRadius: BorderRadius.circular(b * 6),
                         ),
                       );
                     },
@@ -335,11 +356,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 sh(140),
-                /*collectionReq(),
-                sh(20),
-                acceptDetails(),
-                sh(20),
-                contactDetails(),*/
               ]),
             ),
           ]),
@@ -348,86 +364,100 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget acceptDetails() {
+  void dialogBoxContact(BuildContext context) {
     var b = SizeConfig.screenWidth / 414;
     var h = SizeConfig.screenHeight / 896;
 
-    return Container(
-      margin: EdgeInsets.only(right: b * 20, left: b * 20),
-      height: h * 335,
-      decoration: BoxDecoration(
-        color: Color(0xfff1f1f1),
-        borderRadius: BorderRadius.only(
-          bottomRight: Radius.circular(b * 30),
-          topLeft: Radius.circular(b * 30),
-          topRight: Radius.circular(b * 30),
-        ),
-      ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Padding(
-          padding: EdgeInsets.fromLTRB(b * 25, h * 27, b * 60, h * 19),
-          child: Text(
-            'You Have accepted request from Person',
-            style: txtS(textColor, 20, FontWeight.w500),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.fromLTRB(b * 25, h * 0, b * 0, h * 37),
-          child: Text(
-            'Share your Contact',
-            style: txtS(textColor, 14, FontWeight.w700),
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.only(left: b * 25),
-          padding: EdgeInsets.symmetric(horizontal: b * 16),
-          height: h * 40,
-          width: 212 * b,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(b * 10),
-          ),
-          child: TextField(
-            // controller: titleController,
-            style: txtS(textColor, 15, FontWeight.w500),
-            decoration: dec('Name'),
-          ),
-        ),
-        sh(17),
-        Container(
-          margin: EdgeInsets.only(left: b * 25),
-          padding: EdgeInsets.symmetric(horizontal: b * 16),
-          height: h * 40,
-          width: 212 * b,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(b * 10),
-          ),
-          child: TextField(
-            keyboardType: TextInputType.number,
-            // controller: titleController,
-            style: txtS(textColor, 15, FontWeight.w500),
-            decoration: dec('Phone Number'),
-          ),
-        ),
-        sh(28),
-        InkWell(
+    showAnimatedDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding:
+              EdgeInsets.only(top: h * 0, left: b * 20, right: b * 20),
           child: Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.only(left: b * 25),
-            height: h * 40,
-            width: 212 * b,
+            height: h * 335,
             decoration: BoxDecoration(
-              color: mc,
-              borderRadius: BorderRadius.circular(b * 10),
+              color: Color(0xfff1f1f1),
+              borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(b * 30),
+                topLeft: Radius.circular(b * 30),
+                topRight: Radius.circular(b * 30),
+              ),
             ),
-            child: Text(
-              'Send',
-              style: txtS(Colors.white, 14, FontWeight.w500),
-            ),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(b * 25, h * 27, b * 60, h * 19),
+                child: Text(
+                  'You Have accepted request from Person',
+                  style: txtS(textColor, 20, FontWeight.w500),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(b * 25, h * 0, b * 0, h * 37),
+                child: Text(
+                  'Share your Contact',
+                  style: txtS(textColor, 14, FontWeight.w700),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: b * 25),
+                padding: EdgeInsets.symmetric(horizontal: b * 16),
+                height: h * 40,
+                width: 212 * b,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(b * 10),
+                ),
+                child: TextField(
+                  // controller: titleController,
+                  style: txtS(textColor, 15, FontWeight.w500),
+                  decoration: dec('Name'),
+                ),
+              ),
+              sh(17),
+              Container(
+                margin: EdgeInsets.only(left: b * 25),
+                padding: EdgeInsets.symmetric(horizontal: b * 16),
+                height: h * 40,
+                width: 212 * b,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(b * 10),
+                ),
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  // controller: titleController,
+                  style: txtS(textColor, 15, FontWeight.w500),
+                  decoration: dec('Phone Number'),
+                ),
+              ),
+              sh(28),
+              InkWell(
+                child: Container(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.only(left: b * 25),
+                  height: h * 40,
+                  width: 212 * b,
+                  decoration: BoxDecoration(
+                    color: mc,
+                    borderRadius: BorderRadius.circular(b * 10),
+                  ),
+                  child: Text(
+                    'Send',
+                    style: txtS(Colors.white, 14, FontWeight.w500),
+                  ),
+                ),
+              ),
+            ]),
           ),
-        ),
-      ]),
+        );
+      },
+      animationType: DialogTransitionType.slideFromBottomFade,
+      curve: Curves.fastOutSlowIn,
+      duration: Duration(milliseconds: 250),
     );
   }
 
