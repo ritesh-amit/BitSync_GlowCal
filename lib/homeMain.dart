@@ -1,78 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gur/Utils/SizeConfig.dart';
-import 'package:gur/newAuthScreens/login.dart';
-import 'package:gur/screens/chatSection/messageScreen.dart';
+import 'package:flutter/material.dart';
 import 'package:gur/screens/mainScreens/ngoHome.dart';
 import 'package:gur/screens/mainScreens/ngoProfile.dart';
-import 'package:gur/screens/mainScreens/notifications.dart';
-import 'package:gur/screens/mainScreens/profile.dart';
 import 'package:gur/screens/mainScreens/profileOrg.dart';
-
-import 'package:gur/newAuthScreens/login.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/services.dart';
-
-import 'package:get/get.dart';
+import 'package:gur/screens/mainScreens/home.dart';
+import 'Utils/constants.dart';
 import 'screens/mainScreens/aboutNgo.dart';
-
-import 'homeMain.dart';
-
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences pref = await SharedPreferences.getInstance();
-  bool isLoggedIn;
-  await Firebase.initializeApp();
-  FirebaseAuth auth = FirebaseAuth.instance;
-  User user = auth.currentUser;
-  SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      statusBarBrightness: Brightness.light,
-      systemNavigationBarColor: Colors.white,
-      systemNavigationBarIconBrightness: Brightness.dark,
-      systemNavigationBarDividerColor: Colors.transparent);
-
-  if (user == null)
-    isLoggedIn = false;
-  else
-    isLoggedIn = true;
-
-  pref.setBool('isLoggedIn', isLoggedIn);
-
-  runApp(MyApp(isLoggedIn));
-}
-
-class MyApp extends StatelessWidget {
-  final bool isLoggedIn;
-  MyApp(this.isLoggedIn);
-  @override
-  Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'DSC Challenge',
-      theme: ThemeData(primarySwatch: Colors.orange),
-      home: isLoggedIn ? Home() : Login(),
-    );
-    /* MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'DSC Challenge',
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
-      ),
-      home: isLoggedIn == true ? Home() : Login(),
-      // navigatorKey: Get.key,
-      // onGenerateRoute: Router.of(context),
-    ); */
-  }
-
-}
 
 class Home extends StatefulWidget {
   @override
@@ -91,19 +25,19 @@ class _HomeState extends State<Home> {
     HomePage(),
     NgoHome(),
     AboutNgo(),
-    Profile()
+    NgoProfile(),
   ];
 
   List<Widget> _widgetOptionsOrg = <Widget>[
     HomePage(),
-    AboutNgo(),
+    NgoHome(),
     AboutNgo(),
     ProfileOrg()
   ];
 
   List<Widget> _widgetOptionsNGO = <Widget>[
     NgoHome(),
-    AboutNgo(),
+    NgoHome(),
     AboutNgo(),
     NgoProfile(),
   ];
@@ -170,4 +104,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-

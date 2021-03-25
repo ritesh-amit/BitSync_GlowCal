@@ -136,8 +136,8 @@ class _DrawerCodeState extends State<DrawerCode> {
             SvgPicture.asset(
               ic,
               allowDrawingOutsideViewBox: true,
-              width: h * 20,
-              height: b * 20,
+              width: h * 23,
+              height: b * 23,
             ),
             SizedBox(width: SizeConfig.screenWidth * 25 / 375),
             Text(
