@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:gur/Utils/SizeConfig.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +12,9 @@ import 'dart:async';
 import 'package:bubble/bubble.dart';
 import 'package:gur/Utils/messageUI.dart';
 import 'package:gur/models/msg.dart';
+import 'package:gur/screens/mainScreens/aboutNgo.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../Utils/constants.dart';
 import '../../Utils/SizeConfig.dart';
 
@@ -34,6 +40,8 @@ class _ChatScreenState extends State<ChatScreen> {
   StreamSubscription<DocumentSnapshot> subscription;
   File imageFile;
   TextEditingController _messageController;
+  bool acceptOrNot = false;
+  int userType;
 
   void tolast() {
     _scrollController.animateTo(
@@ -47,7 +55,32 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
 
+    loadType();
+
     _messageController = TextEditingController();
+    FirebaseFirestore.instance
+        .collection('donorChats')
+        .doc('lists')
+        .collection(widget.receiverUid)
+        .doc(widget.senderUID)
+        .snapshots()
+        .listen((event) {
+      setState(() {
+        acceptOrNot = event.data()['isAccept'];
+      });
+    });
+  }
+
+  loadType() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String tempType = pref.getString('currentUserType');
+
+    setState(() {
+      if (tempType == 'ngo')
+        userType = 1;
+      else
+        userType = 0;
+    });
   }
 
   @override
@@ -62,7 +95,7 @@ class _ChatScreenState extends State<ChatScreen> {
         .collection('donorChats')
         .doc('messages')
         .collection("messages")
-        .doc(message.senderUid)
+        .doc(widget.senderUID)
         .collection(widget.receiverUid);
 
     _collectionReference.add(map).whenComplete(() {
@@ -70,9 +103,11 @@ class _ChatScreenState extends State<ChatScreen> {
     });
 
     _collectionReference = FirebaseFirestore.instance
+        .collection('donorChats')
+        .doc('messages')
         .collection("messages")
         .doc(widget.receiverUid)
-        .collection(message.senderUid);
+        .collection(widget.senderUID);
 
     _collectionReference.add(map).whenComplete(() {
       print("Messages added to db");
@@ -135,8 +170,12 @@ class _ChatScreenState extends State<ChatScreen> {
                   ],
                 ),
               ),
-              ChatMessagesListWidget(),
-              ChatInputWidget(),
+              userType == 1
+                  ? acceptOrNot
+                      ? ChatMessagesListWidget()
+                      : collectionReq()
+                  : ChatMessagesListWidget(),
+              acceptOrNot ? ChatInputWidget() : notAcceptedText(),
             ],
           ),
         ),
@@ -220,6 +259,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         //sendNotification(_messageController.text);
                         //initLocalDB(_messageController.text);
                         sendMessage();
+                        //viewLocationInMaps();
                       }
                     },
                   ),
@@ -262,6 +302,166 @@ class _ChatScreenState extends State<ChatScreen> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.orange,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget notAcceptedText() {
+    return Text("Wait for NGO to accept your request");
+  }
+
+  Widget contactDetails() {
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
+
+    return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+      Container(
+        padding: EdgeInsets.fromLTRB(b * 25, h * 15, b * 20, h * 19),
+        margin: EdgeInsets.only(right: b * 20),
+        height: h * 170,
+        width: b * 260,
+        decoration: BoxDecoration(
+          color: Color(0xfff1f1f1),
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(b * 30),
+            topLeft: Radius.circular(b * 30),
+            topRight: Radius.circular(b * 30),
+          ),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            'Hey! You Have accepted a request from UserName',
+            style: txtS(textColor, 14, FontWeight.w600),
+          ),
+          sh(15),
+          Text(
+            'Shared contact Details',
+            style: txtS(textColor, 14, FontWeight.w600),
+          ),
+          sh(10),
+          Row(
+            children: [
+              Text(
+                'Name:   ',
+                style: txtS(textColor, 14, FontWeight.w600),
+              ),
+              Text(
+                'Ngo Person Name',
+                style: txtS(textColor, 14, FontWeight.w400),
+              ),
+            ],
+          ),
+          sh(5),
+          Row(
+            children: [
+              Text(
+                'Phone:   ',
+                style: txtS(textColor, 14, FontWeight.w600),
+              ),
+              Text(
+                '6387246025',
+                style: txtS(textColor, 14, FontWeight.w400),
+              ),
+            ],
+          ),
+        ]),
+      ),
+    ]);
+  }
+
+  Widget collectionReq() {
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
+    return Container(
+      margin: EdgeInsets.only(right: b * 130, left: b * 20),
+      height: h * 170,
+      width: b * 260,
+      decoration: BoxDecoration(
+        color: Color(0xfffff2e1),
+        borderRadius: BorderRadius.only(
+          bottomRight: Radius.circular(b * 30),
+          topLeft: Radius.circular(b * 30),
+          topRight: Radius.circular(b * 30),
+        ),
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(b * 20, h * 17, b * 50, h * 19),
+            child: Text(
+              'Hey! You\'ve got a food collection request.',
+              style: txtS(textColor, 14, FontWeight.w600),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: b * 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                  onTap: () {
+                    getDonationLocationInMaps();
+                  },
+                  child: Column(
+                    children: [
+                      Container(
+                        height: h * 30,
+                        width: b * 30,
+                        child: SvgPicture.asset(
+                          'images/map.svg',
+                          allowDrawingOutsideViewBox: true,
+                        ),
+                      ),
+                      sh(5),
+                      Text(
+                        'Get Location',
+                        style: txtS(textColor, 10, FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                ),
+                InkWell(
+                  child: Column(
+                    children: [
+                      Container(
+                        height: h * 30,
+                        width: b * 30,
+                        child: SvgPicture.asset(
+                          'images/Tick Square.svg',
+                          allowDrawingOutsideViewBox: true,
+                        ),
+                      ),
+                      sh(5),
+                      Text(
+                        'Happy to Take it',
+                        style: txtS(textColor, 10, FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                ),
+                InkWell(
+                  child: Column(
+                    children: [
+                      Container(
+                        height: h * 30,
+                        width: b * 30,
+                        child: SvgPicture.asset(
+                          'images/Close Square.svg',
+                          allowDrawingOutsideViewBox: true,
+                        ),
+                      ),
+                      sh(5),
+                      Text(
+                        'Cant\'t go Now',
+                        style: txtS(textColor, 10, FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -528,4 +728,44 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }*/
 
+  getDonationLocationInMaps() async {
+    String url = "";
+    double lat, lon;
+    double originLat, originLon;
+
+    Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.bestForNavigation)
+        .then((position) {
+      originLat = position.latitude;
+      originLon = position.longitude;
+    });
+
+    FirebaseFirestore.instance
+        .collection('donations')
+        .where('donatedTo', isEqualTo: widget.senderUID)
+        .where('donorUID', isEqualTo: widget.receiverUid)
+        .snapshots()
+        .listen((snap) async {
+      lat = snap.docs[0].data()['latitude'];
+      lon = snap.docs[0].data()['longitude'];
+
+      url = 'https://www.google.com/maps/dir/?api=1&' +
+          'origin=' +
+          originLat.toString() +
+          ',' +
+          originLon.toString() +
+          "&destination=" +
+          lat.toString() +
+          ',' +
+          lon.toString();
+
+      if (await canLaunch(url)) {
+        launch(url);
+      } else
+        throw "Could not launch $url";
+    });
+
+    print('Launching Maps');
+    //await LaunchApp.openApp(androidPackageName: 'com.google.android.apps.maps');
+  }
 }

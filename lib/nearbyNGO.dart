@@ -77,7 +77,6 @@ class _NearbyNGOState extends State<NearbyNGO> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
-
         margin: EdgeInsets.symmetric(horizontal: b * 20),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           sh(50),
@@ -103,6 +102,7 @@ class _NearbyNGOState extends State<NearbyNGO> {
                           onTap: () {
                             Navigator.pop(context);
                             dialogBoxDonateDone(context);
+                            uploadDonationToDB(nearbyNGOList[index].uid);
                           },
                           child: Container(
                             margin: EdgeInsets.only(
@@ -131,11 +131,6 @@ class _NearbyNGOState extends State<NearbyNGO> {
                                     color: Color(0xff785758),
                                     image: DecorationImage(
                                       image: AssetImage('images/ill1.png'),
-                                      fit: BoxFit.cover,
-
-                                    ),
-                                    child: Image.network(
-                                      nearbyNGOList[index].photoUrl,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
