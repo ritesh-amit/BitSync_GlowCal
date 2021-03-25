@@ -1,16 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:gur/dialogboxes/donateDoneDialog.dart';
+import 'package:gur/models/foodPacket.dart';
 import 'package:gur/models/ngo.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 import 'Utils/SizeConfig.dart';
 import 'Utils/constants.dart';
 
 class NearbyNGO extends StatefulWidget {
-  final double userLat;
-  final double userLong;
+  final FoodPacket foodPacket;
 
-  NearbyNGO({this.userLat, this.userLong});
+  NearbyNGO(this.foodPacket);
   @override
   _NearbyNGOState createState() => _NearbyNGOState();
 }
@@ -29,8 +34,8 @@ class _NearbyNGOState extends State<NearbyNGO> {
 
   loadList() async {
     FirebaseFirestore.instance
-        .collection('ngo')
-        .where('isVarified', isEqualTo: true)
+        .collection('users')
+        .where('isVerified', isEqualTo: true)
         .snapshots()
         .listen((snapshot) {
       List<QueryDocumentSnapshot> completeList = snapshot.docs;
@@ -39,15 +44,16 @@ class _NearbyNGOState extends State<NearbyNGO> {
         double lat = i.data()['lat'];
         double lon = i.data()['lon'];
 
-        int distance = (Geolocator.distanceBetween(
-                    lat, lon, widget.userLat, widget.userLong) /
+        int distance = (Geolocator.distanceBetween(lat, lon,
+                    widget.foodPacket.latitude, widget.foodPacket.longitude) /
                 1000)
             .ceil();
 
         NGO tempNGO = NGO(
             distance: distance,
             name: i.data()['name'],
-            photoUrl: i.data()['photoURL']);
+            photoUrl: i.data()['image1'],
+            uid: i.data()['uid']);
 
         nearbyNGOList.add(tempNGO);
       }
@@ -88,7 +94,8 @@ class _NearbyNGOState extends State<NearbyNGO> {
                         children: <Widget>[
                           InkWell(
                             onTap: () {
-                              Navigator.pop(context);
+                              //Navigator.of(context).pop();
+                              uploadDonationToDB(nearbyNGOList[index].uid);
                             },
                             child: Container(
                               margin: EdgeInsets.only(
@@ -109,6 +116,10 @@ class _NearbyNGOState extends State<NearbyNGO> {
                                       borderRadius:
                                           BorderRadius.circular(b * 13),
                                       color: Color(0xff785758),
+                                    ),
+                                    child: Image.network(
+                                      nearbyNGOList[index].photoUrl,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
                                   SizedBox(width: b * 15),
@@ -217,5 +228,36 @@ class _NearbyNGOState extends State<NearbyNGO> {
       fontWeight: wg,
       fontSize: SizeConfig.screenWidth * siz / 414,
     );
+  }
+
+  uploadDonationToDB(String ngoUID) async {
+    widget.foodPacket.donatedTo = ngoUID;
+    var map = widget.foodPacket.toMap();
+
+    map.update('donatedTo', (value) => ngoUID);
+
+    FirebaseFirestore.instance.collection('donations').add(map).then((value) {
+      sendNotification(ngoUID);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Donated With Love"),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+        duration: Duration(seconds: 5),
+      ));
+
+      dialogBoxDonateDone(context);
+    }).catchError((error) {
+      print(error);
+      Toast.show("Error Encountered", context);
+    });
+  }
+
+  sendNotification(String ngoUID) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String donorUID = pref.getString('currentUserUID');
+
+    FirebaseFunctions.instance
+        .httpsCallable('sendDonation')
+        .call({'ngoUID': widget.foodPacket.donatedTo, 'donorUID': donorUID});
   }
 }

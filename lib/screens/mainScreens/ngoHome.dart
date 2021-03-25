@@ -1,9 +1,32 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:gur/screens/chatSection/chatScreen.dart';
+import 'package:gur/screens/chatSection/messageScreen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gur/drawer.dart';
+import 'package:get/get.dart';
+
+final GlobalKey<NavigatorState> _loadingKey = GlobalKey<NavigatorState>();
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print(message.data);
+  print("Handling a background message: ${message.messageId}");
+
+  /* FirebaseMessaging.instance.getInitialMessage().then((msg) {
+    if (message.data['uid'] != null) Get.to(MessageScreen());
+    /*  Navigator.of(ctx).push(MaterialPageRoute(builder: (ctx) {
+        return MessageScreen();
+      })); */
+  }); */
+}
 
 class NgoHome extends StatefulWidget {
   _NgoHomeState createState() => _NgoHomeState();
@@ -13,6 +36,74 @@ class _NgoHomeState extends State<NgoHome> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController aboutController = TextEditingController();
   bool isAbout = false;
+  SharedPreferences preferences;
+  String uid = '';
+  @override
+  void initState() {
+    super.initState();
+    fcmInit(context);
+  }
+
+  fcmInit(ctx) async {
+    print("Inside FCM init Function");
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      addDonotToDB(message);
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
+      print('A new onMessageOpenedApp event was published');
+
+      addDonotToDB(message);
+    });
+    FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+        alert: true, sound: true, badge: true);
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
+
+  addDonotToDB(RemoteMessage message) async {
+    print("Donor UID: ${message.data['donorUid']}");
+    print("NGO UID: ${message.data['uid']}");
+    String ngoName = "";
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(message.data['uid'])
+        .snapshots()
+        .listen((snap) {
+      ngoName = snap.data()['name'];
+    });
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(message.data['donorUid'])
+        .snapshots()
+        .listen((snap) {
+      String donorName = snap.data()['name'];
+
+      FirebaseFirestore.instance
+          .collection('donorChats')
+          .doc('lists')
+          .collection(message.data['uid'])
+          .doc(message.data['donorUid'])
+          .set({'uid': message.data['donorUid'], 'name': donorName}).then(
+              (value) {
+        uid = FirebaseAuth.instance.currentUser.uid;
+
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return ChatScreen(message.data['donorUid'], message.data['uid']);
+        }));
+      });
+
+      FirebaseFirestore.instance
+          .collection('donorChats')
+          .doc('lists')
+          .collection(message.data['donorUid'])
+          .doc(message.data['uid'])
+          .set({'uid': message.data['uid'], 'name': ngoName});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +159,13 @@ class _NgoHomeState extends State<NgoHome> {
                 ),
                 Spacer(),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    String uid = FirebaseAuth.instance.currentUser.uid;
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return MessageScreen(uid);
+                    }));
+                  },
                   child: Container(
                     height: h * 30,
                     width: b * 30,

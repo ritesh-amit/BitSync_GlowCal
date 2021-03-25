@@ -26,15 +26,21 @@ dependencies:
   bubble: ^1.1.9+1
   carousel_slider: ^3.0.0
   cloud_firestore: ^1.0.1
+  cloud_functions: ^1.0.1
   cupertino_icons: ^1.0.0
   firebase_auth: ^1.0.1
-  firebase_core: ^1.0.1
-  firebase_messaging: ^9.0.0
+  firebase_core: ^1.0.2
+  firebase_messaging: ^9.0.1
+  firebase_storage: ^8.0.0
+  flutter_animated_dialog: ^2.0.0
   flutter_email_sender: ^4.0.0
+  flutter_local_notifications: ^5.0.0
   flutter_svg: ^0.21.0-nullsafety.0
   geolocator: ^7.0.1
+  get: ^3.26.0
   google_fonts: ^2.0.0
   google_sign_in: ^4.5.9
+  image_picker: ^0.7.3
   location: ">=1.0.0 <=4.0.0"
   material_design_icons_flutter: null
   otp_text_field: ^1.1.0
@@ -42,15 +48,15 @@ dependencies:
   pinput: ^1.0.0
   shared_preferences: ^2.0.5
   titled_navigation_bar: ^4.1.0
-  flutter_animated_dialog: ^2.0.0
+  toast: null
   url_launcher: ^6.0.2
-  toast:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_launcher_icons: ^0.9.0
+
 
 flutter_icons:
   android: true

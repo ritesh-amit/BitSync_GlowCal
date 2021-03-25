@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -348,7 +349,7 @@ class _LoginState extends State<Login> {
     }
   }
 
-  void getUserDataFromDb(String userUid) {
+  void getUserDataFromDb(String userUid) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     firestore.collection('users').doc(userUid).snapshots().listen((snapshot) {
@@ -363,6 +364,11 @@ class _LoginState extends State<Login> {
       if (snapshot.data()['address'] != null) {
         preferences.setString('currentUserAddress', snapshot.data()['address']);
       }
+    });
+
+    await FirebaseMessaging.instance.getToken().then((value) {
+      print("User Token: $value");
+      firestore.collection('users').doc(userUid).update({'token': value});
     });
   }
 
