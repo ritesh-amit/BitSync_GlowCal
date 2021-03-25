@@ -11,8 +11,10 @@ import 'dart:async';
 
 import 'package:bubble/bubble.dart';
 import 'package:gur/Utils/messageUI.dart';
+import 'package:gur/main.dart';
 import 'package:gur/models/msg.dart';
 import 'package:gur/screens/mainScreens/aboutNgo.dart';
+import 'package:location/location.dart' as loc;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../Utils/constants.dart';
@@ -41,7 +43,9 @@ class _ChatScreenState extends State<ChatScreen> {
   File imageFile;
   TextEditingController _messageController;
   bool acceptOrNot = false;
+  bool isRejected = false;
   int userType;
+  String donationUID = "";
 
   void tolast() {
     _scrollController.animateTo(
@@ -58,6 +62,19 @@ class _ChatScreenState extends State<ChatScreen> {
     loadType();
 
     _messageController = TextEditingController();
+
+    FirebaseFirestore.instance
+        .collection('donations')
+        .where('donatedTo', isEqualTo: widget.senderUID)
+        .where('donorUID', isEqualTo: widget.receiverUid)
+        .where('isActive', isEqualTo: true)
+        .snapshots()
+        .listen((event) {
+      setState(() {
+        donationUID = event.docs[0].id;
+      });
+    });
+
     FirebaseFirestore.instance
         .collection('donorChats')
         .doc('lists')
@@ -67,6 +84,7 @@ class _ChatScreenState extends State<ChatScreen> {
         .listen((event) {
       setState(() {
         acceptOrNot = event.data()['isAccept'];
+        //isRejected = event.data()['isRejected'];
       });
     });
   }
@@ -170,11 +188,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   ],
                 ),
               ),
-              userType == 1
-                  ? acceptOrNot
-                      ? ChatMessagesListWidget()
-                      : collectionReq()
-                  : ChatMessagesListWidget(),
+              isRejected
+                  ? Text("Sorry, Your last donation was Rejected by NGO")
+                  : userType == 1
+                      ? acceptOrNot
+                          ? ChatMessagesListWidget()
+                          : collectionReq()
+                      : ChatMessagesListWidget(),
               acceptOrNot ? ChatInputWidget() : notAcceptedText(),
             ],
           ),
@@ -424,6 +444,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
                 InkWell(
+                  onTap: () {
+                    donationAccepted();
+                  },
                   child: Column(
                     children: [
                       Container(
@@ -443,6 +466,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
                 InkWell(
+                  onTap: () {
+                    donationRejected();
+                  },
                   child: Column(
                     children: [
                       Container(
@@ -455,7 +481,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                       sh(5),
                       Text(
-                        'Cant\'t go Now',
+                        'Can\'t go Now',
                         style: txtS(textColor, 10, FontWeight.w500),
                       ),
                     ],
@@ -733,39 +759,150 @@ class _ChatScreenState extends State<ChatScreen> {
     double lat, lon;
     double originLat, originLon;
 
-    Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.bestForNavigation)
-        .then((position) {
-      originLat = position.latitude;
-      originLon = position.longitude;
-    });
+    if (await checkForLocationPermission()) {
+      Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.bestForNavigation)
+          .then((position) {
+        originLat = position.latitude;
+        originLon = position.longitude;
+      });
 
+      FirebaseFirestore.instance
+          .collection('donations')
+          .where('donatedTo', isEqualTo: widget.senderUID)
+          .where('donorUID', isEqualTo: widget.receiverUid)
+          .snapshots()
+          .listen((snap) async {
+        lat = snap.docs[0].data()['latitude'];
+        lon = snap.docs[0].data()['longitude'];
+
+        url = 'https://www.google.com/maps/dir/?api=1&' +
+            'origin=' +
+            originLat.toString() +
+            ',' +
+            originLon.toString() +
+            "&destination=" +
+            lat.toString() +
+            ',' +
+            lon.toString();
+
+        if (await canLaunch(url)) {
+          launch(url);
+        } else
+          throw "Could not launch $url";
+      });
+
+      print('Launching Maps');
+    } else
+      print("Error in getting Location Permission");
+  }
+
+  Future<bool> checkForLocationPermission() async {
+    loc.Location location = loc.Location();
+    loc.PermissionStatus permissionStatus;
+    bool permissionsOK;
+
+    bool serviceEnabled = await location.serviceEnabled();
+
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (serviceEnabled)
+        permissionsOK = true;
+      else
+        permissionsOK = false;
+    } else
+      permissionsOK = true;
+
+    permissionStatus = await location.hasPermission();
+    if (permissionStatus == loc.PermissionStatus.denied) {
+      permissionStatus = await location.requestPermission();
+
+      if (permissionStatus == loc.PermissionStatus.denied ||
+          permissionStatus == loc.PermissionStatus.deniedForever) {
+        permissionsOK = false;
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Insufficient Permission"),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ));
+      } else
+        permissionsOK = true;
+    } else if (permissionStatus == loc.PermissionStatus.deniedForever)
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Insufficient Permission"),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ));
+    else
+      permissionsOK = true;
+
+    if (permissionsOK) {
+      return true;
+    } else
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Insufficient Permission"),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ));
+
+    return false;
+  }
+
+  donationAccepted() async {
     FirebaseFirestore.instance
         .collection('donations')
         .where('donatedTo', isEqualTo: widget.senderUID)
         .where('donorUID', isEqualTo: widget.receiverUid)
+        .where('isActive', isEqualTo: true)
         .snapshots()
-        .listen((snap) async {
-      lat = snap.docs[0].data()['latitude'];
-      lon = snap.docs[0].data()['longitude'];
+        .listen((snap) {
+      String docId = snap.docs[0].id;
 
-      url = 'https://www.google.com/maps/dir/?api=1&' +
-          'origin=' +
-          originLat.toString() +
-          ',' +
-          originLon.toString() +
-          "&destination=" +
-          lat.toString() +
-          ',' +
-          lon.toString();
-
-      if (await canLaunch(url)) {
-        launch(url);
-      } else
-        throw "Could not launch $url";
+      FirebaseFirestore.instance
+          .collection('donations')
+          .doc(docId)
+          .update({'isAccept': true}).then((value) {
+        FirebaseFirestore.instance
+            .collection('donorChats')
+            .doc('lists')
+            .collection(widget.senderUID)
+            .doc(widget.receiverUid)
+            .update({'isAccept': true}).then((value) {
+          FirebaseFirestore.instance
+              .collection('donorChats')
+              .doc('lists')
+              .collection(widget.receiverUid)
+              .doc(widget.senderUID)
+              .update({'isAccept': true}).then((value) {
+            setState(() {
+              acceptOrNot = true;
+            });
+          });
+        });
+      });
     });
+  }
 
-    print('Launching Maps');
-    //await LaunchApp.openApp(androidPackageName: 'com.google.android.apps.maps');
+  donationRejected() {
+    FirebaseFirestore.instance
+        .collection('donations')
+        .where('donatedTo', isEqualTo: widget.senderUID)
+        .where('donorUID', isEqualTo: widget.receiverUid)
+        .where('isActive', isEqualTo: true)
+        .snapshots()
+        .listen((snap) {
+      String docId = snap.docs[0].id;
+
+      FirebaseFirestore.instance.collection('donations').doc(docId).update({
+        'isActive': false,
+        'isRejected': true,
+        'isAccept': false
+      }).then((value) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) {
+          return Home();
+        }), (route) => false);
+      });
+    });
   }
 }
