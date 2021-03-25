@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/drawer.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:location/location.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
@@ -41,6 +46,7 @@ class _NgoProfileState extends State<NgoProfile> {
   String userPhone = "NA";
   String address = "NA";
   bool suraj = false;
+  String designation = "NA";
 
   String email = "";
   bool getImage1 = false;
@@ -48,7 +54,9 @@ class _NgoProfileState extends State<NgoProfile> {
   bool getImage3 = false;
   bool getImage4 = false;
   bool isLocation = false;
-  String designation = "NA";
+  bool isImageUpload = false;
+
+  File image1File, image2File, image3File, image4File;
 
   loadData() async {
     preferences = await SharedPreferences.getInstance();
@@ -178,8 +186,8 @@ class _NgoProfileState extends State<NgoProfile> {
                                 ),
                           isNgoName
                               ? butt(
-                                  fn: userDetailChange(
-                                      'name', "NGO name can't be change"),
+                                  field: 'name',
+                                  value: "NGO name can't be change",
                                   visibleBool: isName)
                               : SizedBox(),
                         ],
@@ -389,8 +397,8 @@ class _NgoProfileState extends State<NgoProfile> {
                                 ),
                           isPhone
                               ? butt(
-                                  fn: userDetailChange(
-                                      'phone', phoneController.text.trim()),
+                                  field: 'phone',
+                                  value: phoneController.text.trim(),
                                   visibleBool: isPhone)
                               : SizedBox(),
                         ],
@@ -448,8 +456,8 @@ class _NgoProfileState extends State<NgoProfile> {
                                 ),
                           isName
                               ? butt(
-                                  fn: userDetailChange('inChargeName',
-                                      inChargeNameController.text.trim()),
+                                  field: 'inChargeName',
+                                  value: inChargeNameController.text.trim(),
                                   visibleBool: isName)
                               : SizedBox(),
                         ],
@@ -508,8 +516,8 @@ class _NgoProfileState extends State<NgoProfile> {
                                 ),
                           isDes
                               ? butt(
-                                  fn: userDetailChange('designation',
-                                      designationController.text.trim()),
+                                  field: 'designation',
+                                  value: designationController.text.trim(),
                                   visibleBool: isDes)
                               : SizedBox(),
                         ],
@@ -670,6 +678,7 @@ class _NgoProfileState extends State<NgoProfile> {
                               ? Container(
                                   width: b * 270,
                                   child: TextField(
+                                    controller: summaryController,
                                     style: txtS(textColor, 15, FontWeight.w500),
                                     decoration: dec('Summary'),
                                   ),
@@ -678,7 +687,12 @@ class _NgoProfileState extends State<NgoProfile> {
                                   "Some random Summary",
                                   style: txtS(textColor, 16, FontWeight.w500),
                                 ),
-                          isSumm ? butt() : SizedBox(),
+                          isSumm
+                              ? butt(
+                                  field: 'summary',
+                                  value: designationController.text.trim(),
+                                  visibleBool: isSumm)
+                              : SizedBox(),
                         ],
                       ),
                       Spacer(),
@@ -699,20 +713,47 @@ class _NgoProfileState extends State<NgoProfile> {
                   ),
                 ),
                 sh(10),
-                Text(
-                  "NGO Pics",
-                  style: txtS(rc, 16, FontWeight.w700),
-                ),
-                sh(5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    getImageCont(false, null),
-                    getImageCont(true, null),
-                    getImageCont(false, null),
-                    getImageCont(true, null),
-                  ],
-                ),
+                isImageUpload
+                    ? sh(1)
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "NGO Pics",
+                            style: txtS(rc, 16, FontWeight.w700),
+                          ),
+                          sh(5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              getImageCont(getImage1, 1),
+                              getImageCont(getImage2, 2),
+                              getImageCont(getImage3, 3),
+                              getImageCont(getImage4, 4),
+                            ],
+                          ),
+                          sh(20),
+                          MaterialButton(
+                            height: h * 30,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(b * 6),
+                            ),
+                            color: !isImageUpload ? mc : Color(0xff28797c),
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            onPressed: () {
+                              uploadImageAndToDB();
+                            },
+                            child: Container(
+                              color: !isImageUpload ? mc : Color(0xff28797c),
+                              child: Text(
+                                !isImageUpload ? "Upload Images" : "Done",
+                                style: txtS(Colors.white, 10, FontWeight.w500),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                 sh(20),
                 Row(
                   children: [
@@ -730,7 +771,7 @@ class _NgoProfileState extends State<NgoProfile> {
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       onPressed: () {
                         setState(() {
-                          isLocation = !isLocation;
+                          currentLocation();
                         });
                       },
                       child: Container(
@@ -775,14 +816,14 @@ class _NgoProfileState extends State<NgoProfile> {
     );
   }
 
-  InkWell getImageCont(bool isImage, Function getImage) {
+  InkWell getImageCont(bool isImage, int imageCode) {
     var b = SizeConfig.screenWidth / 414;
     var h = SizeConfig.screenHeight / 896;
 
     return InkWell(
       splashColor: mc,
       onTap: () {
-        //function
+        pickImage(imageCode);
       },
       child: isImage
           ? Container(
@@ -792,7 +833,13 @@ class _NgoProfileState extends State<NgoProfile> {
                 border: Border.all(color: rc),
                 borderRadius: BorderRadius.circular(b * 5),
               ),
-              child: Image.asset('images/ill2.png'),
+              child: imageCode == 1
+                  ? Image.file(image1File)
+                  : imageCode == 2
+                      ? Image.file(image2File)
+                      : imageCode == 3
+                          ? Image.file(image3File)
+                          : Image.file(image4File),
             )
           : Container(
               height: h * 80,
@@ -824,14 +871,14 @@ class _NgoProfileState extends State<NgoProfile> {
     );
   }
 
-  Padding butt({Future<dynamic> fn, bool visibleBool}) {
+  Padding butt({String field, String value, bool visibleBool}) {
     return Padding(
       padding: EdgeInsets.only(
           left: SizeConfig.screenWidth / 414 * 180,
           top: SizeConfig.screenHeight / 896 * 10),
       child: InkWell(
         onTap: () {
-          fn;
+          userDetailChange(field, value);
           setState(() {
             visibleBool = !visibleBool;
           });
@@ -1021,6 +1068,155 @@ class _NgoProfileState extends State<NgoProfile> {
         pref.setString('currentUserAddress', data);
       else if (field == 'designation')
         pref.setString('currentUserDesignation', data);
+      else if (field == 'summary') pref.setString('currentUserSummary', data);
     });
+  }
+
+  pickImage(int imageCode) async {
+    var picker = await ImagePicker().getImage(source: ImageSource.gallery);
+
+    File selectedImage = File(picker.path);
+    setState(() {
+      if (imageCode == 1) {
+        image1File = selectedImage;
+        getImage1 = true;
+      } else if (imageCode == 2) {
+        image2File = selectedImage;
+        getImage2 = true;
+      } else if (imageCode == 3) {
+        image3File = selectedImage;
+        getImage3 = true;
+      } else {
+        image4File = selectedImage;
+        getImage4 = true;
+      }
+    });
+  }
+
+  uploadImageAndToDB() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String uid = preferences.getString('currentUserUID');
+
+    if (image1File == null &&
+        image2File == null &&
+        image3File == null &&
+        image4File == null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Upload all four images"),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.red,
+      ));
+    } else {
+      await FirebaseStorage.instance
+          .ref()
+          .child('ngoImages')
+          .child(uid)
+          .child('1')
+          .putFile(image1File);
+
+      await FirebaseStorage.instance
+          .ref()
+          .child('ngoImages')
+          .child(uid)
+          .child('2')
+          .putFile(image2File);
+
+      await FirebaseStorage.instance
+          .ref()
+          .child('ngoImages')
+          .child(uid)
+          .child('3')
+          .putFile(image3File);
+
+      await FirebaseStorage.instance
+          .ref()
+          .child('ngoImages')
+          .child(uid)
+          .child('4')
+          .putFile(image4File)
+          .then((snapshot) {
+        setState(() {
+          isImageUpload = true;
+        });
+      });
+
+      String image1URL = await getImageLink('1', uid);
+      String image2URL = await getImageLink('2', uid);
+      String image3URL = await getImageLink('3', uid);
+      String image4URL = await getImageLink('4', uid);
+
+      FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'image1': image1URL,
+        'image2': image2URL,
+        'image3': image3URL,
+        'image4': image4URL
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Images Uploaded Successfully"),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.green,
+      ));
+    }
+  }
+
+  Future<String> getImageLink(String code, String uid) async {
+    String url = await FirebaseStorage.instance
+        .ref()
+        .child('ngoImages')
+        .child(uid)
+        .child(code)
+        .getDownloadURL();
+
+    return url;
+  }
+
+  currentLocation() async {
+    Location location = Location();
+    bool serviceEnabled;
+    PermissionStatus permissionStatus;
+    LocationData locationData;
+    serviceEnabled = await location.serviceEnabled();
+    bool permissionsOK;
+
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (serviceEnabled)
+        permissionsOK = true;
+      else
+        permissionsOK = false;
+    } else
+      permissionsOK = true;
+
+    permissionStatus = await location.hasPermission();
+    if (permissionStatus == PermissionStatus.denied) {
+      permissionStatus = await location.requestPermission();
+
+      if (permissionStatus == PermissionStatus.denied ||
+          permissionStatus == PermissionStatus.deniedForever) {
+        permissionsOK = false;
+        Toast.show("Permission Required", context);
+      } else
+        permissionsOK = true;
+    } else if (permissionStatus == PermissionStatus.deniedForever)
+      Toast.show("Permission Required", context);
+    else
+      permissionsOK = true;
+
+    if (permissionsOK) {
+      locationData = await location.getLocation();
+      double latitude = locationData.latitude;
+      double longitude = locationData.longitude;
+
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(preferences.getString('currentUserUID'))
+          .update({'lon': longitude, 'lat': latitude}).then((value) {
+        setState(() {
+          isLocation = true;
+        });
+      });
+    } else
+      Toast.show("Insufficient Permission", context);
   }
 }

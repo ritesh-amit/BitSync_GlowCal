@@ -186,16 +186,9 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
                 ),
                 sh(34),
                 InkWell(
-                  onTap: () {
+                  onTap: () async {
                     Navigator.pop(context);
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return NearbyNGO(
-                        userLat: latitude,
-                        userLong: longitude,
-                      );
-                    }));
-                    //uploadDonationToDB();
+                    collectFoodPackedData();
                   },
                   child: Container(
                     height: h * 48,
@@ -217,6 +210,22 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
         ]),
       ),
     );
+  }
+
+  collectFoodPackedData() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    FoodPacket foodPacket = FoodPacket(
+        amount: widget.foodAmount,
+        donor: preferences.getString('currentUserName'),
+        donorUID: preferences.getString('currentUserUID'),
+        latitude: latitude,
+        longitude: longitude,
+        remark: remarkController.text.trim(),
+        dateTime: Timestamp.now().millisecondsSinceEpoch.toString());
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return NearbyNGO(foodPacket);
+    }));
   }
 
   currentLocation() async {
@@ -253,38 +262,6 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
       longitude = locationData.longitude;
     } else
       Toast.show("Insufficient Permission", context);
-  }
-
-  uploadDonationToDB() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    FoodPacket foodPacket;
-
-    if (!rad) {
-      foodPacket = FoodPacket(
-          amount: widget.foodAmount,
-          donor: preferences.getString('currentUserName'),
-          remark: remarkController.text,
-          dateTime: Timestamp.now().millisecondsSinceEpoch.toString(),
-          manualAddress: locationController.text.trim());
-    } else {
-      foodPacket = FoodPacket(
-          amount: widget.foodAmount,
-          donor: preferences.getString('currentUserName'),
-          latitude: latitude,
-          longitude: longitude,
-          remark: remarkController.text.trim(),
-          dateTime: Timestamp.now().millisecondsSinceEpoch.toString());
-    }
-
-    var map = foodPacket.toMap();
-
-    FirebaseFirestore.instance.collection('donations').add(map).then((value) {
-      Toast.show("Donated with Love", context, duration: Toast.LENGTH_LONG);
-      dialogBoxDonateDone(context);
-    }).catchError((error) {
-      print(error);
-      Toast.show("Error Encountered", context);
-    });
   }
 }
 

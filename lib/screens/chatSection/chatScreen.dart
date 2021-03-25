@@ -7,22 +7,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 
 import 'package:bubble/bubble.dart';
+import 'package:gur/Utils/messageUI.dart';
+import 'package:gur/models/msg.dart';
 import '../../Utils/constants.dart';
 import '../../Utils/SizeConfig.dart';
 
 class ChatScreen extends StatefulWidget {
-  String name;
-  String email;
-  String photoUrl;
-  String receiverUid;
-  String role;
-  ChatScreen({
-    this.name,
-    this.photoUrl,
-    this.receiverUid,
-    this.role,
-    this.email,
-  });
+  final String receiverUid;
+  final String senderUID;
+
+  ChatScreen(this.receiverUid, this.senderUID);
 
   _ChatScreenState createState() => _ChatScreenState();
 }
@@ -35,7 +29,6 @@ class _ChatScreenState extends State<ChatScreen> {
   var map = Map<String, dynamic>();
   CollectionReference _collectionReference;
   DocumentSnapshot documentSnapshot;
-  String _senderuid;
   var listItem;
   String receiverPhotoUrl, senderPhotoUrl, receiverName, senderName;
   StreamSubscription<DocumentSnapshot> subscription;
@@ -55,24 +48,6 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
 
     _messageController = TextEditingController();
-    getUID().then((user) {
-      setState(() {
-        _senderuid = user.uid;
-        print("sender uid : $_senderuid");
-        getSenderPhotoUrl(_senderuid).then((snapshot) {
-          setState(() {
-            senderPhotoUrl = snapshot['photoUrl'];
-            senderName = snapshot['name'];
-          });
-        });
-        getReceiverPhotoUrl(widget.receiverUid).then((snapshot) {
-          setState(() {
-            receiverPhotoUrl = snapshot['photoUrl'];
-            receiverName = snapshot['name'];
-          });
-        });
-      });
-    });
   }
 
   @override
@@ -81,9 +56,11 @@ class _ChatScreenState extends State<ChatScreen> {
     subscription?.cancel();
   }
 
-  /*void addMessageToDb(Message message) async {
+  void addMessageToDb(Message message) async {
     map = message.toMap();
     _collectionReference = FirebaseFirestore.instance
+        .collection('donorChats')
+        .doc('messages')
         .collection("messages")
         .doc(message.senderUid)
         .collection(widget.receiverUid);
@@ -101,7 +78,7 @@ class _ChatScreenState extends State<ChatScreen> {
       print("Messages added to db");
     });
     _messageController.text = "";
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,75 +88,67 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       body: Form(
         key: _formKey,
-        child: _senderuid == null
-            ? Container(
-                child: CircularProgressIndicator(),
-              )
-            : Container(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      height: h * 60,
-                      padding: EdgeInsets.symmetric(horizontal: b * 20),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.07),
-                            blurRadius: b * 4,
-                            spreadRadius: 0,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Builder(
-                            builder: (BuildContext context) {
-                              return InkWell(
-                                onTap: () {},
-                                child: Container(
-                                  padding: EdgeInsets.only(left: b * 5),
-                                  height: h * 30,
-                                  width: b * 30,
-                                  decoration: BoxDecoration(
-                                    border:
-                                        Border.all(color: mc, width: b * 1.5),
-                                    borderRadius: BorderRadius.circular(b * 12),
-                                  ),
-                                  child: Icon(Icons.arrow_back_ios,
-                                      color: mc, size: b * 16),
-                                ),
-                              );
-                            },
-                          ),
-                          Spacer(),
-                          Text(
-                            'Messages',
-                            style: txtS(mc, 20, FontWeight.w600),
-                          ),
-                          Spacer(),
-                        ],
-                      ),
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Container(
+                height: h * 60,
+                padding: EdgeInsets.symmetric(horizontal: b * 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.07),
+                      blurRadius: b * 4,
+                      spreadRadius: 0,
+                      offset: Offset(0, 2),
                     ),
-                    ChatMessagesListWidget(),
-                    ChatInputWidget(),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Builder(
+                      builder: (BuildContext context) {
+                        return InkWell(
+                          onTap: () {},
+                          child: Container(
+                            padding: EdgeInsets.only(left: b * 5),
+                            height: h * 30,
+                            width: b * 30,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: mc, width: b * 1.5),
+                              borderRadius: BorderRadius.circular(b * 12),
+                            ),
+                            child: Icon(Icons.arrow_back_ios,
+                                color: mc, size: b * 16),
+                          ),
+                        );
+                      },
+                    ),
+                    Spacer(),
+                    Text(
+                      'Messages',
+                      style: txtS(mc, 20, FontWeight.w600),
+                    ),
+                    Spacer(),
                   ],
                 ),
               ),
+              ChatMessagesListWidget(),
+              ChatInputWidget(),
+            ],
+          ),
+        ),
       ),
     );
   }
 
   Widget ChatInputWidget() {
-    var b = SizeConfig.screenWidth / 414;
-    var h = SizeConfig.screenHeight / 896;
     return Container(
-      padding: EdgeInsets.fromLTRB(
-        b * 5,
-        h * 7,
-        b * 55,
-        h * 7,
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.screenWidth * 5 / 360,
+        vertical: SizeConfig.screenHeight * 7 / 640,
       ),
       child: Row(
         children: <Widget>[
@@ -194,7 +163,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 },
                 style: TextStyle(
                   color: Color(0xff1c1c1c),
-                  fontSize: b * 14 / 360,
+                  fontSize: SizeConfig.screenWidth * 14 / 360,
                   fontWeight: FontWeight.w400,
                 ),
                 minLines: 1,
@@ -205,52 +174,54 @@ class _ChatScreenState extends State<ChatScreen> {
                   errorStyle: TextStyle(color: Colors.transparent),
                   hintStyle: TextStyle(
                     color: Color(0xff1c1c1c),
-                    fontSize: b * 14 / 360,
+                    fontSize: SizeConfig.screenWidth * 14 / 360,
                     fontWeight: FontWeight.w400,
                   ),
                   contentPadding: EdgeInsets.symmetric(
-                    vertical: h * 12,
-                    horizontal: b * 10 / 360,
+                    vertical: SizeConfig.screenHeight * 12 / 640,
+                    horizontal: SizeConfig.screenWidth * 10 / 360,
                   ),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: Colors.amber,
-                      width: b * 1 / 360,
+                      color: Colors.red,
+                      width: SizeConfig.screenWidth * 1 / 360,
                     ),
                     borderRadius: BorderRadius.circular(
-                      b * 25 / 360,
+                      SizeConfig.screenWidth * 25 / 360,
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: Colors.amber,
-                      width: b * 1 / 360,
+                      color: Colors.red,
+                      width: SizeConfig.screenWidth * 1 / 360,
                     ),
                     borderRadius: BorderRadius.circular(
-                      b * 25 / 360,
+                      SizeConfig.screenWidth * 25 / 360,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: Colors.amber,
-                      width: b * 1 / 360,
+                      color: Colors.orange,
+                      width: SizeConfig.screenWidth * 1 / 360,
                     ),
                     borderRadius: BorderRadius.circular(
-                      b * 25 / 360,
+                      SizeConfig.screenWidth * 25 / 360,
                     ),
                   ),
                   suffixIcon: InkWell(
                     child: Icon(
                       Icons.send,
                       color: Colors.grey[400],
-                      size: b * 20 / 360,
+                      size: SizeConfig.screenWidth * 20 / 360,
                     ),
-                    /*onTap: () {
+                    onTap: () {
                       tolast();
                       if (_formKey.currentState.validate()) {
+                        //sendNotification(_messageController.text);
+                        //initLocalDB(_messageController.text);
                         sendMessage();
                       }
-                    },*/
+                    },
                   ),
                   fillColor: Colors.white,
                   filled: true,
@@ -259,6 +230,38 @@ class _ChatScreenState extends State<ChatScreen> {
                   _messageController.text = value;
                 },
               ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.screenWidth * 5 / 360,
+            ),
+            child: IconButton(
+                icon: Icon(
+                  Icons.photo,
+                  color: Color.fromARGB(220, 255, 255, 255),
+                  size: SizeConfig.screenWidth * 20 / 360,
+                ),
+                onPressed: () {}),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.orange,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.screenWidth * 5 / 360,
+            ),
+            child: IconButton(
+                icon: Icon(
+                  Icons.video_label,
+                  size: SizeConfig.screenWidth * 20 / 360,
+                  color: Color.fromARGB(220, 255, 255, 255),
+                ),
+                onPressed: () {}),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.orange,
             ),
           ),
         ],
@@ -278,25 +281,19 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  /* void sendMessage() async {
+  void sendMessage() async {
     var text = _messageController.text;
-    _message = Message(
+    Message _message = Message(
         receiverUid: widget.receiverUid,
-        senderUid: _senderuid,
+        senderUid: widget.senderUID,
         message: text,
         timestamp: FieldValue.serverTimestamp(),
         type: 'text');
     print(
-        "receiverUid: ${widget.receiverUid} , senderUid : $_senderuid , message: $text");
+        "receiverUid: ${widget.receiverUid} , senderUid : $widget.senderUID , message: $text");
     print(
         "timestamp: ${DateTime.now().millisecond}, type: ${text != null ? 'text' : 'image'}");
     addMessageToDb(_message);
-  }*/
-
-  Future<User> getUID() async {
-    //User user = await _firebaseAuth.currentUser();
-    User user = FirebaseAuth.instance.currentUser;
-    return user;
   }
 
   Future<DocumentSnapshot> getSenderPhotoUrl(String uid) {
@@ -312,17 +309,14 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget ChatMessagesListWidget() {
-    var b = SizeConfig.screenWidth / 414;
-    var h = SizeConfig.screenHeight / 896;
-
-    print("SENDERUID : $_senderuid");
     return Flexible(
       child: StreamBuilder(
         stream: FirebaseFirestore.instance
+            .collection('donorChats')
+            .doc('messages')
             .collection('messages')
-            .doc(_senderuid)
+            .doc(widget.senderUID)
             .collection(widget.receiverUid)
-            .orderBy('timestamp', descending: false)
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -330,19 +324,19 @@ class _ChatScreenState extends State<ChatScreen> {
               child: CircularProgressIndicator(),
             );
           } else {
-            int rev = snapshot.data.documents.length - 1;
-            listItem = snapshot.data.documents;
+            int rev = snapshot.data.docs.length - 1;
+            listItem = snapshot.data.docs;
             return ListView.builder(
-              physics: ScrollPhysics(),
+              physics: BouncingScrollPhysics(),
               controller: _scrollController,
               padding: EdgeInsets.symmetric(
-                horizontal: b * 10 / 360,
-                vertical: h * 10,
+                horizontal: SizeConfig.screenWidth * 10 / 360,
+                vertical: SizeConfig.screenHeight * 10 / 640,
               ),
               reverse: true,
               itemBuilder: (context, index) =>
-                  chatMessageItem(snapshot.data.documents[rev - index]),
-              itemCount: snapshot.data.documents.length,
+                  chatMessageItem(snapshot.data.docs[rev - index]),
+              itemCount: snapshot.data.docs.length,
             );
           }
         },
@@ -354,234 +348,158 @@ class _ChatScreenState extends State<ChatScreen> {
     return buildChatLayout(documentSnapshot);
   }
 
-  Widget buildChatLayout(DocumentSnapshot snapshot) {
-    var b = SizeConfig.screenWidth / 414;
-    var h = SizeConfig.screenHeight / 896;
-
+  Widget buildChatLayout(DocumentSnapshot snap) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: b * 5 / 360,
+            horizontal: SizeConfig.screenWidth * 5 / 360,
           ),
           child: Row(
-            mainAxisAlignment: snapshot['senderUid'] == _senderuid
+            mainAxisAlignment: snap['senderUid'] == widget.senderUID
                 ? MainAxisAlignment.end
                 : MainAxisAlignment.start,
             children: <Widget>[
-              snapshot['senderUid'] == _senderuid
+              snap['senderUid'] == widget.senderUID
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        snapshot['type'] == 'text'
+                        snap['type'] == 'text'
                             ? Align(
-                                child: Bubble(
-                                  nipWidth: b * 5 / 360,
-                                  nipRadius: b * 2 / 360,
-                                  margin: BubbleEdges.all(0),
-                                  padding: BubbleEdges.all(0),
-                                  nip: BubbleNip.rightBottom,
-                                  color: Color.fromRGBO(48, 82, 117, 0.9),
+                                alignment: Alignment.topRight,
+                                child: CustomPaint(
+                                  painter: ChatBubble(
+                                    color: Color.fromRGBO(242, 108, 37, 0.9),
+                                    alignment: Alignment.topRight,
+                                  ),
                                   child: Container(
                                     margin: EdgeInsets.fromLTRB(
-                                      b * 14 / 360,
-                                      h * 8,
-                                      b * 8 / 360,
-                                      h * 4,
+                                      SizeConfig.screenWidth * 14 / 360,
+                                      SizeConfig.screenHeight * 9 / 640,
+                                      SizeConfig.screenWidth * 10 / 360,
+                                      SizeConfig.screenHeight * 2 / 640,
                                     ),
                                     constraints: BoxConstraints(
                                       minWidth: 0,
-                                      maxWidth: b * 0.55,
+                                      maxWidth: SizeConfig.screenWidth * 0.55,
                                     ),
-                                    child: snapshot['message'].length > 28
-                                        ? Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: <Widget>[
-                                              Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                    0, 0, b * 3 / 360, 0),
-                                                child: SelectableText(
-                                                  (snapshot['message']).trim(),
-                                                  maxLines: null,
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: b * 12,
-                                                  ),
-                                                ),
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0,
+                                                0,
+                                                SizeConfig.screenWidth *
+                                                    10 /
+                                                    360,
+                                                0),
+                                            child: Text(
+                                              snap['message'],
+                                              maxLines: null,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize:
+                                                    SizeConfig.screenWidth *
+                                                        12 /
+                                                        360,
                                               ),
-                                              SizedBox(
-                                                height: h * 7 / 640,
-                                              ),
-                                              Text(
-                                                giveTime(snapshot['timestamp']),
-                                                style: TextStyle(
-                                                  fontSize: b * 10 / 360,
-                                                  color: Colors.white60,
-                                                  fontWeight: FontWeight.w300,
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        : Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: <Widget>[
-                                              Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                  0,
-                                                  0,
-                                                  b * 5 / 360,
-                                                  h * 5 / 640,
-                                                ),
-                                                child: SelectableText(
-                                                  snapshot['message'],
-                                                  maxLines: null,
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: b * 12,
-                                                  ),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                  bottom: h * 2 / 640,
-                                                  right: b * 3 / 360,
-                                                ),
-                                                child: Text(
-                                                  giveTime(
-                                                      snapshot['timestamp']),
-                                                  style: TextStyle(
-                                                    fontSize: b * 10,
-                                                    color: Colors.white60,
-                                                    fontWeight: FontWeight.w300,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
+                                            ),
                                           ),
+                                          SizedBox(
+                                              height: SizeConfig.screenHeight *
+                                                  7 /
+                                                  640),
+                                          Text(
+                                            giveTime(snap['timestamp']),
+                                            style: TextStyle(
+                                              fontSize: SizeConfig.screenWidth *
+                                                  10 /
+                                                  360,
+                                              color: Colors.black87,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                          ),
+                                        ]),
                                   ),
                                 ),
                               )
                             : SizedBox(),
                         Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: h * 3,
-                          ),
+                          padding: EdgeInsets.all(SizeConfig.b * 0.764),
                         ),
                       ],
                     )
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        snapshot['type'] == 'text'
+                        snap['type'] == 'text'
                             ? Align(
-                                child: Bubble(
-                                  margin: BubbleEdges.all(0),
-                                  padding: BubbleEdges.all(0),
-                                  nipWidth: b * 5 / 360,
-                                  nipRadius: b * 2 / 360,
-                                  nip: BubbleNip.leftTop,
-                                  color: Colors.white,
+                                alignment: Alignment.topRight,
+                                child: CustomPaint(
+                                  painter: ChatBubble(
+                                    color: Colors.white,
+                                    alignment: Alignment.topLeft,
+                                  ),
                                   child: Container(
                                     margin: EdgeInsets.fromLTRB(
-                                      b * 14 / 360,
-                                      h * 8,
-                                      b * 5 / 360,
-                                      h * 4,
+                                      SizeConfig.screenWidth * 15 / 360,
+                                      SizeConfig.screenHeight * 9 / 640,
+                                      SizeConfig.screenWidth * 5 / 360,
+                                      SizeConfig.screenHeight * 4 / 640,
                                     ),
                                     constraints: BoxConstraints(
                                       minWidth: 0,
-                                      maxWidth: b * 0.55,
+                                      maxWidth: SizeConfig.screenWidth * 0.55,
                                     ),
-                                    child: snapshot['message'].length > 28
-                                        ? Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: <Widget>[
-                                              Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                  0,
-                                                  0,
-                                                  b * 10 / 360,
-                                                  0,
-                                                ),
-                                                child: SelectableText(
-                                                  snapshot['message'],
-                                                  maxLines: null,
-                                                  style: TextStyle(
-                                                    color: Color(0xff1c1c1c),
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: b * 12,
-                                                  ),
-                                                ),
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0,
+                                                0,
+                                                SizeConfig.screenWidth *
+                                                    10 /
+                                                    360,
+                                                0),
+                                            child: Text(
+                                              snap['message'],
+                                              maxLines: null,
+                                              style: TextStyle(
+                                                color: Color(0xff1c1c1c),
+                                                fontSize:
+                                                    SizeConfig.screenWidth *
+                                                        12 /
+                                                        360,
                                               ),
-                                              SizedBox(
-                                                height: h * 7 / 640,
-                                              ),
-                                              Text(
-                                                giveTime(snapshot['timestamp']),
-                                                style: TextStyle(
-                                                  fontSize: b * 10 / 360,
-                                                  color: Colors.grey[800],
-                                                  fontWeight: FontWeight.w300,
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        : Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: <Widget>[
-                                              Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                  0,
-                                                  0,
-                                                  b * 3 / 360,
-                                                  h * 4 / 640,
-                                                ),
-                                                child: SelectableText(
-                                                  snapshot['message'],
-                                                  maxLines: null,
-                                                  style: TextStyle(
-                                                    color: Color(0xff1c1c1c),
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: b * 12,
-                                                  ),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                  bottom: h * 2 / 640,
-                                                  right: b * 3 / 360,
-                                                ),
-                                                child: Text(
-                                                  giveTime(
-                                                      snapshot['timestamp']),
-                                                  style: TextStyle(
-                                                    fontSize: b * 10,
-                                                    color: Colors.grey[800],
-                                                    fontWeight: FontWeight.w300,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
+                                            ),
                                           ),
+                                          SizedBox(
+                                              height: SizeConfig.screenHeight *
+                                                  7 /
+                                                  640),
+                                          Text(
+                                            giveTime(snap['timestamp']),
+                                            style: TextStyle(
+                                              fontSize: SizeConfig.screenWidth *
+                                                  10 /
+                                                  360,
+                                              color: Colors.grey[800],
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                          ),
+                                        ]),
                                   ),
                                 ),
                               )
                             : SizedBox(),
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: h * 3),
+                          padding: EdgeInsets.all(SizeConfig.b * 0.764),
                         ),
                       ],
                     )

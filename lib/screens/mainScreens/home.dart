@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gur/dialogboxes/dialogBoxSearch.dart';
@@ -99,7 +100,8 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
-                        return MessageScreen();
+                        return MessageScreen(
+                            FirebaseAuth.instance.currentUser.uid);
                       }));
                     },
                     child: Container(
