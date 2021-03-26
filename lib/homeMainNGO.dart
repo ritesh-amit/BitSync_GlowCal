@@ -1,28 +1,26 @@
 import 'package:gur/Utils/SizeConfig.dart';
 import 'package:flutter/material.dart';
+import 'package:gur/screens/mainScreens/ngoHome.dart';
+import 'package:gur/screens/mainScreens/ngoProfile.dart';
 import 'package:gur/screens/mainScreens/notifications.dart';
-import 'package:gur/screens/mainScreens/profile.dart';
-
-import 'package:gur/screens/mainScreens/home.dart';
 import 'package:gur/screens/mainScreens/settings.dart';
 import 'Utils/constants.dart';
-import 'screens/mainScreens/aboutNgo.dart';
 
-class HomeInd extends StatefulWidget {
+class HomeNgo extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _HomeIndState();
+    return _HomeNgoState();
   }
 }
 
-class _HomeIndState extends State<HomeInd> {
+class _HomeNgoState extends State<HomeNgo> {
   int _selectedIndex = 0;
 
-  List<Widget> _widgetOptionsInd = <Widget>[
-    HomePage(),
+  List<Widget> _widgetOptionsNGO = <Widget>[
+    NgoHome(),
     Notifications(),
     Settings(),
-    Profile(),
+    NgoProfile(),
   ];
 
   @override
@@ -64,7 +62,7 @@ class _HomeIndState extends State<HomeInd> {
               });
             },
           ),
-          body: _widgetOptionsInd.elementAt(_selectedIndex)),
+          body: _widgetOptionsNGO.elementAt(_selectedIndex)),
     );
   }
 }

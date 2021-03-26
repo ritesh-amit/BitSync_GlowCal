@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/screens/chatSection/chatScreen.dart';
 import 'package:gur/screens/chatSection/messageScreen.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/SizeConfig.dart';
@@ -42,11 +46,18 @@ class _NgoHomeState extends State<NgoHome> {
   String email = "NA";
   String phone = 'NA';
   String address = 'NA';
-  String photo = 'NA';
+  String photo = '';
+  String photo2 = '';
   String headImageURL = '';
   String regDate = "NA";
   String summary = 'NA';
   bool isVerified = false;
+
+  File image1File, image2File, image3File, image4File;
+  bool getImage1 = false;
+  bool getImage2 = false;
+  bool getImage3 = false;
+  bool getImage4 = false;
   @override
   void initState() {
     super.initState();
@@ -129,6 +140,8 @@ class _NgoHomeState extends State<NgoHome> {
       phone = preferences.getString('currentUserPhone');
       if (preferences.containsKey('profileImageURL'))
         headImageURL = preferences.getString('profileImageURL');
+      if (preferences.containsKey('baseImageUrl'))
+        photo2 = preferences.getString('baseImageUrl');
       if (preferences.containsKey('currentUserAddress'))
         address = preferences.getString('currentUserAddress');
       if (preferences.containsKey('currentUserSummary'))
@@ -247,7 +260,9 @@ class _NgoHomeState extends State<NgoHome> {
                       right: b * 30,
                       bottom: h * 7,
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          pickImage(1);
+                        },
                         child: Container(
                           alignment: Alignment.center,
                           width: b * 26,
@@ -335,6 +350,10 @@ class _NgoHomeState extends State<NgoHome> {
               Stack(
                 children: [
                   Container(
+                    child: Image.network(
+                      photo2,
+                      fit: BoxFit.cover,
+                    ),
                     margin: EdgeInsets.symmetric(horizontal: b * 20),
                     height: h * 147,
                     decoration: BoxDecoration(
@@ -346,7 +365,9 @@ class _NgoHomeState extends State<NgoHome> {
                     right: b * 30,
                     bottom: h * 7,
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        pickImage(2);
+                      },
                       child: Container(
                         alignment: Alignment.center,
                         width: b * 26,
@@ -516,7 +537,9 @@ class _NgoHomeState extends State<NgoHome> {
                                 ),
                                 sh(2),
                                 Text(
-                                  regDate.substring(0, 10),
+                                  regDate == 'NA'
+                                      ? regDate
+                                      : regDate.substring(0, 10),
                                   style: txtS(textColor, 16, FontWeight.w600),
                                 ),
                               ],
@@ -544,5 +567,71 @@ class _NgoHomeState extends State<NgoHome> {
       fontWeight: wg,
       fontSize: SizeConfig.screenWidth / 412 * siz,
     );
+  }
+
+  pickImage(int imageCode) async {
+    var picker = await ImagePicker().getImage(source: ImageSource.gallery);
+
+    File selectedImage = File(picker.path);
+    setState(() {
+      if (imageCode == 1) {
+        image1File = selectedImage;
+        uploadImageAndToDB(1);
+      } else if (imageCode == 2) {
+        image2File = selectedImage;
+        uploadImageAndToDB(2);
+      }
+    });
+  }
+
+  uploadImageAndToDB(int code) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String uid = preferences.getString('currentUserUID');
+    String fileCode;
+    if (code == 1)
+      fileCode = '1';
+    else if (code == 2) fileCode = '2';
+
+    await FirebaseStorage.instance
+        .ref()
+        .child('ngoImages')
+        .child(uid)
+        .child(fileCode)
+        .putFile(image1File)
+        .then((task) async {
+      String imageURL = await getImageLink(fileCode, uid);
+
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .update({'image' + fileCode: imageURL}).then((value) {
+        if (code == 1)
+          preferences.setString('profileImageURL', imageURL);
+        else if (code == 2) preferences.setString('baseImageUrl', imageURL);
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Images Uploaded Successfully"),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.green,
+      ));
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error Encountered'),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ));
+    });
+  }
+
+  Future<String> getImageLink(String code, String uid) async {
+    String url = await FirebaseStorage.instance
+        .ref()
+        .child('ngoImages')
+        .child(uid)
+        .child(code)
+        .getDownloadURL();
+
+    return url;
   }
 }

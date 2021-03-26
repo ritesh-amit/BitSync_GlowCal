@@ -66,46 +66,47 @@ class _NgoProfileState extends State<NgoProfile> {
 
   loadData() async {
     preferences = await SharedPreferences.getInstance();
-    setState(() {
-      ngoName = preferences.getString("currentUserName");
-      count++;
-      email = preferences.getString("currentUserEmail");
-      count++;
+    if (mounted)
+      setState(() {
+        ngoName = preferences.getString("currentUserName");
+        count++;
+        email = preferences.getString("currentUserEmail");
+        count++;
 
-      if (preferences.containsKey("currentUserPhone")) {
-        userPhone = preferences.getString("currentUserPhone");
-        count++;
-      }
+        if (preferences.containsKey("currentUserPhone")) {
+          userPhone = preferences.getString("currentUserPhone");
+          count++;
+        }
 
-      if (preferences.containsKey('currentUserAddress')) {
-        address = preferences.getString('currentUserAddress');
-        count++;
-      }
+        if (preferences.containsKey('currentUserAddress')) {
+          address = preferences.getString('currentUserAddress');
+          count++;
+        }
 
-      if (preferences.containsKey('currentUserDesignation')) {
-        designation = preferences.getString('currentUserDesignation');
-        count++;
-      }
+        if (preferences.containsKey('currentUserDesignation')) {
+          designation = preferences.getString('currentUserDesignation');
+          count++;
+        }
 
-      if (preferences.containsKey('currentInChargeName')) {
-        count++;
-        inChargeName = preferences.getString('currentInChargeName');
-      }
+        if (preferences.containsKey('currentInChargeName')) {
+          count++;
+          inChargeName = preferences.getString('currentInChargeName');
+        }
 
-      if (preferences.containsKey('isProfileImageUploaded')) {
-        isImageUpload = preferences.getBool('isProfileImageUploaded');
-        count++;
-      }
-      if (preferences.containsKey('currentUserSummary')) {
-        count++;
-        summary = preferences.getString('currentUserSummary');
-      }
+        if (preferences.containsKey('isProfileImageUploaded')) {
+          isImageUpload = preferences.getBool('isProfileImageUploaded');
+          count++;
+        }
+        if (preferences.containsKey('currentUserSummary')) {
+          count++;
+          summary = preferences.getString('currentUserSummary');
+        }
 
-      if (preferences.containsKey('isLocationGot')) {
-        isLocationUpload = preferences.getBool('isLocationGot');
-        count++;
-      }
-    });
+        if (preferences.containsKey('isLocationGot')) {
+          isLocationUpload = preferences.getBool('isLocationGot');
+          count++;
+        }
+      });
   }
 
   @override

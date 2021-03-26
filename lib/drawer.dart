@@ -28,16 +28,18 @@ class _DrawerCodeState extends State<DrawerCode> {
   SharedPreferences preferences;
   String userName = "Not Provided";
   String userPhone = "Not Provided";
+  String designation = "Not Provided";
+  String userType = "";
 
   loadData() async {
     preferences = await SharedPreferences.getInstance();
 
     setState(() {
-      if (preferences.containsKey('currentUserName'))
-        userName = preferences.getString("currentUserName");
-
-      if (preferences.containsKey("currentUserPhone"))
-        userPhone = preferences.getString("currentUserPhone");
+      userName = preferences.getString("currentUserName");
+      userPhone = preferences.getString("currentUserPhone");
+      if (preferences.containsKey('currentUserDesignation'))
+        designation = preferences.getString('currentUserDesignation');
+      userType = preferences.getString('currentUserType');
     });
   }
 
@@ -69,7 +71,7 @@ class _DrawerCodeState extends State<DrawerCode> {
             ),
             sh(20),
             Text(
-              "Designation", // this.designation
+              designation, // this.designation
               style: txtS(textColor, 16, FontWeight.w500),
             ),
             // Mobile Number
@@ -106,7 +108,9 @@ class _DrawerCodeState extends State<DrawerCode> {
             row('images/Chat.svg', 'Suggestions', sendSuggestionMail),
             row('images/Heart.svg', 'Mission', null),
             row('images/Info Square.svg', 'About the App', routeA),
-            row('images/Ticket.svg', 'My Coupons', routeC),
+            userType == 'ngo'
+                ? SizedBox()
+                : row('images/Ticket.svg', 'My Coupons', routeC),
             row('images/Logout.svg', 'Log Out', logOut),
             sh(100),
             Container(
