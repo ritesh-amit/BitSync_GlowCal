@@ -55,6 +55,25 @@ class _HomePageState extends State<HomePage> {
     var b = SizeConfig.screenWidth / 414;
     var h = SizeConfig.screenHeight / 896;
     bool isSearch = false;
+    List images = [
+      'images/2.png',
+      'images/3.png',
+      'images/4.png',
+      'images/5.png',
+      'images/6.png',
+      'images/7.png',
+      'images/8.png',
+      'images/9.png',
+      'images/2.png',
+      'images/3.png',
+      'images/4.png',
+      'images/5.png',
+      'images/6.png',
+      'images/7.png',
+      'images/8.png',
+      'images/9.png',
+    ];
+
     List headingItems = [
       'User Summary',
       'User Summary',
@@ -173,51 +192,36 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 sh(20),
-                FutureBuilder(
-                    future: loadMainImageList(),
-                    builder: (context, snapshot) {
-                      return Container(
-                        width: b * 375,
-                        height: h * 145,
-                        margin: EdgeInsets.only(left: b * 10),
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          physics: BouncingScrollPhysics(),
-                          padding: EdgeInsets.zero,
-                          itemCount: mainImageList.length,
-                          itemBuilder: (BuildContext ctxt, int index) {
-                            return InkWell(
-                              onTap: () {
-                                Navigator.of(context)
-                                    .push(MaterialPageRoute(builder: (context) {
-                                  return AboutNgo(
-                                    uidNGO: mainImageList[index]['uid'],
-                                  );
-                                }));
-                              },
-                              child: Container(
-                                width: b * 170,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.25),
-                                      offset: Offset(0, 0),
-                                    ),
-                                  ],
-                                  borderRadius: BorderRadius.circular(b * 6),
-                                ),
-                                child: CachedNetworkImage(
-                                  imageUrl: mainImageList[index]['imageURL'],
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            );
-                          },
+                Container(
+                  width: b * 375,
+                  height: h * 140,
+                  margin: EdgeInsets.only(left: b * 10),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                    itemCount: images.length,
+                    itemBuilder: (BuildContext ctxt, int index) {
+                      return InkWell(
+                        onTap: () {
+                          return dialogBoxCoupon(context);
+                        },
+                        child: Container(
+                          width: b * 170,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(b * 6),
+                            image: DecorationImage(
+                              image: AssetImage(images[index]),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                       );
-                    }),
+                    },
+                  ),
+                ),
                 sh(24),
                 Container(
                   width: b * 375,
@@ -312,50 +316,47 @@ class _HomePageState extends State<HomePage> {
                     style: txtS(textColor, 16, FontWeight.w600),
                   ),
                 ),
-                sh(2),
-                Container(
-                  width: b * 375,
-                  margin: EdgeInsets.only(left: b * 13.5),
-                  height: h * 120,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    physics: BouncingScrollPhysics(),
-                    padding: EdgeInsets.zero,
-                    itemCount: 15,
-                    itemBuilder: (BuildContext ctxt, int index) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) {
-                              return AboutNgo();
-                            }),
-                          );
-                        },
-                        child: Container(
-                          margin: EdgeInsets.symmetric(
-                              horizontal: b * 6.5, vertical: h * 9),
-                          width: b * 102,
-                          height: h * 101,
-                          decoration: BoxDecoration(
-                            color: gc,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.25),
-                                offset: Offset(0, 0),
+                sh(10),
+                FutureBuilder(
+                    future: loadMainImageList(),
+                    builder: (context, snapshot) {
+                      return Container(
+                        width: b * 375,
+                        height: h * 102,
+                        margin: EdgeInsets.only(left: b * 20),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          physics: BouncingScrollPhysics(),
+                          padding: EdgeInsets.zero,
+                          itemCount: mainImageList.length,
+                          itemBuilder: (BuildContext ctxt, int index) {
+                            return InkWell(
+                              onTap: () {
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (context) {
+                                  return AboutNgo(
+                                    uidNGO: mainImageList[index]['uid'],
+                                  );
+                                }));
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(right: b * 13),
+                                width: b * 102,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(b * 17),
+                                ),
+                                child: CachedNetworkImage(
+                                  imageUrl: mainImageList[index]['imageURL'],
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                            ],
-                            image: DecorationImage(
-                              image: AssetImage('images/ill1.png'),
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius: BorderRadius.circular(b * 6),
-                          ),
+                            );
+                          },
                         ),
                       );
-                    },
-                  ),
-                ),
+                    }),
                 sh(20),
                 InkWell(
                   onTap: () {
@@ -420,6 +421,103 @@ class _HomePageState extends State<HomePage> {
       color: col,
       fontWeight: wg,
       fontSize: SizeConfig.screenWidth * siz / 414,
+    );
+  }
+
+  void dialogBoxCoupon(BuildContext context) {
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
+
+    showAnimatedDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          insetPadding: EdgeInsets.symmetric(horizontal: b * 40),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(b * 10),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(vertical: h * 20),
+                padding: EdgeInsets.symmetric(horizontal: b * 22),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: b * 0),
+                      child: Text(
+                        'You want to redeem this Coupon?',
+                        textAlign: TextAlign.center,
+                        style: txtS(textColor, 20, FontWeight.w600),
+                      ),
+                    ),
+                    sh(30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        MaterialButton(
+                          elevation: 5,
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(b * 36),
+                          ),
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: b * 97,
+                            height: h * 40,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(b * 36),
+                              border: Border.all(
+                                color: Color(0xff28797c),
+                                width: b * 2,
+                              ),
+                            ),
+                            child: Text(
+                              'NO',
+                              style:
+                                  txtS(Color(0xff28797c), 16, FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                        MaterialButton(
+                          elevation: 5,
+                          padding: EdgeInsets.zero,
+                          onPressed: () {},
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(b * 36),
+                          ),
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: b * 97,
+                            height: h * 40,
+                            decoration: BoxDecoration(
+                              color: Color(0xff28797c),
+                              borderRadius: BorderRadius.circular(b * 36),
+                            ),
+                            child: Text(
+                              'YES',
+                              style: txtS(Colors.white, 16, FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      animationType: DialogTransitionType.fadeScale,
+      curve: Curves.fastOutSlowIn,
+      duration: Duration(milliseconds: 400),
     );
   }
 }

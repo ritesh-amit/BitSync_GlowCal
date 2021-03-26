@@ -108,28 +108,10 @@ class _AboutNgoState extends State<AboutNgo> {
                   ),
                   Spacer(),
                   Text(
-                    'About NGO',
+                    'NGO Name',
                     style: txtS(mc, 20, FontWeight.w600),
                   ),
                   Spacer(),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
-                        return MessageScreen(
-                          uid: FirebaseAuth.instance.currentUser.uid,
-                        );
-                      }));
-                    },
-                    child: Container(
-                      height: h * 30,
-                      width: b * 30,
-                      child: SvgPicture.asset(
-                        'images/SendColor.svg',
-                        allowDrawingOutsideViewBox: true,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
