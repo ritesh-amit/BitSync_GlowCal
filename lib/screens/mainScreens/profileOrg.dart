@@ -83,74 +83,75 @@ class _ProfileOrgState extends State<ProfileOrg> {
     var b = SizeConfig.screenWidth / 414;
     var h = SizeConfig.screenHeight / 896;
     return Scaffold(
-        key: _scaffoldKey,
-        drawer: DrawerCode(),
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Container(
-              child: Column(
-                children: [
-                  Container(
-                    height: h * 60,
-                    padding: EdgeInsets.symmetric(horizontal: b * 20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.07),
-                          blurRadius: b * 4,
-                          spreadRadius: 0,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            _scaffoldKey.currentState.openDrawer();
-                          },
-                          child: Container(
-                            height: h * 30,
-                            width: b * 30,
-                            child: SvgPicture.asset(
-                              'images/Chart.svg',
-                              allowDrawingOutsideViewBox: true,
-                              width: h * 20,
-                              height: b * 20,
-                            ),
-                          ),
-                        ),
-                        Spacer(),
-                        Text(
-                          'Profile',
-                          style: txtS(mc, 20, FontWeight.w600),
-                        ),
-                        Spacer(),
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) {
-                              return MessageScreen(uid: uid);
-                            }));
-                          },
-                          child: Container(
-                            height: h * 30,
-                            width: b * 30,
-                            child: SvgPicture.asset(
-                              'images/SendColor.svg',
-                              allowDrawingOutsideViewBox: true,
-                              width: h * 20,
-                              height: b * 20,
-                            ),
-                          ),
-                        ),
-                      ],
+      key: _scaffoldKey,
+      drawer: DrawerCode(),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(children: [
+          Container(
+            height: h * 60,
+            padding: EdgeInsets.symmetric(horizontal: b * 20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.07),
+                  blurRadius: b * 4,
+                  spreadRadius: 0,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    _scaffoldKey.currentState.openDrawer();
+                  },
+                  child: Container(
+                    height: h * 30,
+                    width: b * 30,
+                    child: SvgPicture.asset(
+                      'images/Chart.svg',
+                      allowDrawingOutsideViewBox: true,
+                      width: h * 20,
+                      height: b * 20,
                     ),
                   ),
-                  sh(23),
+                ),
+                Spacer(),
+                Text(
+                  'Profile',
+                  style: txtS(mc, 20, FontWeight.w600),
+                ),
+                Spacer(),
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return MessageScreen(uid: uid);
+                    }));
+                  },
+                  child: Container(
+                    height: h * 30,
+                    width: b * 30,
+                    child: SvgPicture.asset(
+                      'images/SendColor.svg',
+                      allowDrawingOutsideViewBox: true,
+                      width: h * 20,
+                      height: b * 20,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          sh(23),
+          Expanded(
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Column(
+                children: [
                   Container(
                     padding: EdgeInsets.symmetric(
                         horizontal: b * 17, vertical: h * 11),
@@ -601,7 +602,9 @@ class _ProfileOrgState extends State<ProfileOrg> {
               ),
             ),
           ),
-        ));
+        ]),
+      ),
+    );
   }
 
   Container ico(String qwerty) {
