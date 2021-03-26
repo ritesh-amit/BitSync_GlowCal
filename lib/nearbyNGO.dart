@@ -38,7 +38,7 @@ class _NearbyNGOState extends State<NearbyNGO> {
   loadList() async {
     FirebaseFirestore.instance
         .collection('users')
-        .where('isVerified', isEqualTo: true)
+        .where('userType', isEqualTo: 'ngo')
         .snapshots()
         .listen((snapshot) {
       List<QueryDocumentSnapshot> completeList = snapshot.docs;

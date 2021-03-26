@@ -197,19 +197,48 @@ class _OtpState extends State<Otp> {
             }
           }).catchError((eror) {
             print(eror);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(eror.message),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+            ));
+            auth.currentUser.delete();
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) {
+              return Login();
+            }), (route) => false);
           });
         } on FirebaseAuthException catch (error) {
-          print(error.message);
+          deleteUser(error.message);
         } catch (er) {
           print(er);
+          deleteUser(er);
         }
       });
     } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.message)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.message),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ));
     } catch (e) {
       print(e);
     }
+  }
+
+  deleteUser(e) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(e),
+      backgroundColor: Colors.red,
+      behavior: SnackBarBehavior.floating,
+    ));
+    auth.currentUser.delete();
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) {
+      return Login();
+    }), (route) => false);
   }
 
   addUsertoDB() async {

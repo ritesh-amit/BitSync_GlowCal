@@ -16,7 +16,7 @@ class DrawerCode extends StatefulWidget {
   final bool hide;
   final String mobileNumber;
   DrawerCode({
-    @required this.hide,
+    this.hide,
     this.userName,
     this.designation,
     this.mobileNumber,

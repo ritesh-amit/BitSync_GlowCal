@@ -1,11 +1,11 @@
 import 'package:gur/Utils/SizeConfig.dart';
 import 'package:flutter/material.dart';
-import 'package:gur/screens/mainScreens/coupons.dart';
 import 'package:gur/screens/mainScreens/ngoHome.dart';
 import 'package:gur/screens/mainScreens/ngoProfile.dart';
 import 'package:gur/screens/mainScreens/notifications.dart';
 import 'package:gur/screens/mainScreens/profile.dart';
 import 'package:gur/screens/mainScreens/profileOrg.dart';
+import 'package:gur/screens/mainScreens/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gur/screens/mainScreens/home.dart';
 import 'Utils/constants.dart';
@@ -34,7 +34,7 @@ class _HomeState extends State<Home> {
   List<Widget> _widgetOptionsOrg = <Widget>[
     HomePage(),
     Notifications(),
-    AboutNgo(),
+    Settings(),
     ProfileOrg()
   ];
 
