@@ -356,7 +356,10 @@ class _LoginState extends State<Login> {
       preferences.setString('currentUserName', snapshot.data()['name']);
       preferences.setString('currentUserEmail', snapshot.data()['email']);
       preferences.setString('currentUserType', snapshot.data()['userType']);
-      preferences.setString('currentUserRegDate', snapshot.data()['regDate'].toDate().toString());
+
+      if (snapshot.data()['regDate'] != null)
+        preferences.setString('currentUserRegDate',
+            snapshot.data()['regDate'].toDate().toString());
 
       if (snapshot.data()['phone'] != null) {
         preferences.setString('currentUserPhone', snapshot.data()['phone']);
@@ -387,8 +390,16 @@ class _LoginState extends State<Login> {
         else
           preferences.setBool('isLocationGot', false);
 
-        if(snapshot.data()['image1']!=null)
+        if (snapshot.data()['image1'] != null)
           preferences.setString('profileImageURL', snapshot.data()['image1']);
+      } else if (snapshot.data()['userType'] == 'org') {
+        if (snapshot.data()['designation'] != null)
+          preferences.setString(
+              'currentUserDesignation', snapshot.data()['designation']);
+
+        if (snapshot.data()['inChargeName'] != null)
+          preferences.setString(
+              'currentInChargeName', snapshot.data()['inChargeName']);
       }
     });
 

@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/drawer.dart';
+import 'package:gur/screens/chatSection/messageScreen.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
@@ -20,6 +22,8 @@ class _ProfileOrgState extends State<ProfileOrg> {
   TextEditingController oldPwdController = TextEditingController();
   TextEditingController newPwdController = TextEditingController();
   TextEditingController newConfirmPwdController = TextEditingController();
+  TextEditingController inChargeNameController = TextEditingController();
+  TextEditingController designationController = TextEditingController();
 
   bool isEmail = false;
   bool isPass = false;
@@ -31,28 +35,38 @@ class _ProfileOrgState extends State<ProfileOrg> {
   bool isOrgName = false;
   bool isAddress = false;
   bool isDes = false;
-  String userName = "";
-  String userPhone = "";
-  String address = "";
+  String userName = "NA";
+  String userPhone = "NA";
+  String address = "NA";
   bool suraj = false;
-  String email = "";
+  String email = "NA";
+  String uid = "NA";
+  String inChargeName = "NA";
+  String designation = "NA";
 
   loadData() async {
     preferences = await SharedPreferences.getInstance();
+    uid = preferences.getString('currentUserUID');
     setState(() {
       userName = preferences.getString("currentUserName");
       email = preferences.getString("currentUserEmail");
 
-      if (preferences.containsKey("currentUserPhone")) {
+      if (preferences.containsKey("currentUserPhone"))
         userPhone = preferences.getString("currentUserPhone");
-      } else {
-        userPhone = "Not Provided";
-      }
 
       if (preferences.containsKey('currentUserAddress'))
         address = preferences.getString('currentUserAddress');
       else
         address = "Not Provided";
+
+      if (preferences.containsKey('currentUserAddress'))
+        address = preferences.getString('currentUserAddress');
+
+      if (preferences.containsKey('currentUserDesignation'))
+        designation = preferences.getString('currentUserDesignation');
+
+      if (preferences.containsKey('currentInChargeName'))
+        inChargeName = preferences.getString('currentInChargeName');
     });
   }
 
@@ -116,7 +130,12 @@ class _ProfileOrgState extends State<ProfileOrg> {
                         ),
                         Spacer(),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return MessageScreen(uid: uid);
+                            }));
+                          },
                           child: Container(
                             height: h * 30,
                             width: b * 30,
@@ -147,43 +166,18 @@ class _ProfileOrgState extends State<ProfileOrg> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              isOrgName
-                                  ? 'Change Organization Name'
-                                  : 'Organization Name',
+                              'Organization Name',
                               style: txtS(isOrgName ? textColor : rc, 14,
                                   FontWeight.w500),
                             ),
                             sh(6),
-                            isOrgName
-                                ? Container(
-                                    width: b * 270,
-                                    child: TextField(
-                                      style:
-                                          txtS(textColor, 15, FontWeight.w500),
-                                      decoration: dec('Organization Name'),
-                                    ),
-                                  )
-                                : Text(
-                                    userName,
-                                    style: txtS(textColor, 16, FontWeight.w500),
-                                  ),
-                            isOrgName ? butt(null) : SizedBox(),
-                          ],
-                        ),
-                        Spacer(),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  isOrgName = !isOrgName;
-                                });
-                              },
-                              child: ediB(),
+                            Text(
+                              userName,
+                              style: txtS(textColor, 16, FontWeight.w500),
                             ),
                           ],
                         ),
+                        Spacer(),
                       ],
                     ),
                   ),
@@ -203,7 +197,9 @@ class _ProfileOrgState extends State<ProfileOrg> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              isName ? 'Change Name' : 'Person Name',
+                              isName
+                                  ? 'Change In-Charge Name'
+                                  : 'In-Charge Name',
                               style: txtS(
                                   isName ? textColor : rc, 14, FontWeight.w500),
                             ),
@@ -212,16 +208,17 @@ class _ProfileOrgState extends State<ProfileOrg> {
                                 ? Container(
                                     width: b * 270,
                                     child: TextField(
+                                      controller: inChargeNameController,
                                       style:
                                           txtS(textColor, 15, FontWeight.w500),
-                                      decoration: dec('Your Name'),
+                                      decoration: dec('In-Charge Name'),
                                     ),
                                   )
                                 : Text(
-                                    userName,
+                                    inChargeName,
                                     style: txtS(textColor, 16, FontWeight.w500),
                                   ),
-                            isName ? butt(null) : SizedBox(),
+                            isName ? butt(field: 'inChargeName') : SizedBox(),
                           ],
                         ),
                         Spacer(),
@@ -257,41 +254,19 @@ class _ProfileOrgState extends State<ProfileOrg> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              isPhone ? 'Change Number' : 'Number',
+                              'Phone Number',
                               style: txtS(isPhone ? textColor : rc, 14,
                                   FontWeight.w500),
                             ),
                             sh(6),
-                            isPhone
-                                ? Container(
-                                    width: b * 270,
-                                    child: TextField(
-                                      style:
-                                          txtS(textColor, 15, FontWeight.w500),
-                                      decoration: dec('Phone Number'),
-                                    ),
-                                  )
-                                : Text(
-                                    userPhone,
-                                    style: txtS(textColor, 16, FontWeight.w500),
-                                  ),
-                            isPhone ? butt(null) : SizedBox(),
+                            Text(
+                              userPhone,
+                              style: txtS(textColor, 16, FontWeight.w500),
+                            ),
+                            isPhone ? butt(field: 'phone') : SizedBox(),
                           ],
                         ),
                         Spacer(),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  isPhone = !isPhone;
-                                });
-                              },
-                              child: ediB(),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),
@@ -479,16 +454,17 @@ class _ProfileOrgState extends State<ProfileOrg> {
                                 ? Container(
                                     width: b * 270,
                                     child: TextField(
+                                      controller: designationController,
                                       style:
                                           txtS(textColor, 15, FontWeight.w500),
                                       decoration: dec('Your Designation'),
                                     ),
                                   )
                                 : Text(
-                                    userName,
+                                    designation,
                                     style: txtS(textColor, 16, FontWeight.w500),
                                   ),
-                            isDes ? butt(null) : SizedBox(),
+                            isDes ? butt(field: 'designation') : SizedBox(),
                           ],
                         ),
                         Spacer(),
@@ -571,12 +547,7 @@ class _ProfileOrgState extends State<ProfileOrg> {
                                     padding: EdgeInsets.only(left: b * 180),
                                     child: InkWell(
                                       onTap: () {
-                                        preferences.setString(
-                                            'currentUserAddress',
-                                            addressController.text.trim());
-                                        setState(() {
-                                          isAddress = !isAddress;
-                                        });
+                                        userDetailChange('address');
                                       },
                                       child: Container(
                                         margin: EdgeInsets.only(top: h * 10),
@@ -650,13 +621,15 @@ class _ProfileOrgState extends State<ProfileOrg> {
     );
   }
 
-  Padding butt(Function fn) {
+  Padding butt({String field}) {
     return Padding(
       padding: EdgeInsets.only(
           left: SizeConfig.screenWidth / 414 * 180,
           top: SizeConfig.screenHeight / 896 * 10),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          userDetailChange(field);
+        },
         child: Container(
           padding: EdgeInsets.symmetric(
             horizontal: SizeConfig.screenWidth / 414 * 17,
@@ -824,6 +797,44 @@ class _ProfileOrgState extends State<ProfileOrg> {
         setState(() {
           isPass = !isPass;
         });
+      });
+    });
+  }
+
+  userDetailChange(String field) async {
+    //print("Value Changed : $data");
+    String data = 'NA';
+
+    setState(() {
+      if (field == 'address') {
+        data = addressController.text.trim();
+      } else if (field == 'designation') {
+        data = designationController.text.trim();
+      } else if (field == 'inChargeName') {
+        data = inChargeNameController.text.trim();
+      }
+    });
+
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String uid = pref.getString('currentUserUID');
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .update({field: data}).then((value) {
+      setState(() {
+        if (field == 'address') {
+          pref.setString('currentUserAddress', data);
+          address = data;
+          isAddress = false;
+        } else if (field == 'designation') {
+          pref.setString('currentUserDesignation', data);
+          designation = data;
+          isDes = false;
+        } else if (field == 'inChargeName') {
+          pref.setString('currentInChargeName', data);
+          inChargeName = data;
+          isName = false;
+        }
       });
     });
   }

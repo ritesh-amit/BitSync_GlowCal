@@ -177,7 +177,7 @@ class _DialogBoxDonateState extends State<DialogBoxDonate> {
                     else if (weight[2])
                       foodWeightCode = "15-20 Kg";
                     else if (weight[3])
-                      foodWeightCode = "Above 2- Kg";
+                      foodWeightCode = "Above 20 Kg";
                     else
                       foodWeightCode = manualAmountController.text;
 

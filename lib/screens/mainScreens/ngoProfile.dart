@@ -879,41 +879,6 @@ class _NgoProfileState extends State<NgoProfile> {
     );
   }
 
-  Padding nonEditableButt() {
-    return Padding(
-      padding: EdgeInsets.only(
-          left: SizeConfig.screenWidth / 414 * 180,
-          top: SizeConfig.screenHeight / 896 * 10),
-      child: InkWell(
-        onTap: () {},
-        child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.screenWidth / 414 * 17,
-            vertical: SizeConfig.screenHeight / 896 * 7,
-          ),
-          width: SizeConfig.screenWidth / 414 * 90,
-          decoration: BoxDecoration(
-            color: mc,
-            borderRadius:
-                BorderRadius.circular(SizeConfig.screenWidth / 414 * 18),
-          ),
-          child: Row(children: [
-            Text(
-              'Save',
-              style: txtS(Colors.white, 12, FontWeight.w400),
-            ),
-            Spacer(),
-            Icon(
-              Icons.arrow_forward,
-              color: Colors.white,
-              size: SizeConfig.screenWidth / 414 * 18,
-            ),
-          ]),
-        ),
-      ),
-    );
-  }
-
   Container ediB() {
     SizeConfig().init(context);
     var b = SizeConfig.screenWidth / 414;

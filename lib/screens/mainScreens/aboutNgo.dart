@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/homeMain.dart';
 import 'package:gur/main.dart';
+import 'package:gur/screens/chatSection/messageScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
@@ -90,11 +93,7 @@ class _AboutNgoState extends State<AboutNgo> {
                     builder: (BuildContext context) {
                       return InkWell(
                         onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) {
-                              return Home();
-                            }),
-                          );
+                          Navigator.of(context).pop();
                         },
                         child: Container(
                           height: h * 30,
@@ -109,12 +108,19 @@ class _AboutNgoState extends State<AboutNgo> {
                   ),
                   Spacer(),
                   Text(
-                    'NGO Name',
+                    'About NGO',
                     style: txtS(mc, 20, FontWeight.w600),
                   ),
                   Spacer(),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return MessageScreen(
+                          uid: FirebaseAuth.instance.currentUser.uid,
+                        );
+                      }));
+                    },
                     child: Container(
                       height: h * 30,
                       width: b * 30,

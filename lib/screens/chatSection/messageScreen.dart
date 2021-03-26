@@ -7,7 +7,7 @@ import '../../Utils/constants.dart';
 
 class MessageScreen extends StatefulWidget {
   final String uid;
-  MessageScreen(this.uid);
+  MessageScreen({this.uid});
   @override
   _MessageScreenState createState() => _MessageScreenState();
 }
