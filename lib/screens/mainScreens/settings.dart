@@ -16,11 +16,6 @@ class _SettingsState extends State<Settings> {
   bool status1 = false;
   bool status2 = false;
   bool status3 = false;
-  bool status4 = false;
-  bool status5 = false;
-  bool status6 = false;
-  bool status7 = false;
-  bool isSwitchOn = false;
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +92,7 @@ class _SettingsState extends State<Settings> {
           ),
           sh(18),
           Container(
-            height: h * 700,
+            height: h * 720,
             padding: EdgeInsets.symmetric(horizontal: b * 20),
             child: Column(
               children: [
@@ -228,8 +223,12 @@ class _SettingsState extends State<Settings> {
                     ),
                     sh(15),
                     Text(
-                      'App Name',
+                      'GlowCal',
                       style: txtS(textColor, 20, FontWeight.w600),
+                    ),
+                    Text(
+                      'V 1.1.0',
+                      style: txtS(textColor, 14, FontWeight.w600),
                     ),
                     sh(10),
                     Row(
