@@ -4,9 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:gur/drawer.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:location/location.dart';
+import 'package:location/location.dart' as loc;
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
@@ -59,6 +60,7 @@ class _NgoProfileState extends State<NgoProfile> {
   bool isImageUpload = false;
   bool isLocationUpload = false;
   bool isLocationLoading = false;
+  int count = 0;
 
   File image1File, image2File, image3File, image4File;
 
@@ -66,28 +68,43 @@ class _NgoProfileState extends State<NgoProfile> {
     preferences = await SharedPreferences.getInstance();
     setState(() {
       ngoName = preferences.getString("currentUserName");
+      count++;
       email = preferences.getString("currentUserEmail");
+      count++;
 
-      if (preferences.containsKey("currentUserPhone"))
+      if (preferences.containsKey("currentUserPhone")) {
         userPhone = preferences.getString("currentUserPhone");
+        count++;
+      }
 
-      if (preferences.containsKey('currentUserAddress'))
+      if (preferences.containsKey('currentUserAddress')) {
         address = preferences.getString('currentUserAddress');
+        count++;
+      }
 
-      if (preferences.containsKey('currentUserDesignation'))
+      if (preferences.containsKey('currentUserDesignation')) {
         designation = preferences.getString('currentUserDesignation');
+        count++;
+      }
 
-      if (preferences.containsKey('currentInChargeName'))
+      if (preferences.containsKey('currentInChargeName')) {
+        count++;
         inChargeName = preferences.getString('currentInChargeName');
+      }
 
-      if (preferences.containsKey('isProfileImageUploaded'))
+      if (preferences.containsKey('isProfileImageUploaded')) {
         isImageUpload = preferences.getBool('isProfileImageUploaded');
-
-      if (preferences.containsKey('currentUserSummary'))
+        count++;
+      }
+      if (preferences.containsKey('currentUserSummary')) {
+        count++;
         summary = preferences.getString('currentUserSummary');
+      }
 
-      if (preferences.containsKey('isLocationGot'))
+      if (preferences.containsKey('isLocationGot')) {
         isLocationUpload = preferences.getBool('isLocationGot');
+        count++;
+      }
     });
   }
 
@@ -748,14 +765,14 @@ class _NgoProfileState extends State<NgoProfile> {
                     Container(
                       alignment: Alignment.center,
                       height: h * 59,
-                      width: b * 375 * 0.67,
+                      width: b * 375 * (count / 9),
                       decoration: BoxDecoration(
                         color: Color(0xff28797c),
                         borderRadius: BorderRadius.circular(
                             SizeConfig.screenWidth / 414 * 8),
                       ),
                       child: Text(
-                        "67% Completed",
+                        ((count / 9) * 100).floor().toString() + "% Completed",
                         style: txtS(gc, 16, FontWeight.w500),
                       ),
                     ),
@@ -1162,6 +1179,13 @@ class _NgoProfileState extends State<NgoProfile> {
         'image2': image2URL,
         'image3': image3URL,
         'image4': image4URL
+      }).then((value) {
+        setState(() {
+          count++;
+          checkCount();
+          preferences.setBool('isProfileImageUploaded', true);
+          preferences.setString('profileImageURL', image1URL);
+        });
       });
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -1184,10 +1208,9 @@ class _NgoProfileState extends State<NgoProfile> {
   }
 
   currentLocation() async {
-    Location location = Location();
+    loc.Location location = loc.Location();
     bool serviceEnabled;
-    PermissionStatus permissionStatus;
-    LocationData locationData;
+    loc.PermissionStatus permissionStatus;
     serviceEnabled = await location.serviceEnabled();
     bool permissionsOK;
 
@@ -1201,43 +1224,58 @@ class _NgoProfileState extends State<NgoProfile> {
       permissionsOK = true;
 
     permissionStatus = await location.hasPermission();
-    if (permissionStatus == PermissionStatus.denied) {
+    if (permissionStatus == loc.PermissionStatus.denied) {
       permissionStatus = await location.requestPermission();
 
-      if (permissionStatus == PermissionStatus.denied ||
-          permissionStatus == PermissionStatus.deniedForever) {
+      if (permissionStatus == loc.PermissionStatus.denied ||
+          permissionStatus == loc.PermissionStatus.deniedForever) {
         permissionsOK = false;
         Toast.show("Permission Required", context);
       } else
         permissionsOK = true;
-    } else if (permissionStatus == PermissionStatus.deniedForever)
+    } else if (permissionStatus == loc.PermissionStatus.deniedForever)
       Toast.show("Permission Required", context);
     else
       permissionsOK = true;
 
     if (permissionsOK) {
-      locationData = await location.getLocation();
-      double latitude = locationData.latitude;
-      double longitude = locationData.longitude;
+      Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+          .then((position) {
+        double latitude = position.latitude;
+        double longitude = position.longitude;
 
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(preferences.getString('currentUserUID'))
-          .update({'lon': longitude, 'lat': latitude}).then((value) {
-        setState(() {
-          isLocationLoading = !isLocationLoading;
-          isLocation = !isLocation;
-        });
-
-        Future.delayed(Duration(seconds: 3), () {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(preferences.getString('currentUserUID'))
+            .update({'lon': longitude, 'lat': latitude}).then((value) {
           setState(() {
-            isLocationUpload = true;
+            isLocationLoading = !isLocationLoading;
+            isLocation = !isLocation;
           });
-        });
 
-        preferences.setBool('isLocationGot', true);
+          Future.delayed(Duration(seconds: 3), () {
+            setState(() {
+              isLocationUpload = true;
+              count++;
+            });
+          });
+
+          preferences.setBool('isLocationGot', true);
+          checkCount();
+        });
       });
     } else
       Toast.show("Insufficient Permission", context);
+  }
+
+  checkCount() {
+    if (count == 9) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser.uid)
+          .update({'isVerified': true}).then((value) {
+        preferences.setBool('isVerified', true);
+      });
+    }
   }
 }

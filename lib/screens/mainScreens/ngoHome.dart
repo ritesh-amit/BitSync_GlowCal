@@ -46,7 +46,7 @@ class _NgoHomeState extends State<NgoHome> {
   String headImageURL = '';
   String regDate = "NA";
   String summary = 'NA';
-
+  bool isVerified = false;
   @override
   void initState() {
     super.initState();
@@ -131,8 +131,11 @@ class _NgoHomeState extends State<NgoHome> {
         headImageURL = preferences.getString('profileImageURL');
       if (preferences.containsKey('currentUserAddress'))
         address = preferences.getString('currentUserAddress');
-      if(preferences.containsKey('currentUserSummary'))
+      if (preferences.containsKey('currentUserSummary'))
         summary = preferences.getString('currentUserSummary');
+
+      if (preferences.containsKey('isVerified'))
+        isVerified = preferences.getBool('isVarified');
 
       regDate = preferences.getString('currentUserRegDate');
     });
@@ -303,26 +306,28 @@ class _NgoHomeState extends State<NgoHome> {
                       ],
                     ),
                     sh(20),
-                    Row(
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          width: b * 26,
-                          height: h * 26,
-                          decoration: BoxDecoration(
-                            color: Color(0xff28797c),
-                            borderRadius: BorderRadius.circular(b * 6),
-                          ),
-                          child: Icon(Icons.verified,
-                              color: Colors.white, size: b * 14),
-                        ),
-                        SizedBox(width: b * 10),
-                        Text(
-                          'Verified',
-                          style: txtS(textColor, 16, FontWeight.w500),
-                        ),
-                      ],
-                    ),
+                    isVerified
+                        ? Row(
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                width: b * 26,
+                                height: h * 26,
+                                decoration: BoxDecoration(
+                                  color: Color(0xff28797c),
+                                  borderRadius: BorderRadius.circular(b * 6),
+                                ),
+                                child: Icon(Icons.verified,
+                                    color: Colors.white, size: b * 14),
+                              ),
+                              SizedBox(width: b * 10),
+                              Text(
+                                'Verified',
+                                style: txtS(textColor, 16, FontWeight.w500),
+                              ),
+                            ],
+                          )
+                        : SizedBox()
                   ],
                 ),
               ]),

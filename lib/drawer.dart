@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:gur/screens/mainScreens/coupons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Utils/SizeConfig.dart';
 import 'Utils/constants.dart';
@@ -68,7 +69,7 @@ class _DrawerCodeState extends State<DrawerCode> {
             sh(20),
             Text(
               "Designation", // this.designation
-              style: txtS(textColor, 16, FontWeight.w400),
+              style: txtS(textColor, 16, FontWeight.w500),
             ),
             // Mobile Number
             sh(10),
@@ -89,7 +90,7 @@ class _DrawerCodeState extends State<DrawerCode> {
                   SizedBox(width: b * 10),
                   Text(
                     userPhone, // this.phoneNumber
-                    style: txtS(textColor, 14, FontWeight.w400),
+                    style: txtS(textColor, 14, FontWeight.w500),
                   ),
                 ],
               ),
@@ -104,7 +105,7 @@ class _DrawerCodeState extends State<DrawerCode> {
             row('images/Chat.svg', 'Suggestions', sendSuggestionMail),
             row('images/Heart.svg', 'Mission', null),
             row('images/Info Square.svg', 'About the App', null),
-            row('images/Ticket.svg', 'My Coupons', null),
+            row('images/Ticket.svg', 'My Coupons', route),
             row('images/Logout.svg', 'Log Out', logOut),
             sh(100),
             Container(
@@ -112,7 +113,6 @@ class _DrawerCodeState extends State<DrawerCode> {
                 color: rc,
                 height: h * 1),
             row('images/Send.svg', 'Share the App', null),
-            row('images/group.svg', 'Version', null),
           ],
         ),
       ),
@@ -187,6 +187,14 @@ class _DrawerCodeState extends State<DrawerCode> {
     } catch (e) {
       print(e);
     }
+  }
+
+  void route() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) {
+        return Coupons();
+      }),
+    );
   }
 
   void sendComplaintMail() async {

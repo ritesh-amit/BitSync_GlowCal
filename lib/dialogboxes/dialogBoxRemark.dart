@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:gur/dialogboxes/donateDoneDialog.dart';
 import 'package:gur/models/foodPacket.dart';
 import 'package:gur/nearbyNGO.dart';
 import 'package:location/location.dart' as loc;
@@ -23,6 +22,7 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
   TextEditingController locationController = TextEditingController();
   double latitude;
   double longitude;
+  bool isLocationGot = false;
 
   bool rad = true;
 
@@ -101,7 +101,7 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
                     InkWell(
                       onTap: () {
                         setState(() {
-                          rad = !rad;
+                          rad = false;
                           locationController.text = "";
                         });
                         currentLocation();
@@ -126,7 +126,7 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
                     SizedBox(width: b * 20),
                   ],
                 ),
-                sh(30),
+                /* sh(30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -162,16 +162,7 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
                           rad = false;
                         });
                         toNavigate(500);
-                        // Prediction p = await PlacesAutocomplete.show(
-                        //     context: context,
-                        //     apiKey: 'AIzaSyBqPMJnoCEmXMLkSiHcVAyEvU4TxRh1Y-E',
-                        //     language: 'en',
-                        //     components: [Component(Component.country, 'in')],
-                        //     hint: "Search",
-                        //     mode: Mode.fullscreen,
-                        //     onError: (valeu) {
-                        //       print(valeu.errorMessage);
-                        //     });
+                       
                       },
                       style: txtS(textColor, 18, FontWeight.w600),
                       decoration: InputDecoration(
@@ -184,18 +175,20 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
                       ),
                     ),
                   ),
-                ),
+                ), */
                 sh(34),
                 InkWell(
                   onTap: () async {
-                    Navigator.pop(context);
-                    collectFoodPackedData();
+                    if (isLocationGot) {
+                      Navigator.pop(context);
+                      collectFoodPackedData();
+                    }
                   },
                   child: Container(
                     height: h * 48,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: mc,
+                      color: isLocationGot ? mc : Colors.grey,
                       borderRadius: BorderRadius.circular(b * 46),
                     ),
                     child: Text(
@@ -269,6 +262,9 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
           .then((position) {
         latitude = position.latitude;
         longitude = position.longitude;
+        setState(() {
+          isLocationGot = true;
+        });
       });
     } else
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
