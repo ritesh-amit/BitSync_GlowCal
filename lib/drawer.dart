@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:gur/about.dart';
 import 'package:gur/screens/mainScreens/coupons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Utils/SizeConfig.dart';
@@ -104,8 +105,8 @@ class _DrawerCodeState extends State<DrawerCode> {
             row('images/Document.svg', 'Complaints', sendComplaintMail),
             row('images/Chat.svg', 'Suggestions', sendSuggestionMail),
             row('images/Heart.svg', 'Mission', null),
-            row('images/Info Square.svg', 'About the App', null),
-            row('images/Ticket.svg', 'My Coupons', route),
+            row('images/Info Square.svg', 'About the App', routeA),
+            row('images/Ticket.svg', 'My Coupons', routeC),
             row('images/Logout.svg', 'Log Out', logOut),
             sh(100),
             Container(
@@ -193,10 +194,18 @@ class _DrawerCodeState extends State<DrawerCode> {
     }
   }
 
-  void route() {
+  void routeC() {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) {
         return Coupons();
+      }),
+    );
+  }
+
+  void routeA() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) {
+        return About();
       }),
     );
   }
