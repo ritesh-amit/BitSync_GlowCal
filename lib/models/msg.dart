@@ -6,13 +6,17 @@ class Message {
   String type;
   String message;
   FieldValue timestamp;
+  String pickUpPersonName;
+  String pickUpPersonContact;
 
   Message(
       {this.senderUid,
       this.receiverUid,
       this.type,
       this.message,
-      this.timestamp});
+      this.timestamp,
+      this.pickUpPersonName,
+      this.pickUpPersonContact});
 
   Map toMap() {
     var map = Map<String, dynamic>();
@@ -21,6 +25,8 @@ class Message {
     map['type'] = this.type;
     map['message'] = this.message;
     map['timestamp'] = this.timestamp;
+    map['pickUpPersonName'] = this.pickUpPersonName;
+    map['pickUpPersonContact'] = this.pickUpPersonContact;
     return map;
   }
 

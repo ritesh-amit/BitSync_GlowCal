@@ -24,6 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   bubble: ^1.1.9+1
+  cached_network_image: ^2.5.1
   carousel_slider: ^3.0.0
   cloud_firestore: ^1.0.1
   cloud_functions: ^1.0.1

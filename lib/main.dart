@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:gur/newAuthScreens/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'homeMain.dart';
 
 void main() async {
@@ -37,7 +36,7 @@ class MyApp extends StatelessWidget {
   MyApp(this.isLoggedIn);
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'DSC Challenge',
       theme: ThemeData(primarySwatch: Colors.orange),

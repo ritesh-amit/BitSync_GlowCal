@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gur/Utils/SizeConfig.dart';
@@ -38,10 +39,12 @@ class _ChatScreenState extends State<ChatScreen> {
   StreamSubscription<DocumentSnapshot> subscription;
   File imageFile;
   TextEditingController _messageController;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
   bool acceptOrNot = false;
   bool isRejected = false;
   int userType;
-  String donationUID = "";
+  String donationUIDOnlyForNGOSide = "";
 
   void tolast() {
     _scrollController.animateTo(
@@ -67,7 +70,7 @@ class _ChatScreenState extends State<ChatScreen> {
         .snapshots()
         .listen((event) {
       setState(() {
-        donationUID = event.docs[0].id;
+        donationUIDOnlyForNGOSide = event.docs[0].id;
       });
     });
 
@@ -177,6 +180,15 @@ class _ChatScreenState extends State<ChatScreen> {
                         style: txtS(mc, 20, FontWeight.w600),
                       ),
                       Spacer(),
+                      InkWell(
+                      onTap: () {
+                        dialogBoxContact(context);
+                      },
+                      child: Container(
+                          height: h * 30,
+                          width: b * 30,
+                          child: Icon(Icons.contact_page)),
+                    )
                     ],
                   ),
                 ),
@@ -267,6 +279,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         //sendNotification(_messageController.text);
                         //initLocalDB(_messageController.text);
                         sendMessage();
+                        //dialogBoxContact(context);
                         //viewLocationInMaps();
                       }
                     },
@@ -280,6 +293,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
           ),
+
         ],
       ),
     );
@@ -289,7 +303,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Text("Wait for NGO to accept your request");
   }
 
-  Widget contactDetails() {
+  Widget contactDetails(String name, String phone) {
     var b = SizeConfig.screenWidth / 414;
     var h = SizeConfig.screenHeight / 896;
 
@@ -325,7 +339,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 style: txtS(textColor, 14, FontWeight.w600),
               ),
               Text(
-                'Ngo Person Name',
+                name,
                 style: txtS(textColor, 14, FontWeight.w400),
               ),
             ],
@@ -334,11 +348,11 @@ class _ChatScreenState extends State<ChatScreen> {
           Row(
             children: [
               Text(
-                'Phone:   ',
+                'Phone:  ',
                 style: txtS(textColor, 14, FontWeight.w600),
               ),
               Text(
-                '6387246025',
+                phone,
                 style: txtS(textColor, 14, FontWeight.w400),
               ),
             ],
@@ -501,6 +515,7 @@ class _ChatScreenState extends State<ChatScreen> {
             .collection('messages')
             .doc(widget.senderUID)
             .collection(widget.receiverUid)
+            .orderBy('timestamp')
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -576,8 +591,12 @@ class _ChatScreenState extends State<ChatScreen> {
                                     ),
                                   ),
                                 ),
-                              ])
-                            : SizedBox(),
+                              )
+                            : snap['type'] == 'contactCard'
+                                ? contactDetails(snap['pickUpPersonName'],
+                                    snap['pickUpPersonContact'])
+                                : SizedBox(),
+
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: h * 7),
                         ),
@@ -608,14 +627,13 @@ class _ChatScreenState extends State<ChatScreen> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: b * 5),
-                                Text(
-                                  giveTime(snap['timestamp']),
-                                  style: txtS(
-                                      Color(0xff7d7d7d), 10, FontWeight.w600),
-                                ),
-                              ])
-                            : SizedBox(),
+
+                              )
+                            : snap['type'] == 'contactCard'
+                                ? contactDetails(snap['pickUpPersonName'],
+                                    snap['pickUpPersonContact'])
+                                : SizedBox(),
+
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: h * 7),
                         ),
@@ -628,10 +646,127 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  void dialogBoxContact(BuildContext context) {
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
+
+    showAnimatedDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding:
+              EdgeInsets.only(top: h * 0, left: b * 20, right: b * 20),
+          child: Container(
+            height: h * 335,
+            decoration: BoxDecoration(
+              color: Color(0xfff1f1f1),
+              borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(b * 30),
+                topLeft: Radius.circular(b * 30),
+                topRight: Radius.circular(b * 30),
+              ),
+            ),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(b * 25, h * 27, b * 60, h * 19),
+                child: Text(
+                  'You Have accepted request from Person',
+                  style: txtS(textColor, 20, FontWeight.w500),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(b * 25, h * 0, b * 0, h * 37),
+                child: Text(
+                  'Share your Contact',
+                  style: txtS(textColor, 14, FontWeight.w700),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: b * 25),
+                padding: EdgeInsets.symmetric(horizontal: b * 16),
+                height: h * 40,
+                width: 212 * b,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(b * 10),
+                ),
+                child: TextField(
+                  controller: nameController,
+                  style: txtS(textColor, 15, FontWeight.w500),
+                  decoration: dec('Name'),
+                ),
+              ),
+              sh(17),
+              Container(
+                margin: EdgeInsets.only(left: b * 25),
+                padding: EdgeInsets.symmetric(horizontal: b * 16),
+                height: h * 40,
+                width: 212 * b,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(b * 10),
+                ),
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  controller: phoneController,
+                  style: txtS(textColor, 15, FontWeight.w500),
+                  decoration: dec('Phone Number'),
+                ),
+              ),
+              sh(28),
+              InkWell(
+                onTap: () {
+                  sendContactDetails(
+                      nameController.text.trim(), phoneController.text.trim());
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.only(left: b * 25),
+                  height: h * 40,
+                  width: 212 * b,
+                  decoration: BoxDecoration(
+                    color: mc,
+                    borderRadius: BorderRadius.circular(b * 10),
+                  ),
+                  child: Text(
+                    'Send',
+                    style: txtS(Colors.white, 14, FontWeight.w500),
+                  ),
+                ),
+              ),
+            ]),
+          ),
+        );
+      },
+      animationType: DialogTransitionType.slideFromBottomFade,
+      curve: Curves.fastOutSlowIn,
+      duration: Duration(milliseconds: 250),
+    );
+  }
+
   String giveTime(Timestamp timestamp) {
     DateTime d = timestamp.toDate();
     String time = d.toString().substring(11, 16);
     return time;
+  }
+
+  InputDecoration dec(String txt) {
+    return InputDecoration(
+      enabledBorder: InputBorder.none,
+      focusedBorder: InputBorder.none,
+      hintText: txt,
+      hintStyle: TextStyle(
+        color: Color(0xffb9b9b9),
+        fontSize: SizeConfig.screenWidth * 14 / 412,
+        fontWeight: FontWeight.w400,
+      ),
+      isDense: true,
+      contentPadding:
+          EdgeInsets.symmetric(vertical: SizeConfig.screenHeight * 11 / 896),
+    );
   }
 
   /*Future<void> sendNotification(String textMessage) async {
@@ -652,39 +787,38 @@ class _ChatScreenState extends State<ChatScreen> {
     double originLat, originLon;
 
     if (await checkForLocationPermission()) {
-      Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.bestForNavigation)
+      Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
           .then((position) {
         originLat = position.latitude;
         originLon = position.longitude;
+
+        FirebaseFirestore.instance
+            .collection('donations')
+            .where('donatedTo', isEqualTo: widget.senderUID)
+            .where('donorUID', isEqualTo: widget.receiverUid)
+            .snapshots()
+            .listen((snap) async {
+          lat = snap.docs[0].data()['latitude'];
+          lon = snap.docs[0].data()['longitude'];
+
+          url = 'https://www.google.com/maps/dir/?api=1&' +
+              'origin=' +
+              originLat.toString() +
+              ',' +
+              originLon.toString() +
+              "&destination=" +
+              lat.toString() +
+              ',' +
+              lon.toString();
+
+          if (await canLaunch(url)) {
+            launch(url);
+          } else
+            throw "Could not launch $url";
+        });
+
+        print('Launching Maps');
       });
-
-      FirebaseFirestore.instance
-          .collection('donations')
-          .where('donatedTo', isEqualTo: widget.senderUID)
-          .where('donorUID', isEqualTo: widget.receiverUid)
-          .snapshots()
-          .listen((snap) async {
-        lat = snap.docs[0].data()['latitude'];
-        lon = snap.docs[0].data()['longitude'];
-
-        url = 'https://www.google.com/maps/dir/?api=1&' +
-            'origin=' +
-            originLat.toString() +
-            ',' +
-            originLon.toString() +
-            "&destination=" +
-            lat.toString() +
-            ',' +
-            lon.toString();
-
-        if (await canLaunch(url)) {
-          launch(url);
-        } else
-          throw "Could not launch $url";
-      });
-
-      print('Launching Maps');
     } else
       print("Error in getting Location Permission");
   }
@@ -741,38 +875,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   donationAccepted() async {
-    FirebaseFirestore.instance
-        .collection('donations')
-        .where('donatedTo', isEqualTo: widget.senderUID)
-        .where('donorUID', isEqualTo: widget.receiverUid)
-        .where('isActive', isEqualTo: true)
-        .snapshots()
-        .listen((snap) {
-      String docId = snap.docs[0].id;
-
-      FirebaseFirestore.instance
-          .collection('donations')
-          .doc(docId)
-          .update({'isAccept': true}).then((value) {
-        FirebaseFirestore.instance
-            .collection('donorChats')
-            .doc('lists')
-            .collection(widget.senderUID)
-            .doc(widget.receiverUid)
-            .update({'isAccept': true}).then((value) {
-          FirebaseFirestore.instance
-              .collection('donorChats')
-              .doc('lists')
-              .collection(widget.receiverUid)
-              .doc(widget.senderUID)
-              .update({'isAccept': true}).then((value) {
-            setState(() {
-              acceptOrNot = true;
-            });
-          });
-        });
-      });
-    });
+    dialogBoxContact(context);
   }
 
   donationRejected() {
@@ -796,5 +899,41 @@ class _ChatScreenState extends State<ChatScreen> {
         }), (route) => false);
       });
     });
+  }
+
+  sendContactDetails(String name, String phone) {
+    FirebaseFirestore.instance
+        .collection('donations')
+        .doc(donationUIDOnlyForNGOSide)
+        .update({'isAccept': true}).then((value) {
+      FirebaseFirestore.instance
+          .collection('donorChats')
+          .doc('lists')
+          .collection(widget.senderUID)
+          .doc(widget.receiverUid)
+          .update({'isAccept': true}).then((value) {
+        FirebaseFirestore.instance
+            .collection('donorChats')
+            .doc('lists')
+            .collection(widget.receiverUid)
+            .doc(widget.senderUID)
+            .update({'isAccept': true}).then((value) {
+          setState(() {
+            acceptOrNot = true;
+          });
+        });
+      });
+    });
+
+    print("Inside Send Contact Detail");
+    Message message = Message(
+        senderUid: widget.senderUID,
+        receiverUid: widget.receiverUid,
+        type: 'contactCard',
+        pickUpPersonName: name,
+        pickUpPersonContact: phone,
+        timestamp: FieldValue.serverTimestamp());
+
+    addMessageToDb(message);
   }
 }

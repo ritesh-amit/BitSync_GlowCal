@@ -356,6 +356,7 @@ class _LoginState extends State<Login> {
       preferences.setString('currentUserName', snapshot.data()['name']);
       preferences.setString('currentUserEmail', snapshot.data()['email']);
       preferences.setString('currentUserType', snapshot.data()['userType']);
+      preferences.setString('currentUserRegDate', snapshot.data()['regDate'].toDate().toString());
 
       if (snapshot.data()['phone'] != null) {
         preferences.setString('currentUserPhone', snapshot.data()['phone']);
@@ -363,6 +364,31 @@ class _LoginState extends State<Login> {
       preferences.setString('currentUserPhone', snapshot.data()['phone']);
       if (snapshot.data()['address'] != null) {
         preferences.setString('currentUserAddress', snapshot.data()['address']);
+      }
+
+      if (snapshot.data()['userType'] == 'ngo') {
+        if (snapshot.data()['image1'] != null)
+          preferences.setBool('isProfileImageUploaded', true);
+
+        if (snapshot.data()['designation'] != null)
+          preferences.setString(
+              'currentUserDesignation', snapshot.data()['designation']);
+
+        if (snapshot.data()['inChargeName'] != null)
+          preferences.setString(
+              'currentInChargeName', snapshot.data()['inChargeName']);
+
+        if (snapshot.data()['summary'] != null)
+          preferences.setString(
+              'currentUserSummary', snapshot.data()['summary']);
+
+        if (snapshot.data()['lat'] != null)
+          preferences.setBool('isLocationGot', true);
+        else
+          preferences.setBool('isLocationGot', false);
+
+        if(snapshot.data()['image1']!=null)
+          preferences.setString('profileImageURL', snapshot.data()['image1']);
       }
     });
 

@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:gur/homeMain.dart';
 import 'package:gur/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutNgo extends StatefulWidget {
+  final String uidNGO;
+
+  AboutNgo({this.uidNGO});
   _AboutNgoState createState() => _AboutNgoState();
 }
 
@@ -19,8 +23,44 @@ void launchUrl(String url) async {
 }
 
 class _AboutNgoState extends State<AboutNgo> {
+  String uid = '';
+  String ngoName = 'NA';
+  String email = "NA";
+  String phone = 'NA';
+  String address = 'NA';
+  String photo = 'NA';
+  String headImageURL = '';
+  String regDate = "NA";
+  String summary = 'NA';
+
+  @override
+  void initState() {
+    super.initState();
+
+    getDataFromLocalStorage();
+  }
+
+  getDataFromLocalStorage() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    setState(() {
+      ngoName = preferences.getString('currentUserName');
+      email = preferences.getString('currentUserEmail');
+      phone = preferences.getString('currentUserPhone');
+      if (preferences.containsKey('profileImageURL'))
+        headImageURL = preferences.getString('profileImageURL');
+      if (preferences.containsKey('currentUserAddress'))
+        address = preferences.getString('currentUserAddress');
+      if (preferences.containsKey('currentUserSummary'))
+        summary = preferences.getString('currentUserSummary');
+
+      regDate = preferences.getString('currentUserRegDate');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(widget.uidNGO);
     SizeConfig().init(context);
     var h = SizeConfig.screenHeight / 896;
     var b = SizeConfig.screenWidth / 412;
@@ -114,7 +154,7 @@ class _AboutNgoState extends State<AboutNgo> {
                           height: h * 140,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage('images/ill1.png'),
+                              image: NetworkImage(photo),
                               fit: BoxFit.cover,
                             ),
                             borderRadius: BorderRadius.circular(b * 6),
@@ -144,7 +184,7 @@ class _AboutNgoState extends State<AboutNgo> {
                       Container(
                         width: b * 144,
                         child: Text(
-                          'Raam Puri NGO ',
+                          ngoName,
                           overflow: TextOverflow.ellipsis,
                           style: txtS(textColor, 20, FontWeight.w600),
                         ),
@@ -236,7 +276,7 @@ class _AboutNgoState extends State<AboutNgo> {
                       ),
                       sh(10),
                       Text(
-                        'About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About About ',
+                        summary,
                         maxLines: 5,
                         overflow: TextOverflow.ellipsis,
                         style: txtS(Color(0xff828282), 14, FontWeight.w500),

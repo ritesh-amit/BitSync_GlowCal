@@ -214,12 +214,15 @@ class _OtpState extends State<Otp> {
     String email = widget.currentUser.email;
     String phone = widget.currentUser.phone;
 
+    Timestamp timestamp = Timestamp.now();
+
     CurrentUser currentUser = CurrentUser(
         name: userName,
         email: email,
         phone: phone,
         uid: uid,
-        userType: widget.currentUser.userType);
+        userType: widget.currentUser.userType,
+     regDate: FieldValue.serverTimestamp());
 
     Map<String, dynamic> map = currentUser.toMap();
 
@@ -237,5 +240,6 @@ class _OtpState extends State<Otp> {
     preferences.setString('currentUserPhone', phone);
     preferences.setString('currentUserPhone', widget.phoneNo);
     preferences.setString('currentUserType', widget.currentUser.userType);
+    preferences.setString('currentUserRegDate', timestamp.toDate().toString());
   }
 }
