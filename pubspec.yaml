@@ -46,13 +46,12 @@ dependencies:
   location: ">=1.0.0 <=4.0.0"
   material_design_icons_flutter: null
   otp_text_field: ^1.1.0
-  persistent_bottom_nav_bar: null
-  pinput: ^1.0.0
   shared_preferences: ^2.0.5
   titled_navigation_bar: ^4.1.0
   toast: null
   url_launcher: ^6.0.2
-
+  flutter_switch: ^0.2.2
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

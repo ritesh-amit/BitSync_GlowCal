@@ -136,8 +136,8 @@ class _NgoHomeState extends State<NgoHome> {
 
       if (preferences.containsKey('isVerified'))
         isVerified = preferences.getBool('isVarified');
-
-      regDate = preferences.getString('currentUserRegDate');
+      if (preferences.containsKey('currentUserRegDate'))
+        regDate = preferences.getString('currentUserRegDate');
     });
   }
 

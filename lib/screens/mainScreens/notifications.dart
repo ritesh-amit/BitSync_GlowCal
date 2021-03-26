@@ -3,6 +3,8 @@ import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gur/drawer.dart';
+import 'package:gur/screens/chatSection/messageScreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Notifications extends StatefulWidget {
   _NotificationsState createState() => _NotificationsState();
@@ -65,15 +67,19 @@ class _NotificationsState extends State<Notifications> {
                 ),
                 Spacer(),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return MessageScreen(
+                          uid: FirebaseAuth.instance.currentUser.uid);
+                    }));
+                  },
                   child: Container(
                     height: h * 30,
                     width: b * 30,
                     child: SvgPicture.asset(
                       'images/SendColor.svg',
                       allowDrawingOutsideViewBox: true,
-                      width: h * 20,
-                      height: b * 20,
                     ),
                   ),
                 ),
