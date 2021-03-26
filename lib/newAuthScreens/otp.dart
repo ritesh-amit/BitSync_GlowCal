@@ -182,21 +182,27 @@ class _OtpState extends State<Otp> {
       await auth
           .createUserWithEmailAndPassword(email: email, password: pwd)
           .then((credential) {
-        auth.currentUser
-            .linkWithCredential(PhoneAuthProvider.credential(
-                verificationId: verificationCode, smsCode: pin))
-            .then((result) {
-          if (credential.user != null) {
-            uid = credential.user.uid;
-            addUsertoDB();
-            Navigator.pushAndRemoveUntil(context,
-                MaterialPageRoute(builder: (context) {
-              return Home();
-            }), (route) => false);
-          } else
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Error! Try again after sometime")));
-        });
+        try {
+          auth.currentUser
+              .linkWithCredential(PhoneAuthProvider.credential(
+                  verificationId: verificationCode, smsCode: pin))
+              .then((result) {
+            if (result.user != null) {
+              uid = credential.user.uid;
+              addUsertoDB();
+              Navigator.pushAndRemoveUntil(context,
+                  MaterialPageRoute(builder: (context) {
+                return Home();
+              }), (route) => false);
+            }
+          }).catchError((eror) {
+            print(eror);
+          });
+        } on FirebaseAuthException catch (error) {
+          print(error.message);
+        } catch (er) {
+          print(er);
+        }
       });
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context)
@@ -222,7 +228,7 @@ class _OtpState extends State<Otp> {
         phone: phone,
         uid: uid,
         userType: widget.currentUser.userType,
-     regDate: FieldValue.serverTimestamp());
+        regDate: FieldValue.serverTimestamp());
 
     Map<String, dynamic> map = currentUser.toMap();
 

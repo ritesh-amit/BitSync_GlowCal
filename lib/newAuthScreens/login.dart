@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:gur/homeMain.dart';
 import 'package:gur/newAuthScreens/choice.dart';
@@ -30,6 +31,7 @@ class _LoginState extends State<Login> {
 
   AutovalidateMode phoneValidator = AutovalidateMode.disabled;
   AutovalidateMode pwdValidator = AutovalidateMode.disabled;
+  bool isLoggedInPresses = false;
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +151,9 @@ class _LoginState extends State<Login> {
                         child: MaterialButton(
                           onPressed: () {
                             login();
+                            setState(() {
+                              isLoggedInPresses = true;
+                            });
                           },
                           color: mc,
                           shape: RoundedRectangleBorder(
@@ -157,26 +162,30 @@ class _LoginState extends State<Login> {
                           elevation: 0,
                           height: h * 65,
                           minWidth: b * 345,
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: h * 20,
-                                  width: b * 20,
-                                  child: SvgPicture.asset(
-                                    'images/Group 23.svg',
-                                    allowDrawingOutsideViewBox: true,
-                                    width: h * 20,
-                                    height: b * 20,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  'Login',
-                                  style:
-                                      txtS(Colors.white, 16, FontWeight.w700),
-                                ),
-                              ]),
+                          child: isLoggedInPresses
+                              ? SpinKitCircle(
+                                  color: Colors.white,
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                      Container(
+                                        height: h * 20,
+                                        width: b * 20,
+                                        child: SvgPicture.asset(
+                                          'images/Group 23.svg',
+                                          allowDrawingOutsideViewBox: true,
+                                          width: h * 20,
+                                          height: b * 20,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Login',
+                                        style: txtS(
+                                            Colors.white, 16, FontWeight.w700),
+                                      ),
+                                    ]),
                         ),
                       ),
                       sh(40),
@@ -279,6 +288,10 @@ class _LoginState extends State<Login> {
         Toast.show("Failure, Kindly login after sometime", context,
             duration: Toast.LENGTH_LONG);
       }
+
+      setState(() {
+        isLoggedInPresses = false;
+      });
     } catch (e) {
       print(e);
     }
