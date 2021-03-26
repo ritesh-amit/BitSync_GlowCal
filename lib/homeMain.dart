@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gur/screens/mainScreens/home.dart';
 import 'Utils/constants.dart';
 import 'screens/mainScreens/aboutNgo.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -76,19 +77,38 @@ class _HomeState extends State<Home> {
           currentIndex: _selectedIndex,
           items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Container(
+                  child: SvgPicture.asset(
+                _selectedIndex == 0 ? 'images/Home1.svg' : 'images/Home2.svg',
+                allowDrawingOutsideViewBox: true,
+              )),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.notifications),
+              icon: Container(
+                child: SvgPicture.asset(
+                  _selectedIndex == 1 ? 'images/Not.svg' : 'images/not2.svg',
+                  allowDrawingOutsideViewBox: true,
+                ),
+              ),
               label: 'Notifications',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
+              icon: Container(
+                child: SvgPicture.asset(
+                  _selectedIndex == 2 ? 'images/Set.svg' : 'images/set2.svg',
+                  allowDrawingOutsideViewBox: true,
+                ),
+              ),
               label: 'Settings',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
+              icon: Container(
+                child: SvgPicture.asset(
+                  _selectedIndex == 3 ? 'images/prof.svg' : 'images/prof2.svg',
+                  allowDrawingOutsideViewBox: true,
+                ),
+              ),
               label: 'Profile',
             ),
           ],
