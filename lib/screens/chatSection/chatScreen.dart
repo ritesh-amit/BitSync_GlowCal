@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,11 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:gur/homeMain.dart';
-import 'package:bubble/bubble.dart';
 import 'package:gur/Utils/messageUI.dart';
-import 'package:gur/main.dart';
 import 'package:gur/models/msg.dart';
-import 'package:gur/screens/mainScreens/aboutNgo.dart';
 import 'package:location/location.dart' as loc;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -141,56 +137,50 @@ class _ChatScreenState extends State<ChatScreen> {
     SizeConfig().init(context);
     var b = SizeConfig.screenWidth / 414;
     var h = SizeConfig.screenHeight / 896;
-    return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Container(
-                height: h * 60,
-                padding: EdgeInsets.symmetric(horizontal: b * 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.07),
-                      blurRadius: b * 4,
-                      spreadRadius: 0,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Builder(
-                      builder: (BuildContext context) {
-                        return InkWell(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Container(
-                            padding: EdgeInsets.only(left: b * 5),
-                            height: h * 30,
-                            width: b * 30,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: mc, width: b * 1.5),
-                              borderRadius: BorderRadius.circular(b * 12),
-                            ),
-                            child: Icon(Icons.arrow_back_ios,
-                                color: mc, size: b * 16),
+    return SafeArea(
+      child: Scaffold(
+        body: Form(
+          key: _formKey,
+          child: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  height: h * 60,
+                  padding: EdgeInsets.symmetric(horizontal: b * 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.07),
+                        blurRadius: b * 4,
+                        spreadRadius: 0,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          height: h * 30,
+                          width: b * 30,
+                          child: SvgPicture.asset(
+                            'images/Arrow1.svg',
+                            allowDrawingOutsideViewBox: true,
                           ),
-                        );
-                      },
-                    ),
-                    Spacer(),
-                    Text(
-                      'Messages',
-                      style: txtS(mc, 20, FontWeight.w600),
-                    ),
-                    Spacer(),
-                    InkWell(
+                        ),
+                      ),
+                      Spacer(),
+                      Text(
+                        'Messages',
+                        style: txtS(mc, 20, FontWeight.w600),
+                      ),
+                      Spacer(),
+                      InkWell(
                       onTap: () {
                         dialogBoxContact(context);
                       },
@@ -199,18 +189,19 @@ class _ChatScreenState extends State<ChatScreen> {
                           width: b * 30,
                           child: Icon(Icons.contact_page)),
                     )
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              isRejected
-                  ? Text("Sorry, Your last donation was Rejected by NGO")
-                  : userType == 1
-                      ? acceptOrNot
-                          ? ChatMessagesListWidget()
-                          : collectionReq()
-                      : ChatMessagesListWidget(),
-              acceptOrNot ? ChatInputWidget() : notAcceptedText(),
-            ],
+                isRejected
+                    ? Text("Sorry, Your last donation was Rejected by NGO")
+                    : userType == 1
+                        ? acceptOrNot
+                            ? ChatMessagesListWidget()
+                            : collectionReq()
+                        : ChatMessagesListWidget(),
+                acceptOrNot ? ChatInputWidget() : notAcceptedText(),
+              ],
+            ),
           ),
         ),
       ),
@@ -218,11 +209,11 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget ChatInputWidget() {
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
+
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.screenWidth * 5 / 360,
-        vertical: SizeConfig.screenHeight * 7 / 640,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: b * 10, vertical: h * 15),
       child: Row(
         children: <Widget>[
           Flexible(
@@ -234,58 +225,53 @@ class _ChatScreenState extends State<ChatScreen> {
                   }
                   return null;
                 },
-                style: TextStyle(
-                  color: Color(0xff1c1c1c),
-                  fontSize: SizeConfig.screenWidth * 14 / 360,
-                  fontWeight: FontWeight.w400,
-                ),
+                style: txtS(Color(0xff828282), 14, FontWeight.w500),
                 minLines: 1,
                 maxLines: 4,
                 controller: _messageController,
                 decoration: InputDecoration(
                   hintText: "Type a message...",
-                  errorStyle: TextStyle(color: Colors.transparent),
-                  hintStyle: TextStyle(
-                    color: Color(0xff1c1c1c),
-                    fontSize: SizeConfig.screenWidth * 14 / 360,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  hintStyle: txtS(Color(0xff828282), 13, FontWeight.w400),
                   contentPadding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.screenHeight * 12 / 640,
-                    horizontal: SizeConfig.screenWidth * 10 / 360,
+                    vertical: h * 16,
+                    horizontal: b * 20,
                   ),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: Colors.red,
-                      width: SizeConfig.screenWidth * 1 / 360,
+                      color: Colors.transparent,
                     ),
-                    borderRadius: BorderRadius.circular(
-                      SizeConfig.screenWidth * 25 / 360,
-                    ),
+                    borderRadius: BorderRadius.circular(b * 60),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: Colors.red,
-                      width: SizeConfig.screenWidth * 1 / 360,
+                      color: Colors.transparent,
                     ),
-                    borderRadius: BorderRadius.circular(
-                      SizeConfig.screenWidth * 25 / 360,
-                    ),
+                    borderRadius: BorderRadius.circular(b * 60),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: Colors.orange,
-                      width: SizeConfig.screenWidth * 1 / 360,
+                      color: Colors.transparent,
                     ),
-                    borderRadius: BorderRadius.circular(
-                      SizeConfig.screenWidth * 25 / 360,
-                    ),
+                    borderRadius: BorderRadius.circular(b * 60),
                   ),
                   suffixIcon: InkWell(
-                    child: Icon(
-                      Icons.send,
-                      color: Colors.grey[400],
-                      size: SizeConfig.screenWidth * 20 / 360,
+                    child: Container(
+                      margin: EdgeInsets.symmetric(
+                          horizontal: b * 6, vertical: h * 5),
+                      height: h * 39,
+                      width: h * 39,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Container(
+                        child: SvgPicture.asset(
+                          'images/Send1.svg',
+                          allowDrawingOutsideViewBox: true,
+                          height: h * 15,
+                          width: b * 15,
+                        ),
+                      ),
                     ),
                     onTap: () {
                       tolast();
@@ -298,7 +284,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       }
                     },
                   ),
-                  fillColor: Colors.white,
+                  fillColor: Color(0xfffff2e1),
                   filled: true,
                 ),
                 onFieldSubmitted: (value) {
@@ -307,40 +293,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
           ),
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.screenWidth * 5 / 360,
-            ),
-            child: IconButton(
-                icon: Icon(
-                  Icons.photo,
-                  color: Color.fromARGB(220, 255, 255, 255),
-                  size: SizeConfig.screenWidth * 20 / 360,
-                ),
-                onPressed: () {
-                  dialogBoxContact(context);
-                }),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.orange,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.screenWidth * 5 / 360,
-            ),
-            child: IconButton(
-                icon: Icon(
-                  Icons.video_label,
-                  size: SizeConfig.screenWidth * 20 / 360,
-                  color: Color.fromARGB(220, 255, 255, 255),
-                ),
-                onPressed: () {}),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.orange,
-            ),
-          ),
+
         ],
       ),
     );
@@ -552,6 +505,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget ChatMessagesListWidget() {
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
     return Flexible(
       child: StreamBuilder(
         stream: FirebaseFirestore.instance
@@ -573,10 +528,8 @@ class _ChatScreenState extends State<ChatScreen> {
             return ListView.builder(
               physics: BouncingScrollPhysics(),
               controller: _scrollController,
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.screenWidth * 10 / 360,
-                vertical: SizeConfig.screenHeight * 10 / 640,
-              ),
+              padding:
+                  EdgeInsets.symmetric(horizontal: b * 10, vertical: h * 10),
               reverse: true,
               itemBuilder: (context, index) =>
                   chatMessageItem(snapshot.data.docs[rev - index]),
@@ -593,13 +546,14 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget buildChatLayout(DocumentSnapshot snap) {
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.screenWidth * 5 / 360,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: b * 5),
           child: Row(
             mainAxisAlignment: snap['senderUid'] == widget.senderUID
                 ? MainAxisAlignment.end
@@ -610,64 +564,31 @@ class _ChatScreenState extends State<ChatScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         snap['type'] == 'text'
-                            ? Align(
-                                alignment: Alignment.topRight,
-                                child: CustomPaint(
+                            ? Row(children: [
+                                Text(
+                                  giveTime(snap['timestamp']),
+                                  style: txtS(
+                                      Color(0xff7d7d7d), 10, FontWeight.w600),
+                                ),
+                                SizedBox(width: b * 5),
+                                CustomPaint(
                                   painter: ChatBubble(
-                                    color: Color.fromRGBO(242, 108, 37, 0.9),
+                                    color: Color(0xfff1f1f1),
                                     alignment: Alignment.topRight,
                                   ),
                                   child: Container(
                                     margin: EdgeInsets.fromLTRB(
-                                      SizeConfig.screenWidth * 14 / 360,
-                                      SizeConfig.screenHeight * 9 / 640,
-                                      SizeConfig.screenWidth * 10 / 360,
-                                      SizeConfig.screenHeight * 2 / 640,
-                                    ),
+                                        b * 17, h * 10, b * 15, h * 10),
                                     constraints: BoxConstraints(
                                       minWidth: 0,
-                                      maxWidth: SizeConfig.screenWidth * 0.55,
+                                      maxWidth: SizeConfig.screenWidth * 0.5,
                                     ),
-                                    child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: EdgeInsets.fromLTRB(
-                                                0,
-                                                0,
-                                                SizeConfig.screenWidth *
-                                                    10 /
-                                                    360,
-                                                0),
-                                            child: Text(
-                                              snap['message'],
-                                              maxLines: null,
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w400,
-                                                fontSize:
-                                                    SizeConfig.screenWidth *
-                                                        12 /
-                                                        360,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                              height: SizeConfig.screenHeight *
-                                                  7 /
-                                                  640),
-                                          Text(
-                                            giveTime(snap['timestamp']),
-                                            style: TextStyle(
-                                              fontSize: SizeConfig.screenWidth *
-                                                  10 /
-                                                  360,
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.w300,
-                                            ),
-                                          ),
-                                        ]),
+                                    child: Text(
+                                      snap['message'],
+                                      maxLines: null,
+                                      style:
+                                          txtS(textColor, 14, FontWeight.w400),
+                                    ),
                                   ),
                                 ),
                               )
@@ -675,8 +596,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                 ? contactDetails(snap['pickUpPersonName'],
                                     snap['pickUpPersonContact'])
                                 : SizedBox(),
+
                         Padding(
-                          padding: EdgeInsets.all(SizeConfig.b * 0.764),
+                          padding: EdgeInsets.symmetric(vertical: h * 7),
                         ),
                       ],
                     )
@@ -684,72 +606,36 @@ class _ChatScreenState extends State<ChatScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         snap['type'] == 'text'
-                            ? Align(
-                                alignment: Alignment.topRight,
-                                child: CustomPaint(
+                            ? Row(children: [
+                                CustomPaint(
                                   painter: ChatBubble(
-                                    color: Colors.white,
+                                    color: Color(0xfffff2e1),
                                     alignment: Alignment.topLeft,
                                   ),
                                   child: Container(
                                     margin: EdgeInsets.fromLTRB(
-                                      SizeConfig.screenWidth * 15 / 360,
-                                      SizeConfig.screenHeight * 9 / 640,
-                                      SizeConfig.screenWidth * 5 / 360,
-                                      SizeConfig.screenHeight * 4 / 640,
-                                    ),
+                                        b * 17, h * 10, b * 15, h * 10),
                                     constraints: BoxConstraints(
                                       minWidth: 0,
                                       maxWidth: SizeConfig.screenWidth * 0.55,
                                     ),
-                                    child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: EdgeInsets.fromLTRB(
-                                                0,
-                                                0,
-                                                SizeConfig.screenWidth *
-                                                    10 /
-                                                    360,
-                                                0),
-                                            child: Text(
-                                              snap['message'],
-                                              maxLines: null,
-                                              style: TextStyle(
-                                                color: Color(0xff1c1c1c),
-                                                fontSize:
-                                                    SizeConfig.screenWidth *
-                                                        12 /
-                                                        360,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                              height: SizeConfig.screenHeight *
-                                                  7 /
-                                                  640),
-                                          Text(
-                                            giveTime(snap['timestamp']),
-                                            style: TextStyle(
-                                              fontSize: SizeConfig.screenWidth *
-                                                  10 /
-                                                  360,
-                                              color: Colors.grey[800],
-                                              fontWeight: FontWeight.w300,
-                                            ),
-                                          ),
-                                        ]),
+                                    child: Text(
+                                      snap['message'],
+                                      maxLines: null,
+                                      style:
+                                          txtS(textColor, 14, FontWeight.w400),
+                                    ),
                                   ),
                                 ),
+
                               )
                             : snap['type'] == 'contactCard'
                                 ? contactDetails(snap['pickUpPersonName'],
                                     snap['pickUpPersonContact'])
                                 : SizedBox(),
+
                         Padding(
-                          padding: EdgeInsets.all(SizeConfig.b * 0.764),
+                          padding: EdgeInsets.symmetric(vertical: h * 7),
                         ),
                       ],
                     )

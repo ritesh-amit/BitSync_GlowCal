@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:gur/screens/chatSection/chatScreen.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MessageScreen extends StatefulWidget {
   final String uid;
@@ -62,32 +63,24 @@ class _MessageScreenState extends State<MessageScreen> {
               ),
               child: Row(
                 children: [
-                  Builder(
-                    builder: (BuildContext context) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Container(
-                          padding: EdgeInsets.only(left: b * 5),
-                          height: h * 30,
-                          width: b * 30,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: mc, width: b * 1.5),
-                            borderRadius: BorderRadius.circular(b * 12),
-                          ),
-                          child: Icon(Icons.arrow_back_ios,
-                              color: mc, size: b * 16),
-                        ),
-                      );
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
                     },
+                    child: Container(
+                      height: h * 30,
+                      width: b * 30,
+                      child: SvgPicture.asset(
+                        'images/Arrow1.svg',
+                        allowDrawingOutsideViewBox: true,
+                      ),
+                    ),
                   ),
-                  Spacer(),
+                  SizedBox(width: b * 114),
                   Text(
                     'Messages',
                     style: txtS(mc, 20, FontWeight.w600),
                   ),
-                  Spacer(),
                 ],
               ),
             ),
@@ -102,7 +95,12 @@ class _MessageScreenState extends State<MessageScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting)
                   return CircularProgressIndicator();
                 else if (snapshot.data.docs.length == 0)
-                  return Center(child: Text('Woops ! No Chat so far'));
+                  return Center(
+                    child: Text(
+                      'Oops ! No Chat so far',
+                      style: txtS(Color(0xff28797c), 20, FontWeight.w600),
+                    ),
+                  );
                 else
                   return Expanded(
                     child: ListView.builder(
@@ -113,12 +111,13 @@ class _MessageScreenState extends State<MessageScreen> {
                         children: <Widget>[
                           InkWell(
                             onTap: () {
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) {
-                                return ChatScreen(
-                                    snapshot.data.docs[index]['uid'],
-                                    widget.uid);
-                              }));
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (context) {
+                                  return ChatScreen(
+                                      snapshot.data.docs[index]['uid'],
+                                      widget.uid);
+                                }),
+                              );
                             },
                             child: Container(
                               height: h * 90,
@@ -133,9 +132,17 @@ class _MessageScreenState extends State<MessageScreen> {
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  CircleAvatar(
-                                    radius: b * 69 / 2,
-                                    backgroundColor: gc,
+                                  Container(
+                                    width: b * 69,
+                                    height: h * 69,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      image: DecorationImage(
+                                        image: AssetImage('images/ill1.png'),
+                                        fit: BoxFit.fill,
+                                      ),
+                                      shape: BoxShape.circle,
+                                    ),
                                   ),
                                   SizedBox(width: b * 15),
                                   Container(
