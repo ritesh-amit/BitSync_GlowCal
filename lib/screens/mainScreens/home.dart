@@ -133,7 +133,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
                         return MessageScreen(
-                            FirebaseAuth.instance.currentUser.uid);
+                            uid: FirebaseAuth.instance.currentUser.uid);
                       }));
                     },
                     child: Container(

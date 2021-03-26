@@ -181,14 +181,14 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                       Spacer(),
                       InkWell(
-                      onTap: () {
-                        dialogBoxContact(context);
-                      },
-                      child: Container(
-                          height: h * 30,
-                          width: b * 30,
-                          child: Icon(Icons.contact_page)),
-                    )
+                        onTap: () {
+                          dialogBoxContact(context);
+                        },
+                        child: Container(
+                            height: h * 30,
+                            width: b * 30,
+                            child: Icon(Icons.contact_page)),
+                      )
                     ],
                   ),
                 ),
@@ -293,7 +293,6 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
           ),
-
         ],
       ),
     );
@@ -591,12 +590,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                     ),
                                   ),
                                 ),
-                              )
+                              ])
                             : snap['type'] == 'contactCard'
                                 ? contactDetails(snap['pickUpPersonName'],
                                     snap['pickUpPersonContact'])
                                 : SizedBox(),
-
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: h * 7),
                         ),
@@ -627,13 +625,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                     ),
                                   ),
                                 ),
-
-                              )
+                              ])
                             : snap['type'] == 'contactCard'
                                 ? contactDetails(snap['pickUpPersonName'],
                                     snap['pickUpPersonContact'])
                                 : SizedBox(),
-
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: h * 7),
                         ),

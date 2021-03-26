@@ -279,12 +279,6 @@ class _NearbyNGOState extends State<NearbyNGO> {
 
     FirebaseFirestore.instance.collection('donations').add(map).then((value) {
       sendNotification(ngoUID);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Donated With Love"),
-        backgroundColor: Colors.green,
-        behavior: SnackBarBehavior.floating,
-        duration: Duration(seconds: 5),
-      ));
 
       dialogBoxDonateDone(context);
     }).catchError((error) {

@@ -199,7 +199,7 @@ class _NgoHomeState extends State<NgoHome> {
                     String uid = FirebaseAuth.instance.currentUser.uid;
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      return MessageScreen(uid);
+                      return MessageScreen(uid: uid);
                     }));
                   },
                   child: Container(
