@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/drawer.dart';
+import 'package:gur/screens/chatSection/messageScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 import '../../Utils/SizeConfig.dart';
@@ -121,7 +122,12 @@ class _ProfileState extends State<Profile> {
                         ),
                         Spacer(),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return MessageScreen();
+                            }));
+                          },
                           child: Container(
                             height: h * 30,
                             width: b * 30,
@@ -152,41 +158,18 @@ class _ProfileState extends State<Profile> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              isName ? 'Change Name' : 'Name',
-                              style: txtS(
-                                  isName ? textColor : rc, 14, FontWeight.w500),
+                              'Name',
+                              style: txtS(rc, 14, FontWeight.w500),
                             ),
                             sh(6),
-                            isName
-                                ? Container(
-                                    width: b * 270,
-                                    child: TextField(
-                                      style:
-                                          txtS(textColor, 15, FontWeight.w500),
-                                      decoration: dec('Your Name'),
-                                    ),
-                                  )
-                                : Text(
-                                    userName,
-                                    style: txtS(textColor, 16, FontWeight.w500),
-                                  ),
+                            Text(
+                              userName,
+                              style: txtS(textColor, 16, FontWeight.w500),
+                            ),
                             isName ? butt(null) : SizedBox(),
                           ],
                         ),
                         Spacer(),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  isName = !isName;
-                                });
-                              },
-                              child: ediB(),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),
@@ -211,36 +194,13 @@ class _ProfileState extends State<Profile> {
                                   FontWeight.w500),
                             ),
                             sh(6),
-                            isPhone
-                                ? Container(
-                                    width: b * 270,
-                                    child: TextField(
-                                      style:
-                                          txtS(textColor, 15, FontWeight.w500),
-                                      decoration: dec('Phone Number'),
-                                    ),
-                                  )
-                                : Text(
-                                    userPhone,
-                                    style: txtS(textColor, 16, FontWeight.w500),
-                                  ),
-                            isPhone ? butt(null) : SizedBox(),
-                          ],
-                        ),
-                        Spacer(),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  isPhone = !isPhone;
-                                });
-                              },
-                              child: ediB(),
+                            Text(
+                              userPhone,
+                              style: txtS(textColor, 16, FontWeight.w500),
                             ),
                           ],
                         ),
+                        Spacer(),
                       ],
                     ),
                   ),
@@ -466,14 +426,7 @@ class _ProfileState extends State<Profile> {
                                     padding: EdgeInsets.only(left: b * 180),
                                     child: InkWell(
                                       onTap: () {
-                                        preferences.setString(
-                                            'currentUserAddress',
-                                            addressController.text.trim());
-                                        setState(() {
-                                          isAddress = !isAddress;
-                                        });
-                                        addressChangeRequest(
-                                            addressController.text.trim());
+                                        userDetailChange('address');
                                       },
                                       child: Container(
                                         margin: EdgeInsets.only(top: h * 10),
@@ -725,21 +678,28 @@ class _ProfileState extends State<Profile> {
     });
   }
 
-  addressChangeRequest(String adr) {
-    String userUID = preferences.getString("currentUserUID");
+  userDetailChange(String field) async {
+    String data = 'NA';
 
-    try {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(userUID)
-          .update({'address': adr}).then((value) {
-        setState(() {
-          preferences.setString('currentUserAddress', adr);
-          address = adr;
-        });
+    setState(() {
+      if (field == 'address') {
+        data = addressController.text.trim();
+      }
+    });
+
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String uid = pref.getString('currentUserUID');
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .update({field: data}).then((value) {
+      setState(() {
+        if (field == 'address') {
+          pref.setString('currentUserAddress', data);
+          address = data;
+          isAddress = false;
+        }
       });
-    } catch (e) {
-      print(e);
-    }
+    });
   }
 }

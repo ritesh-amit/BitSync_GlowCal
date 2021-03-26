@@ -4,12 +4,13 @@ import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gur/Utils/SizeConfig.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
-import 'package:gur/homeMain.dart';
 import 'package:gur/Utils/messageUI.dart';
+import 'package:gur/homeMainInd.dart';
+import 'package:gur/homeMainNGO.dart';
+import 'package:gur/homeMainOrg.dart';
 import 'package:gur/models/msg.dart';
 import 'package:location/location.dart' as loc;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,6 +46,7 @@ class _ChatScreenState extends State<ChatScreen> {
   bool isRejected = false;
   int userType;
   String donationUIDOnlyForNGOSide = "";
+  String userTypeString = '';
 
   void tolast() {
     _scrollController.animateTo(
@@ -91,6 +93,7 @@ class _ChatScreenState extends State<ChatScreen> {
   loadType() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String tempType = pref.getString('currentUserType');
+    userTypeString = tempType;
 
     setState(() {
       if (tempType == 'ngo')
@@ -891,7 +894,11 @@ class _ChatScreenState extends State<ChatScreen> {
       }).then((value) {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) {
-          return Home();
+          return userTypeString == 'ind'
+              ? HomeInd()
+              : userTypeString == 'org'
+                  ? HomeOrg()
+                  : HomeNgo();
         }), (route) => false);
       });
     });

@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:gur/homeMainInd.dart';
+import 'package:gur/homeMainNGO.dart';
+import 'package:gur/homeMainOrg.dart';
 import 'package:gur/models/currentUser.dart';
 import 'package:gur/newAuthScreens/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,7 +12,6 @@ import '../Utils/SizeConfig.dart';
 import '../Utils/constants.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
-import 'package:gur/homeMain.dart';
 
 class Otp extends StatefulWidget {
   final String phoneNo;
@@ -182,28 +184,67 @@ class _OtpState extends State<Otp> {
       await auth
           .createUserWithEmailAndPassword(email: email, password: pwd)
           .then((credential) {
-        auth.currentUser
-            .linkWithCredential(PhoneAuthProvider.credential(
-                verificationId: verificationCode, smsCode: pin))
-            .then((result) {
-          if (credential.user != null) {
-            uid = credential.user.uid;
-            addUsertoDB();
-            Navigator.pushAndRemoveUntil(context,
+        try {
+          auth.currentUser
+              .linkWithCredential(PhoneAuthProvider.credential(
+                  verificationId: verificationCode, smsCode: pin))
+              .then((result) {
+            if (result.user != null) {
+              uid = credential.user.uid;
+              addUsertoDB();
+              Navigator.pushAndRemoveUntil(context,
+                  MaterialPageRoute(builder: (context) {
+                return widget.currentUser.userType == 'ind'
+                    ? HomeInd()
+                    : widget.currentUser.userType == 'org'
+                        ? HomeOrg()
+                        : HomeNgo();
+              }), (route) => false);
+            }
+          }).catchError((eror) {
+            print(eror);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(eror.message),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+            ));
+            auth.currentUser.delete();
+            Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) {
-              return Home();
+              return Login();
             }), (route) => false);
-          } else
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Error! Try again after sometime")));
-        });
+          });
+        } on FirebaseAuthException catch (error) {
+          deleteUser(error.message);
+        } catch (er) {
+          print(er);
+          deleteUser(er);
+        }
       });
     } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.message)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.message),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ));
     } catch (e) {
       print(e);
     }
+  }
+
+  deleteUser(e) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(e),
+      backgroundColor: Colors.red,
+      behavior: SnackBarBehavior.floating,
+    ));
+    auth.currentUser.delete();
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) {
+      return Login();
+    }), (route) => false);
   }
 
   addUsertoDB() async {
@@ -222,7 +263,7 @@ class _OtpState extends State<Otp> {
         phone: phone,
         uid: uid,
         userType: widget.currentUser.userType,
-     regDate: FieldValue.serverTimestamp());
+        regDate: FieldValue.serverTimestamp());
 
     Map<String, dynamic> map = currentUser.toMap();
 

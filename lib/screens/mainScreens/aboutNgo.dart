@@ -1,9 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:gur/homeMain.dart';
-import 'package:gur/main.dart';
-import 'package:gur/screens/chatSection/messageScreen.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
@@ -32,32 +29,40 @@ class _AboutNgoState extends State<AboutNgo> {
   String phone = 'NA';
   String address = 'NA';
   String photo = 'NA';
+  String photo2 = 'NA';
   String headImageURL = '';
   String regDate = "NA";
   String summary = 'NA';
+  Timestamp timestamp;
 
   @override
   void initState() {
     super.initState();
 
-    getDataFromLocalStorage();
+    getDataFromDb();
   }
 
-  getDataFromLocalStorage() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
+  getDataFromDb() async {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.uidNGO)
+        .snapshots()
+        .listen((snap) {
+      setState(() {
+        ngoName = snap.data()['name'];
+        email = snap.data()['email'];
+        phone = snap.data()['phone'];
+        if (snap.data()['address'] != null) address = snap.data()['address'];
 
-    setState(() {
-      ngoName = preferences.getString('currentUserName');
-      email = preferences.getString('currentUserEmail');
-      phone = preferences.getString('currentUserPhone');
-      if (preferences.containsKey('profileImageURL'))
-        headImageURL = preferences.getString('profileImageURL');
-      if (preferences.containsKey('currentUserAddress'))
-        address = preferences.getString('currentUserAddress');
-      if (preferences.containsKey('currentUserSummary'))
-        summary = preferences.getString('currentUserSummary');
+        if (snap.data()['regDate'] != null) {
+          if (timestamp != null) timestamp = snap.data()['regData'];
+        }
+        if (snap.data()['image1'] != null) photo = snap.data()['image1'];
 
-      regDate = preferences.getString('currentUserRegDate');
+        if (snap.data()['image2'] != null) photo2 = snap.data()['image2'];
+
+        if (snap.data()['summary'] != null) summary = snap.data()['summary'];
+      });
     });
   }
 
@@ -156,7 +161,9 @@ class _AboutNgoState extends State<AboutNgo> {
                                 style: txtS(textColor, 12, FontWeight.w400),
                               ),
                               Text(
-                                '21/08/2020',
+                                regDate == 'NA'
+                                    ? regDate
+                                    : regDate.substring(0, 10),
                                 style: txtS(textColor, 12, FontWeight.w600),
                               ),
                             ],
@@ -246,7 +253,7 @@ class _AboutNgoState extends State<AboutNgo> {
                       ),
                     ],
                     image: DecorationImage(
-                      image: AssetImage('images/ill1.png'),
+                      image: NetworkImage(photo2),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.circular(b * 6),
@@ -305,7 +312,7 @@ class _AboutNgoState extends State<AboutNgo> {
                                 ),
                                 sh(2),
                                 Text(
-                                  'ritesh.shuklalmp2018@gmail.com',
+                                  email,
                                   overflow: TextOverflow.ellipsis,
                                   style: txtS(textColor, 13, FontWeight.w600),
                                 ),
@@ -342,7 +349,7 @@ class _AboutNgoState extends State<AboutNgo> {
                                 ),
                                 sh(2),
                                 Text(
-                                  '6387246025',
+                                  phone,
                                   style: txtS(textColor, 13, FontWeight.w600),
                                 ),
                               ],
@@ -375,7 +382,7 @@ class _AboutNgoState extends State<AboutNgo> {
                             ),
                             sh(3),
                             Text(
-                              'Shastri Nagar, ghoshiyana road, near chitra medical center, lakhimpur kheri',
+                              address,
                               style: txtS(textColor, 13, FontWeight.w600),
                             ),
                           ],

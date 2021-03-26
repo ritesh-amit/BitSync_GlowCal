@@ -37,7 +37,10 @@ dependencies:
   flutter_animated_dialog: ^2.0.0
   flutter_email_sender: ^4.0.0
   flutter_local_notifications: ^5.0.0
+  flutter_native_splash: ^1.1.5+1
+  flutter_spinkit: ^5.0.0
   flutter_svg: ^0.21.0-nullsafety.0
+  flutter_switch: ^0.2.2
   geolocator: ^7.0.1
   get: ^3.26.0
   google_fonts: ^2.0.0
@@ -50,19 +53,16 @@ dependencies:
   titled_navigation_bar: ^4.1.0
   toast: null
   url_launcher: ^6.0.2
-  flutter_switch: ^0.2.2
-  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_launcher_icons: ^0.9.0
-
-flutter_icons:
+flutter_native_splash:
+  color: "#F17815"
+  image: images/app-icon.png
   android: true
   ios: true
-  image_path_android: "assets/icon-launcher.png"
-  image_path_ios: "assets/icon-launcher.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -2,13 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:gur/dialogboxes/dialogBoxSearch.dart';
 import 'package:gur/dialogboxes/dialogBoxDonate.dart';
 import 'package:gur/drawer.dart';
 import 'package:gur/screens/chatSection/messageScreen.dart';
 import 'package:gur/screens/mainScreens/aboutNgo.dart';
-import 'package:location/location.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -40,8 +38,6 @@ class _HomePageState extends State<HomePage> {
         for (var i in documentSnapshot) {
           mainImageList
               .add({'imageURL': i.data()['image1'], 'uid': i.data()['uid']});
-
-          //mainImageList.add(i.data()['image1']);
         }
       });
     });

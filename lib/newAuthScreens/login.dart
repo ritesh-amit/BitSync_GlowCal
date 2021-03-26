@@ -3,13 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:gur/homeMain.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:gur/homeMainInd.dart';
+import 'package:gur/homeMainNGO.dart';
+import 'package:gur/homeMainOrg.dart';
 import 'package:gur/newAuthScreens/choice.dart';
 import 'package:gur/newAuthScreens/forgotPass.dart';
 import 'package:gur/models/currentUser.dart';
-import 'package:gur/newAuthScreens/signup.dart';
-import 'package:gur/slidePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Utils/SizeConfig.dart';
 import '../Utils/constants.dart';
@@ -30,6 +30,7 @@ class _LoginState extends State<Login> {
 
   AutovalidateMode phoneValidator = AutovalidateMode.disabled;
   AutovalidateMode pwdValidator = AutovalidateMode.disabled;
+  bool isLoggedInPresses = false;
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +150,9 @@ class _LoginState extends State<Login> {
                         child: MaterialButton(
                           onPressed: () {
                             login();
+                            setState(() {
+                              isLoggedInPresses = true;
+                            });
                           },
                           color: mc,
                           shape: RoundedRectangleBorder(
@@ -157,26 +161,30 @@ class _LoginState extends State<Login> {
                           elevation: 0,
                           height: h * 65,
                           minWidth: b * 345,
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: h * 20,
-                                  width: b * 20,
-                                  child: SvgPicture.asset(
-                                    'images/Group 23.svg',
-                                    allowDrawingOutsideViewBox: true,
-                                    width: h * 20,
-                                    height: b * 20,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  'Login',
-                                  style:
-                                      txtS(Colors.white, 16, FontWeight.w700),
-                                ),
-                              ]),
+                          child: isLoggedInPresses
+                              ? SpinKitCircle(
+                                  color: Colors.white,
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                      Container(
+                                        height: h * 20,
+                                        width: b * 20,
+                                        child: SvgPicture.asset(
+                                          'images/Group 23.svg',
+                                          allowDrawingOutsideViewBox: true,
+                                          width: h * 20,
+                                          height: b * 20,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Login',
+                                        style: txtS(
+                                            Colors.white, 16, FontWeight.w700),
+                                      ),
+                                    ]),
                         ),
                       ),
                       sh(40),
@@ -255,97 +263,23 @@ class _LoginState extends State<Login> {
         preferences.setBool('isLoggedIn', true);
         getUserDataFromDb(credential.user.uid);
         preferences.setString('currentUserUID', credential.user.uid);
-
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) {
-          return Home();
-        }), (route) => false);
       });
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
+      if (e.code == 'user-not-found')
         Toast.show("User not found", context,
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-      } else if (e.code == 'account-exists-with-different-credential') {
-        String email = e.email;
-
-        List<String> userSignInMethods =
-            await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-
-        print(userSignInMethods);
-      } else if (e.code == 'wrong-password') {
-        Toast.show("Wrong Password", context,
-            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-      } else {
+      else
         Toast.show("Failure, Kindly login after sometime", context,
             duration: Toast.LENGTH_LONG);
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
 
-  void googleSignIn() async {
-    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
-    final GoogleAuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
-
-    preferences = await SharedPreferences.getInstance();
-
-    try {
-      bool newUser = false;
-
-      await FirebaseAuth.instance
-          .fetchSignInMethodsForEmail(googleUser.email)
-          .then((signMethodList) {
-        if (signMethodList.isEmpty)
-          newUser = true;
-        else
-          newUser = false;
-      }).then((x) async {
-        await FirebaseAuth.instance
-            .signInWithCredential(credential)
-            .then((value) async {
-          if (value.user != null) {
-            if (newUser)
-              setUserDataToDb(googleUser, value.user.uid);
-            else
-              getUserDataFromDb(value.user.uid);
-          }
-
-          Toast.show("Login Succesfull", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-          preferences.setBool('isLoggedIn', true);
-
-          preferences.setString('currentUserUID', value.user.uid);
-
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) {
-            return Home();
-          }), (route) => false);
-        });
+      setState(() {
+        isLoggedInPresses = false;
       });
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'account-exists-with-different-credential') {
-        String email = e.email;
-
-        List<String> userSignInMethods =
-            await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-
-        Toast.show("Login Successfull", context,
-            duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-        preferences.setBool('isLoggedIn', true);
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return Home();
-        }));
-
-        print(userSignInMethods);
-      } else {
-        print(e.message);
-      }
     } catch (e) {
       print(e);
+      setState(() {
+        isLoggedInPresses = false;
+      });
     }
   }
 
@@ -392,6 +326,8 @@ class _LoginState extends State<Login> {
 
         if (snapshot.data()['image1'] != null)
           preferences.setString('profileImageURL', snapshot.data()['image1']);
+        if (snapshot.data()['image2'] != null)
+          preferences.setString('baseImageUrl', snapshot.data()['image2']);
       } else if (snapshot.data()['userType'] == 'org') {
         if (snapshot.data()['designation'] != null)
           preferences.setString(
@@ -401,6 +337,19 @@ class _LoginState extends State<Login> {
           preferences.setString(
               'currentInChargeName', snapshot.data()['inChargeName']);
       }
+
+      String userType = snapshot.data()['userType'];
+      setState(() {
+        isLoggedInPresses = false;
+      });
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) {
+        return userType == 'ind'
+            ? HomeInd()
+            : userType == 'org'
+                ? HomeOrg()
+                : HomeNgo();
+      }), (route) => false);
     });
 
     await FirebaseMessaging.instance.getToken().then((value) {
