@@ -12,6 +12,7 @@ import '../Utils/SizeConfig.dart';
 import '../Utils/constants.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
+import 'dart:async';
 
 class Otp extends StatefulWidget {
   final String phoneNo;
@@ -120,6 +121,10 @@ class _OtpState extends State<Otp> {
                         ),
                       ],
                     ),
+                    sh(30),
+                    Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                      OtpTimer(),
+                    ]),
                   ],
                 ),
               ),
@@ -282,5 +287,61 @@ class _OtpState extends State<Otp> {
     preferences.setString('currentUserPhone', widget.phoneNo);
     preferences.setString('currentUserType', widget.currentUser.userType);
     preferences.setString('currentUserRegDate', timestamp.toDate().toString());
+  }
+}
+
+class OtpTimer extends StatefulWidget {
+  @override
+  _OtpTimerState createState() => _OtpTimerState();
+}
+
+class _OtpTimerState extends State<OtpTimer> {
+  final interval = const Duration(seconds: 1);
+
+  final int timerMaxSeconds = 60;
+
+  int currentSeconds = 0;
+
+  String get timerText =>
+      '${((timerMaxSeconds - currentSeconds) ~/ 60).toString().padLeft(2, '0')}: ${((timerMaxSeconds - currentSeconds) % 60).toString().padLeft(2, '0')}';
+
+  startTimeout([int milliseconds]) {
+    var duration = interval;
+    Timer.periodic(duration, (timer) {
+      setState(() {
+        currentSeconds = timer.tick;
+        if (timer.tick >= timerMaxSeconds) timer.cancel();
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    startTimeout();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    SizeConfig().init(context);
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Text(
+          "Send Otp After",
+          style: TextStyle(color: textColor, fontWeight: FontWeight.w600),
+        ),
+        SizedBox(width: b * 10),
+        Icon(Icons.timer, color: textColor),
+        SizedBox(width: b * 10),
+        Text(
+          timerText,
+          style: TextStyle(color: mc, fontWeight: FontWeight.w600),
+        ),
+      ],
+    );
   }
 }

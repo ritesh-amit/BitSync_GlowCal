@@ -138,7 +138,8 @@ class _MessageScreenState extends State<MessageScreen> {
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       image: DecorationImage(
-                                        image: AssetImage('images/ill1.png'),
+                                        image:
+                                            AssetImage('images/profilee.png'),
                                         fit: BoxFit.fill,
                                       ),
                                       shape: BoxShape.circle,
@@ -165,16 +166,6 @@ class _MessageScreenState extends State<MessageScreen> {
                                               FontWeight.w500),
                                         ),
                                       ],
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        right: b * 20, top: h * 16.5),
-                                    child: Text(
-                                      "18:34",
-                                      style: txtS(Color(0xff7d7d7d), 10,
-                                          FontWeight.w500),
                                     ),
                                   ),
                                 ],

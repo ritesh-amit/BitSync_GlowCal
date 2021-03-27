@@ -7,6 +7,7 @@ import 'package:gur/dialogboxes/dialogBoxDonate.dart';
 import 'package:gur/drawer.dart';
 import 'package:gur/screens/chatSection/messageScreen.dart';
 import 'package:gur/screens/mainScreens/aboutNgo.dart';
+import 'package:gur/searchNgo.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -170,8 +171,8 @@ class _HomePageState extends State<HomePage> {
                 sh(20),
                 InkWell(
                   onTap: () {
+                    dialogBoxSearch(context);
                     setState(() {
-                      dialogBoxSearch(context);
                       isSearch = !isSearch;
                       print('serach');
                     });
@@ -512,8 +513,8 @@ class _HomePageState extends State<HomePage> {
         );
       },
       animationType: DialogTransitionType.fadeScale,
-      curve: Curves.fastOutSlowIn,
-      duration: Duration(milliseconds: 400),
+      curve: Curves.fastLinearToSlowEaseIn,
+      duration: Duration(milliseconds: 300),
     );
   }
 }

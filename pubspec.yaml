@@ -53,7 +53,7 @@ dependencies:
   titled_navigation_bar: ^4.1.0
   toast: null
   url_launcher: ^6.0.2
-
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

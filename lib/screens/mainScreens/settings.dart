@@ -91,172 +91,174 @@ class _SettingsState extends State<Settings> {
             ),
           ),
           sh(18),
-          Container(
-            height: h * 720,
-            padding: EdgeInsets.symmetric(horizontal: b * 20),
-            child: Column(
-              children: [
-                Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            "Theme",
-                            style: txtS(textColor, 20, FontWeight.w500),
-                          ),
-                        ),
-                        FlutterSwitch(
-                          padding: 0.6,
-                          width: b * 45,
-                          height: h * 25,
-                          toggleSize: b * 20,
-                          value: status2,
-                          borderRadius: b * 24,
-                          toggleColor: Colors.black,
-                          switchBorder: Border.all(
-                            color: textColor,
-                            width: b * 1,
-                          ),
-                          activeColor: Colors.white,
-                          inactiveColor: Colors.white,
-                          onToggle: (val) {
-                            setState(() {
-                              status2 = val;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    sh(25),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            "Notifications",
-                            style: txtS(textColor, 20, FontWeight.w500),
-                          ),
-                        ),
-                        FlutterSwitch(
-                          padding: 0.6,
-                          width: b * 45,
-                          height: h * 25,
-                          toggleSize: b * 20,
-                          value: status1,
-                          borderRadius: b * 24,
-                          toggleColor: mc,
-                          switchBorder: Border.all(
-                            color: mc,
-                            width: b * 1,
-                          ),
-                          activeColor: Colors.white,
-                          inactiveColor: Colors.white,
-                          onToggle: (val) {
-                            setState(() {
-                              status1 = val;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    sh(25),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          child: Text(
-                            "Language",
-                            style: txtS(textColor, 20, FontWeight.w500),
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              "Hin",
-                              style: txtS(textColor, 12, FontWeight.w500),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: b * 20),
+              child: Column(
+                children: [
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              "Theme",
+                              style: txtS(textColor, 20, FontWeight.w500),
                             ),
-                            SizedBox(width: b * 4),
-                            FlutterSwitch(
-                              padding: 0.6,
-                              width: b * 45,
-                              height: h * 25,
-                              toggleSize: b * 20,
-                              value: status3,
-                              borderRadius: b * 24,
-                              toggleColor: Color(0xff28797c),
-                              switchBorder: Border.all(
-                                color: Color(0xff28797c),
-                                width: b * 1,
+                          ),
+                          FlutterSwitch(
+                            padding: 0.6,
+                            width: b * 45,
+                            height: h * 25,
+                            toggleSize: b * 20,
+                            value: status2,
+                            borderRadius: b * 24,
+                            toggleColor: Colors.black,
+                            switchBorder: Border.all(
+                              color: textColor,
+                              width: b * 1,
+                            ),
+                            activeColor: Colors.white,
+                            inactiveColor: Colors.white,
+                            onToggle: (val) {
+                              setState(() {
+                                status2 = val;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      sh(25),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              "Notifications",
+                              style: txtS(textColor, 20, FontWeight.w500),
+                            ),
+                          ),
+                          FlutterSwitch(
+                            padding: 0.6,
+                            width: b * 45,
+                            height: h * 25,
+                            toggleSize: b * 20,
+                            value: status1,
+                            borderRadius: b * 24,
+                            toggleColor: mc,
+                            switchBorder: Border.all(
+                              color: mc,
+                              width: b * 1,
+                            ),
+                            activeColor: Colors.white,
+                            inactiveColor: Colors.white,
+                            onToggle: (val) {
+                              setState(() {
+                                status1 = val;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      sh(25),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                            child: Text(
+                              "Language",
+                              style: txtS(textColor, 20, FontWeight.w500),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "Hin",
+                                style: txtS(textColor, 12, FontWeight.w500),
                               ),
-                              activeColor: Colors.white,
-                              inactiveColor: Colors.white,
-                              onToggle: (val) {
-                                setState(() {
-                                  status3 = val;
-                                });
-                              },
-                            ),
-                            SizedBox(width: b * 4),
-                            Text(
-                              "Eng",
-                              style: txtS(textColor, 12, FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Spacer(),
-                Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset('images/icon.png',
-                            height: h * 127, width: b * 127),
-                      ],
-                    ),
-                    sh(15),
-                    Text(
-                      'GlowCal',
-                      style: txtS(textColor, 20, FontWeight.w600),
-                    ),
-                    Text(
-                      'V 1.1.0',
-                      style: txtS(textColor, 14, FontWeight.w600),
-                    ),
-                    sh(10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Created with ',
-                          style: txtS(textColor, 12, FontWeight.w400),
-                        ),
-                        SvgPicture.asset(
-                          'images/Heart.svg',
-                          allowDrawingOutsideViewBox: true,
-                          width: h * 23,
-                          height: b * 23,
-                        ),
-                        Text(
-                          ' by Team ',
-                          style: txtS(textColor, 12, FontWeight.w400),
-                        ),
-                        Text(
-                          ' BitSync',
-                          style: txtS(textColor, 13, FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
+                              SizedBox(width: b * 4),
+                              FlutterSwitch(
+                                padding: 0.6,
+                                width: b * 45,
+                                height: h * 25,
+                                toggleSize: b * 20,
+                                value: status3,
+                                borderRadius: b * 24,
+                                toggleColor: Color(0xff28797c),
+                                switchBorder: Border.all(
+                                  color: Color(0xff28797c),
+                                  width: b * 1,
+                                ),
+                                activeColor: Colors.white,
+                                inactiveColor: Colors.white,
+                                onToggle: (val) {
+                                  setState(() {
+                                    status3 = val;
+                                  });
+                                },
+                              ),
+                              SizedBox(width: b * 4),
+                              Text(
+                                "Eng",
+                                style: txtS(textColor, 12, FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Spacer(),
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset('images/icon.png',
+                              height: h * 127, width: b * 127),
+                        ],
+                      ),
+                      sh(15),
+                      Text(
+                        'GlowCal',
+                        style: txtS(textColor, 20, FontWeight.w600),
+                      ),
+                      Text(
+                        'V 1.1.0',
+                        style: txtS(textColor, 14, FontWeight.w600),
+                      ),
+                      sh(10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Created with ',
+                            style: txtS(textColor, 12, FontWeight.w400),
+                          ),
+                          SvgPicture.asset(
+                            'images/Heart.svg',
+                            allowDrawingOutsideViewBox: true,
+                            width: h * 23,
+                            height: b * 23,
+                          ),
+                          Text(
+                            ' by Team ',
+                            style: txtS(textColor, 12, FontWeight.w400),
+                          ),
+                          Text(
+                            ' BitSync',
+                            style: txtS(textColor, 13, FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  sh(10),
+                ],
+              ),
             ),
           ),
         ]),
