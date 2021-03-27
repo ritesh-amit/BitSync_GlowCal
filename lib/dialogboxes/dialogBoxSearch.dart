@@ -19,7 +19,7 @@ void dialogBoxSearch(BuildContext context) {
   showGeneralDialog(
     barrierLabel: "Label",
     barrierDismissible: true,
-    barrierColor: Colors.black.withOpacity(0.7),
+    barrierColor: Colors.black.withOpacity(0.9),
     transitionDuration: Duration(milliseconds: 350),
     context: context,
     pageBuilder: (context, anim1, anim2) {

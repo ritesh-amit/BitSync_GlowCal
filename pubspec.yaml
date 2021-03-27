@@ -50,6 +50,7 @@ dependencies:
   titled_navigation_bar: ^4.1.0
   toast: null
   url_launcher: ^6.0.2
+  page_transition: "^1.1.7+6"
   
 dev_dependencies:
   flutter_test:

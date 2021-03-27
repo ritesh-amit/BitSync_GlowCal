@@ -2,17 +2,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gur/dialogboxes/dialogBoxSearch.dart';
 import 'package:gur/dialogboxes/dialogBoxDonate.dart';
 import 'package:gur/drawer.dart';
 import 'package:gur/screens/chatSection/messageScreen.dart';
 import 'package:gur/screens/mainScreens/aboutNgo.dart';
-import 'package:gur/searchNgo.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
+import 'package:gur/search.dart';
+import 'package:page_transition/page_transition.dart';
 
 class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
@@ -51,7 +51,6 @@ class _HomePageState extends State<HomePage> {
     SizeConfig().init(context);
     var b = SizeConfig.screenWidth / 414;
     var h = SizeConfig.screenHeight / 896;
-    bool isSearch = false;
     List images = [
       'images/2.png',
       'images/3.png',
@@ -171,11 +170,15 @@ class _HomePageState extends State<HomePage> {
                 sh(20),
                 InkWell(
                   onTap: () {
-                    dialogBoxSearch(context);
-                    setState(() {
-                      isSearch = !isSearch;
-                      print('serach');
-                    });
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        duration: Duration(milliseconds: 350),
+                        type: PageTransitionType.rightToLeftWithFade,
+                        childCurrent: HomePage(),
+                        child: Search(),
+                      ),
+                    );
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -191,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                 sh(20),
                 Container(
                   width: b * 375,
-                  height: h * 140,
+                  height: h * 145,
                   margin: EdgeInsets.only(left: b * 10),
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -205,7 +208,7 @@ class _HomePageState extends State<HomePage> {
                           return dialogBoxCoupon(context);
                         },
                         child: Container(
-                          width: b * 170,
+                          width: b * 180,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(b * 6),
@@ -347,6 +350,16 @@ class _HomePageState extends State<HomePage> {
                                 child: CachedNetworkImage(
                                   imageUrl: mainImageList[index]['imageURL'],
                                   fit: BoxFit.cover,
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.circular(b * 10),
+                                      image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover),
+                                    ),
+                                  ),
                                 ),
                               ),
                             );
@@ -354,7 +367,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       );
                     }),
-                sh(20),
+                sh(30),
                 InkWell(
                   onTap: () {
                     dialogBoxDonate(context);
@@ -384,7 +397,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                sh(140),
               ]),
             ),
           ]),
@@ -485,7 +497,10 @@ class _HomePageState extends State<HomePage> {
                         MaterialButton(
                           elevation: 5,
                           padding: EdgeInsets.zero,
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pop(context);
+                            dialogBoxReedemed(context);
+                          },
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(b * 36),
                           ),
@@ -515,6 +530,44 @@ class _HomePageState extends State<HomePage> {
       animationType: DialogTransitionType.fadeScale,
       curve: Curves.fastLinearToSlowEaseIn,
       duration: Duration(milliseconds: 300),
+    );
+  }
+
+  void dialogBoxReedemed(BuildContext context) {
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
+
+    showAnimatedDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          insetPadding: EdgeInsets.symmetric(horizontal: b * 40),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(b * 10),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(vertical: h * 20),
+                padding: EdgeInsets.symmetric(horizontal: b * 22),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: b * 0),
+                  child: Text(
+                    'Thanks for redeeming this coupon.. You can now avail it\'s benefits!!',
+                    textAlign: TextAlign.center,
+                    style: txtS(textColor, 20, FontWeight.w600),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      animationType: DialogTransitionType.rotate3D,
+      curve: Curves.fastOutSlowIn,
+      duration: Duration(milliseconds: 500),
     );
   }
 }

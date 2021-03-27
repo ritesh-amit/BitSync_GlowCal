@@ -147,7 +147,8 @@ class Coupons extends StatelessWidget {
           sh(20),
           Expanded(
             child: ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: b * 20),
+              padding:
+                  EdgeInsets.symmetric(horizontal: b * 20, vertical: h * 5),
               shrinkWrap: true,
               physics: BouncingScrollPhysics(),
               itemCount: images.length,
@@ -155,37 +156,28 @@ class Coupons extends StatelessWidget {
                 children: <Widget>[
                   InkWell(
                     onTap: () {
-                      dialogBoxCoupon(context, index % 2 == 1 ? true : false);
+                      dialogBoxCoupon(context, true);
                     },
                     child: Container(
-                        height: h * 111,
-                        width: b * 370,
-                        margin: EdgeInsets.only(bottom: h * 20),
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.25),
-                              offset: Offset(0, 0),
-                              blurRadius: 6,
-                            ),
-                          ],
-                          image: DecorationImage(
-                            image: AssetImage(images[index]),
-                            fit: BoxFit.cover,
+                      height: h * 111,
+                      width: b * 370,
+                      margin: EdgeInsets.only(bottom: h * 20),
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.25),
+                            offset: Offset(0, 0),
+                            blurRadius: 6,
                           ),
-                          borderRadius: BorderRadius.circular(b * 6),
-                          color: Colors.black,
+                        ],
+                        image: DecorationImage(
+                          image: AssetImage(images[index]),
+                          fit: BoxFit.cover,
                         ),
-                        child: index % 2 == 0
-                            ? Container(
-                                height: h * 111,
-                                width: b * 370,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(b * 6),
-                                  color: Colors.grey.withOpacity(0.9),
-                                ),
-                              )
-                            : SizedBox()),
+                        borderRadius: BorderRadius.circular(b * 6),
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -263,7 +255,10 @@ class Coupons extends StatelessWidget {
                               MaterialButton(
                                 elevation: 5,
                                 padding: EdgeInsets.zero,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  dialogBoxReedemed(context);
+                                },
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(b * 36),
                                 ),
@@ -295,6 +290,44 @@ class Coupons extends StatelessWidget {
       animationType: DialogTransitionType.fadeScale,
       curve: Curves.fastOutSlowIn,
       duration: Duration(milliseconds: 300),
+    );
+  }
+
+  void dialogBoxReedemed(BuildContext context) {
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
+
+    showAnimatedDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          insetPadding: EdgeInsets.symmetric(horizontal: b * 40),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(b * 10),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(vertical: h * 20),
+                padding: EdgeInsets.symmetric(horizontal: b * 22),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: b * 0),
+                  child: Text(
+                    'Thanks for redeeming this coupon.. You can now avail it\'s benefits!!',
+                    textAlign: TextAlign.center,
+                    style: txtS(textColor, 20, FontWeight.w600),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      animationType: DialogTransitionType.rotate3D,
+      curve: Curves.fastOutSlowIn,
+      duration: Duration(milliseconds: 500),
     );
   }
 
