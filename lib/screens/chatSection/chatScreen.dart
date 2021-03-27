@@ -773,8 +773,11 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   String giveTime(Timestamp timestamp) {
-    DateTime d = timestamp.toDate();
-    String time = d.toString().substring(11, 16);
+    String time = "";
+    if (timestamp != null) {
+      DateTime d = timestamp.toDate();
+      time = d.toString().substring(11, 16);
+    }
     return time;
   }
 

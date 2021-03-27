@@ -16,7 +16,6 @@ import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gur/drawer.dart';
-import 'package:get/get.dart';
 
 final GlobalKey<NavigatorState> _loadingKey = GlobalKey<NavigatorState>();
 

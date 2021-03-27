@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:gur/newAuthScreens/login.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,6 +16,7 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  TextEditingController pwdController = TextEditingController();
   bool status1 = false;
   bool status2 = false;
   bool status3 = false;
@@ -108,25 +112,39 @@ class _SettingsState extends State<Settings> {
                               style: txtS(textColor, 20, FontWeight.w500),
                             ),
                           ),
-                          FlutterSwitch(
-                            padding: 0.6,
-                            width: b * 45,
-                            height: h * 25,
-                            toggleSize: b * 20,
-                            value: status2,
-                            borderRadius: b * 24,
-                            toggleColor: Colors.black,
-                            switchBorder: Border.all(
-                              color: textColor,
-                              width: b * 1,
-                            ),
-                            activeColor: Colors.white,
-                            inactiveColor: Colors.white,
-                            onToggle: (val) {
-                              setState(() {
-                                status2 = val;
-                              });
-                            },
+                          Row(
+                            children: [
+                              Text(
+                                "Light",
+                                style: txtS(textColor, 12, FontWeight.w500),
+                              ),
+                              SizedBox(width: b * 4),
+                              FlutterSwitch(
+                                padding: 0.6,
+                                width: b * 45,
+                                height: h * 25,
+                                toggleSize: b * 20,
+                                value: status2,
+                                borderRadius: b * 24,
+                                toggleColor: Colors.black,
+                                switchBorder: Border.all(
+                                  color: textColor,
+                                  width: b * 1,
+                                ),
+                                activeColor: Colors.white,
+                                inactiveColor: Colors.white,
+                                onToggle: (val) {
+                                  setState(() {
+                                    status2 = val;
+                                  });
+                                },
+                              ),
+                              SizedBox(width: b * 4),
+                              Text(
+                                "Dark",
+                                style: txtS(textColor, 12, FontWeight.w500),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -141,25 +159,39 @@ class _SettingsState extends State<Settings> {
                               style: txtS(textColor, 20, FontWeight.w500),
                             ),
                           ),
-                          FlutterSwitch(
-                            padding: 0.6,
-                            width: b * 45,
-                            height: h * 25,
-                            toggleSize: b * 20,
-                            value: status1,
-                            borderRadius: b * 24,
-                            toggleColor: mc,
-                            switchBorder: Border.all(
-                              color: mc,
-                              width: b * 1,
-                            ),
-                            activeColor: Colors.white,
-                            inactiveColor: Colors.white,
-                            onToggle: (val) {
-                              setState(() {
-                                status1 = val;
-                              });
-                            },
+                          Row(
+                            children: [
+                              Text(
+                                "On",
+                                style: txtS(textColor, 12, FontWeight.w500),
+                              ),
+                              SizedBox(width: b * 4),
+                              FlutterSwitch(
+                                padding: 0.6,
+                                width: b * 45,
+                                height: h * 25,
+                                toggleSize: b * 20,
+                                value: status1,
+                                borderRadius: b * 24,
+                                toggleColor: mc,
+                                switchBorder: Border.all(
+                                  color: mc,
+                                  width: b * 1,
+                                ),
+                                activeColor: Colors.white,
+                                inactiveColor: Colors.white,
+                                onToggle: (val) {
+                                  setState(() {
+                                    status1 = val;
+                                  });
+                                },
+                              ),
+                              SizedBox(width: b * 4),
+                              Text(
+                                "Off",
+                                style: txtS(textColor, 12, FontWeight.w500),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -176,7 +208,7 @@ class _SettingsState extends State<Settings> {
                           Row(
                             children: [
                               Text(
-                                "Hin",
+                                "Eng",
                                 style: txtS(textColor, 12, FontWeight.w500),
                               ),
                               SizedBox(width: b * 4),
@@ -202,13 +234,25 @@ class _SettingsState extends State<Settings> {
                               ),
                               SizedBox(width: b * 4),
                               Text(
-                                "Eng",
+                                "Hin",
                                 style: txtS(textColor, 12, FontWeight.w500),
                               ),
                             ],
                           ),
                         ],
                       ),
+                      sh(25),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                            child: Text(
+                              "Language",
+                              style: txtS(textColor, 20, FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                   Spacer(),
@@ -276,5 +320,29 @@ class _SettingsState extends State<Settings> {
       fontWeight: wg,
       fontSize: SizeConfig.screenWidth / 412 * siz,
     );
+  }
+
+  deleteUser() {
+    String uid = FirebaseAuth.instance.currentUser.uid;
+    String email = FirebaseAuth.instance.currentUser.email;
+    String pwd = pwdController.text;
+
+    FirebaseAuth.instance.currentUser.delete().then((value) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .delete()
+          .then((value) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Account Deleted Successfully. We gonna miss u !'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ));
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) {
+          return Login();
+        }), (route) => false);
+      });
+    });
   }
 }

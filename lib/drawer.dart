@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:gur/about.dart';
 import 'package:gur/mission.dart';
 import 'package:gur/screens/mainScreens/coupons.dart';
@@ -176,7 +175,6 @@ class _DrawerCodeState extends State<DrawerCode> {
 
   void logOut() async {
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-    GoogleSignIn googleSignIn = GoogleSignIn();
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     try {
@@ -191,11 +189,20 @@ class _DrawerCodeState extends State<DrawerCode> {
           (route) => false,
         );
       }).catchError((e) {
-        print(e);
+        print(e.message);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Error Encountered"),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ));
       });
-      googleSignIn.signOut();
     } on FirebaseAuthException catch (e) {
-      print(e);
+      print(e.message);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.message),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ));
     } catch (e) {
       print(e);
     }
