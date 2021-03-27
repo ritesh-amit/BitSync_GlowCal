@@ -295,13 +295,17 @@ class _NgoHomeState extends State<NgoHome> {
                         Container(
                           alignment: Alignment.center,
                           width: b * 26,
-                          height: h * 26,
+                          height: h * 30,
                           decoration: BoxDecoration(
                             color: mc,
                             borderRadius: BorderRadius.circular(b * 6),
                           ),
-                          child: Icon(Icons.restaurant,
-                              color: Colors.white, size: b * 14),
+                          child: SvgPicture.asset(
+                            'images/rest.svg',
+                            allowDrawingOutsideViewBox: true,
+                            width: h * 20,
+                            height: b * 20,
+                          ),
                         ),
                         SizedBox(width: b * 10),
                         Column(
@@ -349,13 +353,25 @@ class _NgoHomeState extends State<NgoHome> {
               Stack(
                 children: [
                   Container(
-                    child: Image.network(
+                    /* child: Image.network(
                       photo2,
                       fit: BoxFit.cover,
-                    ),
+                    ),*/
                     margin: EdgeInsets.symmetric(horizontal: b * 20),
                     height: h * 147,
                     decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.25),
+                          blurRadius: 24,
+                          spreadRadius: -7,
+                          offset: Offset(0, 6),
+                        ),
+                      ],
+                      image: DecorationImage(
+                        image: NetworkImage(photo2),
+                        fit: BoxFit.contain,
+                      ),
                       color: gc,
                       borderRadius: BorderRadius.circular(b * 6),
                     ),

@@ -98,6 +98,7 @@ class _NotificationsState extends State<Notifications> {
                   InkWell(
                     onTap: () {},
                     child: Container(
+                      height: h * 60,
                       padding: EdgeInsets.symmetric(
                           horizontal: b * 20, vertical: h * 10),
                       margin: EdgeInsets.only(top: h * 12, bottom: h * 12),
@@ -110,8 +111,8 @@ class _NotificationsState extends State<Notifications> {
                           ),
                         ],
                         image: DecorationImage(
-                          image: AssetImage('images/1.png'),
-                          fit: BoxFit.cover,
+                          image: AssetImage('images/ill1.png'),
+                          fit: BoxFit.contain,
                         ),
                         borderRadius: BorderRadius.circular(b * 12),
                         color: Colors.white,

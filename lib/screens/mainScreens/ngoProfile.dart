@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:gur/screens/chatSection/messageScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -165,7 +165,13 @@ class _NgoProfileState extends State<NgoProfile> {
                 ),
                 Spacer(),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return MessageScreen(
+                          uid: FirebaseAuth.instance.currentUser.uid);
+                    }));
+                  },
                   child: Container(
                     height: h * 30,
                     width: b * 30,
@@ -636,9 +642,9 @@ class _NgoProfileState extends State<NgoProfile> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            isSumm ? 'Brief Summary' : 'Edit Summary',
+                            !isSumm ? 'Brief Summary' : 'Edit Summary',
                             style: txtS(
-                                isName ? textColor : rc, 14, FontWeight.w500),
+                                isSumm ? textColor : rc, 14, FontWeight.w500),
                           ),
                           sh(6),
                           isSumm
@@ -650,9 +656,12 @@ class _NgoProfileState extends State<NgoProfile> {
                                     decoration: dec('Summary'),
                                   ),
                                 )
-                              : Text(
-                                  summary,
-                                  style: txtS(textColor, 16, FontWeight.w500),
+                              : Container(
+                                  width: b * 270,
+                                  child: Text(
+                                    summary,
+                                    style: txtS(textColor, 16, FontWeight.w500),
+                                  ),
                                 ),
                           isSumm ? butt(field: 'summary') : SizedBox(),
                         ],

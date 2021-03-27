@@ -17,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../Utils/constants.dart';
 import '../../Utils/SizeConfig.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ChatScreen extends StatefulWidget {
   final String receiverUid;
@@ -185,37 +186,37 @@ class _ChatScreenState extends State<ChatScreen> {
                         style: txtS(mc, 20, FontWeight.w600),
                       ),
                       Spacer(),
+                      typeofUser == "DONOR"
+                          ? MaterialButton(
+                              height: h * 30,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(b * 6),
+                              ),
+                              color: Color(0xFF28797c),
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              onPressed: () {
+                                dialogBoxReceived(context);
+                                setState(() {
+                                  accepted = !accepted;
+                                });
+                              },
+                              child: Container(
+                                color: Color(0xFF28797c),
+                                child: Text(
+                                  "Order Received??",
+                                  style:
+                                      txtS(Colors.white, 10, FontWeight.w500),
+                                ),
+                              ),
+                            )
+                          : SizedBox(),
+                      SizedBox(width: b * 10),
                       InkWell(
                         onTap: () {
                           dialogBoxContact(context);
                         },
-                        child: typeofUser == "DONOR"
-                            ? MaterialButton(
-                                height: h * 30,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(b * 6),
-                                ),
-                                color: !accepted ? mc : Color(0xff28797c),
-                                materialTapTargetSize:
-                                    MaterialTapTargetSize.shrinkWrap,
-                                onPressed: () {
-                                  setState(() {
-                                    accepted = !accepted;
-                                  });
-                                },
-                                child: Container(
-                                  color: !accepted ? mc : Color(0xff28797c),
-                                  child: Text(
-                                    !accepted ? "Order Received??" : "Yes!!",
-                                    style:
-                                        txtS(Colors.white, 10, FontWeight.w500),
-                                  ),
-                                ),
-                              )
-                            : Container(
-                                height: h * 30,
-                                width: b * 30,
-                              ),
+                        child: Icon(MdiIcons.accountBox, color: mc),
                       ),
                     ],
                   ),
@@ -234,6 +235,14 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       ),
     );
+  }
+
+  void launchUrl(String url) async {
+    if (await canLaunch(url)) {
+      launch(url);
+    } else {
+      throw "Could not launch $url";
+    }
   }
 
   Widget ChatInputWidget() {
@@ -326,6 +335,105 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  void dialogBoxReceived(BuildContext context) {
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
+
+    showAnimatedDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          insetPadding: EdgeInsets.symmetric(horizontal: b * 40),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(b * 10),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(vertical: h * 20),
+                padding: EdgeInsets.symmetric(horizontal: b * 22),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: b * 0),
+                      child: Text(
+                        'Are you sure the package of ANY Kg is received?\n\nGet access to ANY points if received!!',
+                        textAlign: TextAlign.center,
+                        style: txtS(textColor, 16, FontWeight.w500),
+                      ),
+                    ),
+                    SizedBox(height: h * 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        MaterialButton(
+                          elevation: 5,
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(b * 36),
+                          ),
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: b * 97,
+                            height: h * 40,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(b * 36),
+                              border: Border.all(
+                                color: Color(0xff28797c),
+                                width: b * 2,
+                              ),
+                            ),
+                            child: Text(
+                              'NO',
+                              style:
+                                  txtS(Color(0xff28797c), 16, FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                        MaterialButton(
+                          elevation: 5,
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(b * 36),
+                          ),
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: b * 97,
+                            height: h * 40,
+                            decoration: BoxDecoration(
+                              color: Color(0xff28797c),
+                              borderRadius: BorderRadius.circular(b * 36),
+                            ),
+                            child: Text(
+                              'YES',
+                              style: txtS(Colors.white, 16, FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      animationType: DialogTransitionType.fadeScale,
+      curve: Curves.fastOutSlowIn,
+      duration: Duration(milliseconds: 300),
+    );
+  }
+
   Widget notAcceptedText() {
     return Text("Wait for NGO to accept your request");
   }
@@ -345,6 +453,7 @@ class _ChatScreenState extends State<ChatScreen> {
             bottomLeft: Radius.circular(b * 30),
             topLeft: Radius.circular(b * 30),
             topRight: Radius.circular(b * 30),
+            bottomRight: Radius.circular(b * 30),
           ),
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -377,9 +486,26 @@ class _ChatScreenState extends State<ChatScreen> {
                 'Phone:  ',
                 style: txtS(textColor, 14, FontWeight.w600),
               ),
-              Text(
-                phone,
-                style: txtS(textColor, 14, FontWeight.w400),
+              InkWell(
+                splashColor: Colors.white,
+                highlightColor: Colors.white,
+                onTap: () {
+                  launchUrl("tel:$phone");
+                },
+                child: Text(
+                  phone,
+                  style: txtS(textColor, 14, FontWeight.w400),
+                ),
+              ),
+              SizedBox(width: b * 10),
+              InkWell(
+                splashColor: Colors.white,
+                highlightColor: Colors.white,
+                onTap: () {
+                  launchUrl("tel:$phone");
+                },
+                child: Icon(Icons.call_outlined,
+                    color: Colors.green, size: b * 16),
               ),
             ],
           ),
@@ -651,6 +777,12 @@ class _ChatScreenState extends State<ChatScreen> {
                                           txtS(textColor, 14, FontWeight.w400),
                                     ),
                                   ),
+                                ),
+                                SizedBox(width: b * 5),
+                                Text(
+                                  giveTime(snap['timestamp']),
+                                  style: txtS(
+                                      Color(0xff7d7d7d), 10, FontWeight.w600),
                                 ),
                               ])
                             : snap['type'] == 'contactCard'

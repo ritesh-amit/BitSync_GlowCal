@@ -113,7 +113,7 @@ class _AboutNgoState extends State<AboutNgo> {
                   ),
                   Spacer(),
                   Text(
-                    'NGO Name',
+                    ngoName,
                     style: txtS(mc, 20, FontWeight.w600),
                   ),
                   Spacer(),
@@ -126,8 +126,8 @@ class _AboutNgoState extends State<AboutNgo> {
                 Row(children: [
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: b * 20),
-                    width: b * 150,
-                    height: h * 175,
+                    width: b * 144,
+                    height: h * 177,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       boxShadow: [
@@ -143,8 +143,8 @@ class _AboutNgoState extends State<AboutNgo> {
                     child: Column(
                       children: [
                         Container(
-                          width: b * 140,
-                          height: h * 140,
+                          width: b * 144,
+                          height: h * 138,
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image: NetworkImage(photo),
@@ -153,6 +153,7 @@ class _AboutNgoState extends State<AboutNgo> {
                             borderRadius: BorderRadius.circular(b * 6),
                           ),
                         ),
+                        sh(5),
                         Container(
                           child: Column(
                             children: [
@@ -172,12 +173,12 @@ class _AboutNgoState extends State<AboutNgo> {
                       ],
                     ),
                   ),
-                  SizedBox(width: b * 25),
+                  SizedBox(width: b * 20),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        width: b * 144,
+                        width: b * 170,
                         child: Text(
                           ngoName,
                           overflow: TextOverflow.ellipsis,
@@ -189,14 +190,20 @@ class _AboutNgoState extends State<AboutNgo> {
                         children: [
                           Container(
                             alignment: Alignment.center,
-                            width: b * 28,
-                            height: h * 28,
+                            width: b * 26,
+                            height: h * 30,
                             decoration: BoxDecoration(
                               color: mc,
                               borderRadius: BorderRadius.circular(b * 6),
                             ),
-                            child: Icon(Icons.restaurant,
-                                color: Colors.white, size: b * 14),
+                            child: Container(
+                              height: h * 18,
+                              width: b * 18,
+                              child: SvgPicture.asset(
+                                'images/rest.svg',
+                                allowDrawingOutsideViewBox: true,
+                              ),
+                            ),
                           ),
                           SizedBox(width: b * 10),
                           Column(
@@ -238,23 +245,23 @@ class _AboutNgoState extends State<AboutNgo> {
                     ],
                   ),
                 ]),
-                sh(30),
+                sh(40),
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: b * 20),
-                  height: h * 125,
+                  height: h * 160,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.25),
-                        blurRadius: 24,
-                        spreadRadius: -7,
+                        color: Colors.black.withOpacity(0.15),
+                        blurRadius: 12,
+                        spreadRadius: 1,
                         offset: Offset(0, 6),
                       ),
                     ],
                     image: DecorationImage(
                       image: NetworkImage(photo2),
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain,
                     ),
                     borderRadius: BorderRadius.circular(b * 6),
                   ),
@@ -286,7 +293,7 @@ class _AboutNgoState extends State<AboutNgo> {
                         InkWell(
                           onTap: () {
                             launchUrl(
-                                "mailto:ritesh.shuklalmp2018.com?subject=Regarding Ngo Information&body=Can I get information regarding your employees");
+                                "mailto:$email?subject=Regarding Ngo Information&body=Can I get information regarding your employees");
                           },
                           child: Container(
                             width: b * 250,
@@ -321,8 +328,10 @@ class _AboutNgoState extends State<AboutNgo> {
                           ),
                         ),
                         InkWell(
+                          splashColor: Colors.white,
+                          highlightColor: Colors.white,
                           onTap: () {
-                            launchUrl("tel:+916387246025");
+                            launchUrl("tel:$phone");
                           },
                           child: Container(
                             width: b * 100,
@@ -391,7 +400,6 @@ class _AboutNgoState extends State<AboutNgo> {
                     ],
                   ),
                 ),
-                sh(200),
               ]),
             ),
           ]),
