@@ -118,8 +118,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(builder: (context) {
                                     return AboutNgo(
-                                        //  uidNGO: mainImageList[index]['uid'],
-                                        );
+                                      uidNGO: newDataList[index].uid,
+                                    );
                                   }),
                                 );
                               },
