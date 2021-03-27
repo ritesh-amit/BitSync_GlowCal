@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gur/newAuthScreens/login.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
@@ -242,16 +241,12 @@ class _SettingsState extends State<Settings> {
                         ],
                       ),
                       sh(25),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Container(
-                            child: Text(
-                              "Language",
-                              style: txtS(textColor, 20, FontWeight.w500),
-                            ),
-                          ),
-                        ],
+                      MaterialButton(
+                        onPressed: () {
+                          deleteUser();
+                        },
+                        child: Text("Delete"),
+                        color: Colors.red,
                       )
                     ],
                   ),
@@ -343,6 +338,34 @@ class _SettingsState extends State<Settings> {
           return Login();
         }), (route) => false);
       });
+    }).catchError((error) {
+      if (error.message == 'requires-recent-login') {
+        FirebaseAuth.instance.currentUser
+            .reauthenticateWithCredential(
+                EmailAuthProvider.credential(email: email, password: pwd))
+            .then((credential) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Account Deleted Successfully. We gonna miss u !"),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ));
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) {
+            return Login();
+          }), (route) => false);
+        }).catchError((e) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(e.message),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ));
+        });
+      } else
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(error.message),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ));
     });
   }
 }

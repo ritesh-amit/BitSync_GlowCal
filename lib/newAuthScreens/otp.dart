@@ -25,10 +25,21 @@ class Otp extends StatefulWidget {
 class _OtpState extends State<Otp> {
   String verificationCode = "";
   String uid = "";
+  bool otpTimeOut = false;
+  bool timerWidget = true;
   @override
   void initState() {
     super.initState();
     otpVerify();
+    resendTime();
+  }
+
+  resendTime() {
+    Future.delayed(Duration(seconds: 60), () {
+      setState(() {
+        otpTimeOut = true;
+      });
+    });
   }
 
   @override
@@ -113,18 +124,27 @@ class _OtpState extends State<Otp> {
                           style: txtS(textColor, 16, FontWeight.w500),
                         ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            if (otpTimeOut) {
+                              setState(() {
+                                otpTimeOut = false;
+                                timerWidget = false;
+                                timerWidget = true;
+                              });
+                              resendTime();
+                              otpVerify();
+                            }
+                          },
                           child: Text(
                             'Resend it!',
-                            style: txtS(mc, 16, FontWeight.w700),
+                            style: txtS(otpTimeOut ? mc : Colors.grey, 16,
+                                FontWeight.w700),
                           ),
                         ),
                       ],
                     ),
                     sh(30),
-                    Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                      OtpTimer(),
-                    ]),
+                    timerWidget ? OtpTimer() : SizedBox(),
                   ],
                 ),
               ),
@@ -325,18 +345,16 @@ class _OtpTimerState extends State<OtpTimer> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     var b = SizeConfig.screenWidth / 414;
-    var h = SizeConfig.screenHeight / 896;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Text(
-          "Send Otp After",
+          "Re-send OTP after: ",
           style: TextStyle(color: textColor, fontWeight: FontWeight.w600),
         ),
-        SizedBox(width: b * 10),
         Icon(Icons.timer, color: textColor),
-        SizedBox(width: b * 10),
+        SizedBox(width: b * 3),
         Text(
           timerText,
           style: TextStyle(color: mc, fontWeight: FontWeight.w600),
