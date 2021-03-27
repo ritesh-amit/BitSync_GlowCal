@@ -47,7 +47,8 @@ class _ChatScreenState extends State<ChatScreen> {
   int userType;
   String donationUIDOnlyForNGOSide = "";
   String userTypeString = '';
-
+  String typeofUser = "DONOR";
+  bool accepted = false;
   void tolast() {
     _scrollController.animateTo(
       0,
@@ -142,6 +143,7 @@ class _ChatScreenState extends State<ChatScreen> {
     var h = SizeConfig.screenHeight / 896;
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: Form(
           key: _formKey,
           child: Container(
@@ -177,9 +179,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                         ),
                       ),
-                      Spacer(),
+                      SizedBox(width: b * 10),
                       Text(
-                        'Messages',
+                        'Messages', //name of user to be displayed
                         style: txtS(mc, 20, FontWeight.w600),
                       ),
                       Spacer(),
@@ -187,11 +189,34 @@ class _ChatScreenState extends State<ChatScreen> {
                         onTap: () {
                           dialogBoxContact(context);
                         },
-                        child: Container(
-                            height: h * 30,
-                            width: b * 30,
-                            child: Icon(Icons.contact_page)),
-                      )
+                        child: typeofUser == "DONOR"
+                            ? MaterialButton(
+                                height: h * 30,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(b * 6),
+                                ),
+                                color: !accepted ? mc : Color(0xff28797c),
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                                onPressed: () {
+                                  setState(() {
+                                    accepted = !accepted;
+                                  });
+                                },
+                                child: Container(
+                                  color: !accepted ? mc : Color(0xff28797c),
+                                  child: Text(
+                                    !accepted ? "Order Received??" : "Yes!!",
+                                    style:
+                                        txtS(Colors.white, 10, FontWeight.w500),
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                height: h * 30,
+                                width: b * 30,
+                              ),
+                      ),
                     ],
                   ),
                 ),
@@ -313,7 +338,6 @@ class _ChatScreenState extends State<ChatScreen> {
       Container(
         padding: EdgeInsets.fromLTRB(b * 25, h * 15, b * 20, h * 19),
         margin: EdgeInsets.only(right: b * 20),
-        height: h * 170,
         width: b * 260,
         decoration: BoxDecoration(
           color: Color(0xfff1f1f1),
@@ -325,15 +349,15 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
-            'Hey! You Have accepted a request from UserName',
+            'Hey! I Have accepted a request from You', //username to be added
             style: txtS(textColor, 14, FontWeight.w600),
           ),
-          sh(15),
+          SizedBox(height: h * 15),
           Text(
-            'Shared contact Details',
+            'My contact details are:',
             style: txtS(textColor, 14, FontWeight.w600),
           ),
-          sh(10),
+          SizedBox(height: h * 10),
           Row(
             children: [
               Text(
@@ -346,7 +370,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ],
           ),
-          sh(5),
+          SizedBox(height: h * 5),
           Row(
             children: [
               Text(
@@ -698,7 +722,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   decoration: dec('Name'),
                 ),
               ),
-              sh(17),
+              SizedBox(height: h * 17),
               Container(
                 margin: EdgeInsets.only(left: b * 25),
                 padding: EdgeInsets.symmetric(horizontal: b * 16),
@@ -715,9 +739,11 @@ class _ChatScreenState extends State<ChatScreen> {
                   decoration: dec('Phone Number'),
                 ),
               ),
-              sh(28),
+              SizedBox(height: h * 28),
               InkWell(
                 onTap: () {
+                  //Navigator.pop(context);
+
                   sendContactDetails(
                       nameController.text.trim(), phoneController.text.trim());
                 },

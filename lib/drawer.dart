@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:gur/about.dart';
+import 'package:gur/mission.dart';
 import 'package:gur/screens/mainScreens/coupons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Utils/SizeConfig.dart';
@@ -57,99 +58,105 @@ class _DrawerCodeState extends State<DrawerCode> {
     var h = SizeConfig.screenHeight / 896;
     return Drawer(
       child: Container(
-        padding: EdgeInsets.only(
-          left: b * 25,
-        ),
-        color: Colors.white,
+        color: Colors.transparent,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             sh(100),
-            Text(
-              userName, //this.userName
-              style: txtS(textColor, 30, FontWeight.w500),
-            ),
-            sh(20),
-            Text(
-              designation, // this.designation
-              style: txtS(textColor, 16, FontWeight.w500),
-            ),
-            // Mobile Number
-            sh(10),
-            InkWell(
-              child: Row(
-                children: [
-                  Container(
-                    height: h * 20,
-                    width: b * 20,
-                    child: SvgPicture.asset(
-                      'images/Call.svg',
-                      allowDrawingOutsideViewBox: true,
-                      width: h * 20,
-                      height: b * 20,
-                      color: Colors.black,
+            Padding(
+              padding: EdgeInsets.only(left: b * 25),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      userName, //this.userName
+                      style: txtS(textColor, 30, FontWeight.w500),
                     ),
-                  ),
-                  SizedBox(width: b * 10),
-                  Text(
-                    userPhone, // this.phoneNumber
-                    style: txtS(textColor, 14, FontWeight.w500),
-                  ),
-                ],
-              ),
+                    sh(20),
+                    Text(
+                      "Designation", // this.designation
+                      style: txtS(textColor, 16, FontWeight.w400),
+                    ),
+                    // Mobile Number
+                    sh(10),
+                    InkWell(
+                      child: Row(
+                        children: [
+                          Container(
+                            height: h * 20,
+                            width: b * 20,
+                            child: SvgPicture.asset(
+                              'images/Call.svg',
+                              allowDrawingOutsideViewBox: true,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(width: b * 10),
+                          Text(
+                            userPhone, // this.phoneNumber
+                            style: txtS(textColor, 14, FontWeight.w400),
+                          ),
+                        ],
+                      ),
+                    ),
+                    sh(20),
+                    Container(
+                        margin: EdgeInsets.only(right: b * 20),
+                        color: rc,
+                        height: h * 1),
+                  ]),
             ),
-            sh(20),
-            Container(
-                margin: EdgeInsets.only(right: b * 20),
-                color: rc,
-                height: h * 1),
             sh(50),
             row('images/Document.svg', 'Complaints', sendComplaintMail),
             row('images/Chat.svg', 'Suggestions', sendSuggestionMail),
-            row('images/Heart.svg', 'Mission', null),
+            row('images/Heart.svg', 'Mission', routeM),
             row('images/Info Square.svg', 'About the App', routeA),
             userType == 'ngo'
                 ? SizedBox()
                 : row('images/Ticket.svg', 'My Coupons', routeC),
             row('images/Logout.svg', 'Log Out', logOut),
-            sh(100),
+            Spacer(),
             Container(
                 margin: EdgeInsets.only(right: b * 20),
                 color: rc,
                 height: h * 1),
+            sh(10),
             row('images/Send.svg', 'Share the App', null),
+            sh(10),
           ],
         ),
       ),
     );
   }
 
-  InkWell row(String ic, String tit, Function fn) {
+  Material row(String ic, String tit, Function fn) {
     SizeConfig().init(context);
     var b = SizeConfig.screenWidth / 414;
     var h = SizeConfig.screenHeight / 896;
-    return InkWell(
-      splashColor: mc,
-      onTap: () {
-        fn();
-      },
-      child: Container(
-        height: SizeConfig.screenHeight * 50 / 896,
-        child: Row(
-          children: [
-            SizedBox(width: SizeConfig.screenWidth * 12 / 414),
-            SvgPicture.asset(
-              ic,
-              allowDrawingOutsideViewBox: true,
-              width: h * 23,
-              height: b * 23,
-            ),
-            SizedBox(width: SizeConfig.screenWidth * 25 / 375),
-            Text(
-              tit,
-              style: txtS(textColor, 16, FontWeight.w500),
-            ),
-          ],
+    return Material(
+      child: InkWell(
+        highlightColor: mc,
+        splashColor: mc,
+        onTap: () => fn(),
+        child: Container(
+          color: Colors.transparent,
+          height: SizeConfig.screenHeight * 50 / 896,
+          child: Row(
+            children: [
+              SizedBox(width: SizeConfig.screenWidth * (12 + 25) / 414),
+              SvgPicture.asset(
+                ic,
+                allowDrawingOutsideViewBox: true,
+                width: h * 26,
+                height: b * 26,
+              ),
+              SizedBox(width: SizeConfig.screenWidth * 25 / 375),
+              Text(
+                tit,
+                style: txtS(textColor, 16, FontWeight.w500),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -192,6 +199,14 @@ class _DrawerCodeState extends State<DrawerCode> {
     } catch (e) {
       print(e);
     }
+  }
+
+  void routeM() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) {
+        return Mission();
+      }),
+    );
   }
 
   void routeC() {

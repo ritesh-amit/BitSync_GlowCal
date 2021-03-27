@@ -766,7 +766,7 @@ class _NgoProfileState extends State<NgoProfile> {
                     Container(
                       alignment: Alignment.center,
                       height: h * 59,
-                      width: b * 375 * (count / 9),
+                      width: b * 370 * (count / 9),
                       decoration: BoxDecoration(
                         color: Color(0xff28797c),
                         borderRadius: BorderRadius.circular(

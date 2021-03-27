@@ -16,7 +16,7 @@ class _SearchScreenState extends State<SearchScreen> {
   List<NGO> mainDataList = [];
   List<NGO> newDataList = [];
   bool isListLoding = true;
-
+  bool tapped = false;
   @override
   void initState() {
     super.initState();
@@ -74,6 +74,11 @@ class _SearchScreenState extends State<SearchScreen> {
               controller: searchTextController,
               style: txtS(textColor, 18, FontWeight.w500),
               decoration: dec('Search for NGO name...'),
+              onTap: () {
+                setState(() {
+                  tapped = !tapped;
+                });
+              },
               onChanged: (value) {
                 onItemChanged(value);
               },
@@ -81,7 +86,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
           sh(30),
           Container(
-            height: h * 500,
+            constraints: BoxConstraints(maxHeight: h * 500, minHeight: h * 240),
             margin: EdgeInsets.symmetric(horizontal: b * 20),
             padding: EdgeInsets.symmetric(horizontal: b * 10, vertical: h * 0),
             decoration: BoxDecoration(
@@ -93,7 +98,15 @@ class _SearchScreenState extends State<SearchScreen> {
                     color: Colors.orange,
                   )
                 : newDataList.length == 0
-                    ? Text("Oops! No NGO found of this name")
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Oops! No NGO found of this name",
+                            style: txtS(textColor, 20, FontWeight.w500),
+                          ),
+                        ],
+                      )
                     : ListView.builder(
                         shrinkWrap: true,
                         physics: BouncingScrollPhysics(),
@@ -104,7 +117,9 @@ class _SearchScreenState extends State<SearchScreen> {
                               onTap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(builder: (context) {
-                                    return AboutNgo();
+                                    return AboutNgo(
+                                        //  uidNGO: mainImageList[index]['uid'],
+                                        );
                                   }),
                                 );
                               },
