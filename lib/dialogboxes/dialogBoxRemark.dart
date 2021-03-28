@@ -218,7 +218,8 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
         remark: remarkController.text.trim(),
         dateTime: Timestamp.now().millisecondsSinceEpoch.toString(),
         isActive: true,
-        isAccept: false);
+        isAccept: false,
+        isDelivered: false);
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return NearbyNGO(foodPacket);
     }));

@@ -10,6 +10,7 @@ class FoodPacket {
   String donatedTo;
   bool isActive;
   bool isAccept;
+  bool isDelivered;
 
   FoodPacket(
       {this.amount,
@@ -22,7 +23,8 @@ class FoodPacket {
       this.donorUID,
       this.donatedTo,
       this.isActive,
-      this.isAccept});
+      this.isAccept,
+      this.isDelivered});
 
   Map toMap() {
     var map = Map<String, dynamic>();
@@ -38,6 +40,7 @@ class FoodPacket {
     map['donatedTo'] = this.donatedTo;
     map['isActive'] = this.isActive;
     map['isAccept'] = this.isAccept;
+    map['isDelivered'] = this.isDelivered;
 
     return map;
   }

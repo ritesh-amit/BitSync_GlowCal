@@ -73,7 +73,7 @@ class _DrawerCodeState extends State<DrawerCode> {
                     ),
                     sh(20),
                     Text(
-                      "Designation", // this.designation
+                      designation, // this.designation
                       style: txtS(textColor, 16, FontWeight.w400),
                     ),
                     // Mobile Number
@@ -116,7 +116,7 @@ class _DrawerCodeState extends State<DrawerCode> {
             row('images/Logout.svg', 'Log Out', logOut),
             Spacer(),
             Container(
-                margin: EdgeInsets.only(right: b * 20),
+                margin: EdgeInsets.only(left: b * 20, right: b * 20),
                 color: rc,
                 height: h * 1),
             sh(10),

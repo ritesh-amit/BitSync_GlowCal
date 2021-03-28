@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gur/models/currentUser.dart';
 import 'package:gur/newAuthScreens/otp.dart';
 import 'login.dart';
@@ -23,6 +24,7 @@ class _SignUpState extends State<SignUp> {
   bool isVisible2 = false;
   bool isIndividual = true;
   bool isOrg = false;
+  bool isButtonPressed = false;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController pwdController = TextEditingController();
@@ -169,8 +171,11 @@ class _SignUpState extends State<SignUp> {
                         child: TextField(
                           controller: nameController,
                           style: txtS(tc, 16, FontWeight.w500),
-                          decoration:
-                              dec(isOrg ? 'Name of Organization' : 'Name'),
+                          decoration: dec(isOrg
+                              ? 'Name of Organization'
+                              : widget.userType == '0'
+                                  ? 'Name of NGO'
+                                  : 'Name'),
                         ),
                       ),
                       sh(13),
@@ -318,7 +323,12 @@ class _SignUpState extends State<SignUp> {
                       Container(
                         child: MaterialButton(
                           onPressed: () {
-                            if (fieldValidation()) signUpEmail();
+                            if (fieldValidation()) {
+                              setState(() {
+                                isButtonPressed = true;
+                              });
+                              signUpEmail();
+                            }
                           },
                           color: mc,
                           shape: RoundedRectangleBorder(
@@ -327,26 +337,30 @@ class _SignUpState extends State<SignUp> {
                           elevation: 0,
                           height: h * 65,
                           minWidth: b * 345,
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: h * 20,
-                                  width: b * 20,
-                                  child: SvgPicture.asset(
-                                    'images/Group 23.svg',
-                                    allowDrawingOutsideViewBox: true,
-                                    width: h * 20,
-                                    height: b * 20,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  'Sign-Up for Free',
-                                  style:
-                                      txtS(Colors.white, 16, FontWeight.w700),
-                                ),
-                              ]),
+                          child: isButtonPressed
+                              ? SpinKitCircle(
+                                  color: Colors.white,
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                      Container(
+                                        height: h * 20,
+                                        width: b * 20,
+                                        child: SvgPicture.asset(
+                                          'images/Group 23.svg',
+                                          allowDrawingOutsideViewBox: true,
+                                          width: h * 20,
+                                          height: b * 20,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Sign-Up for Free',
+                                        style: txtS(
+                                            Colors.white, 16, FontWeight.w700),
+                                      ),
+                                    ]),
                         ),
                       ),
                       sh(40),
@@ -499,7 +513,11 @@ class _SignUpState extends State<SignUp> {
       }), (route) => false);
     } else {
       CurrentUser currentUser = CurrentUser(
-          name: userName, email: email, phone: phone, userType: type, regDate: FieldValue.serverTimestamp());
+          name: userName,
+          email: email,
+          phone: phone,
+          userType: type,
+          regDate: FieldValue.serverTimestamp());
 
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
         return Otp(phone, currentUser, pwd);

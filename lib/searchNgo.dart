@@ -74,11 +74,6 @@ class _SearchScreenState extends State<SearchScreen> {
               controller: searchTextController,
               style: txtS(textColor, 18, FontWeight.w500),
               decoration: dec('Search for NGO name...'),
-              onTap: () {
-                setState(() {
-                  tapped = !tapped;
-                });
-              },
               onChanged: (value) {
                 onItemChanged(value);
               },
@@ -86,16 +81,16 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
           sh(30),
           Container(
-            constraints: BoxConstraints(maxHeight: h * 500, minHeight: h * 240),
+            constraints: BoxConstraints(maxHeight: h * 600, minHeight: h * 0),
             margin: EdgeInsets.symmetric(horizontal: b * 20),
-            padding: EdgeInsets.symmetric(horizontal: b * 10, vertical: h * 0),
+            padding: EdgeInsets.symmetric(horizontal: b * 15, vertical: h * 10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(b * 13),
               color: Colors.white,
             ),
             child: isListLoding
                 ? SpinKitCircle(
-                    color: Colors.orange,
+                    color: mc,
                   )
                 : newDataList.length == 0
                     ? Row(
@@ -125,8 +120,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               },
                               child: Container(
                                 margin: EdgeInsets.only(
-                                    top: index == 0 ? h * 0 : h * 12,
-                                    bottom: h * 12),
+                                    top: h * 12, bottom: h * 12),
                                 height: h * 100,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(b * 20),
@@ -139,8 +133,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                       height: h * 97,
                                       width: b * 97,
                                       decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(b * 13),
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(b * 13),
+                                          bottomLeft: Radius.circular(b * 13),
+                                        ),
                                         color: Color(0xff785758),
                                         image: DecorationImage(
                                           image: NetworkImage(
@@ -158,7 +154,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                         children: [
                                           sh(7),
                                           Container(
-                                            width: b * 144,
+                                            width: b * 250,
                                             child: Text(
                                               newDataList[index].name,
                                               overflow: TextOverflow.ellipsis,
@@ -166,62 +162,27 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   FontWeight.w600),
                                             ),
                                           ),
+                                          sh(20),
                                           Row(
                                             children: [
                                               Container(
                                                 alignment: Alignment.center,
-                                                width: b * 18,
-                                                height: h * 18,
-                                                decoration: BoxDecoration(
-                                                  color: mc,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          b * 4),
-                                                ),
-                                                child: Icon(Icons.restaurant,
-                                                    color: Colors.white,
-                                                    size: b * 10),
-                                              ),
-                                              SizedBox(width: b * 10),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    '12',
-                                                    style: txtS(textColor, 10,
-                                                        FontWeight.w500),
-                                                  ),
-                                                  Text(
-                                                    'Packages Delivered',
-                                                    style: txtS(
-                                                        rc, 9, FontWeight.w400),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          sh(2),
-                                          Row(
-                                            children: [
-                                              Container(
-                                                alignment: Alignment.center,
-                                                width: b * 18,
-                                                height: h * 18,
+                                                width: b * 24,
+                                                height: h * 24,
                                                 decoration: BoxDecoration(
                                                   color: Color(0xff28797c),
                                                   borderRadius:
                                                       BorderRadius.circular(
-                                                          b * 4),
+                                                          b * 6),
                                                 ),
                                                 child: Icon(Icons.verified,
                                                     color: Colors.white,
-                                                    size: b * 10),
+                                                    size: b * 14),
                                               ),
                                               SizedBox(width: b * 10),
                                               Text(
                                                 'Verified',
-                                                style: txtS(textColor, 12,
+                                                style: txtS(textColor, 14,
                                                     FontWeight.w500),
                                               ),
                                             ],
@@ -235,6 +196,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 style: txtS(textColor, 12,
                                                     FontWeight.w500),
                                               ),
+                                              SizedBox(width: b * 10),
                                             ],
                                           ),
                                           sh(3),

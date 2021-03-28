@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gur/homeMainInd.dart';
 import 'package:gur/homeMainNGO.dart';
 import 'package:gur/homeMainOrg.dart';
@@ -27,6 +28,7 @@ class _OtpState extends State<Otp> {
   String uid = "";
   bool otpTimeOut = false;
   bool timerWidget = true;
+  bool isButtonPressed = false;
   @override
   void initState() {
     super.initState();
@@ -109,10 +111,14 @@ class _OtpState extends State<Otp> {
                         elevation: 0,
                         height: h * 65,
                         minWidth: b * 345,
-                        child: Text(
-                          'Verify & Proceed',
-                          style: txtS(Colors.white, 16, FontWeight.w700),
-                        ),
+                        child: isButtonPressed
+                            ? SpinKitCircle(
+                                color: Colors.white,
+                              )
+                            : Text(
+                                'Verify & Proceed',
+                                style: txtS(Colors.white, 16, FontWeight.w700),
+                              ),
                       ),
                     ),
                     sh(40),
@@ -172,7 +178,7 @@ class _OtpState extends State<Otp> {
 
     auth.verifyPhoneNumber(
         phoneNumber: widget.phoneNo,
-        timeout: Duration(seconds: 120),
+        timeout: Duration(seconds: 60),
         verificationCompleted: (PhoneAuthCredential credential) async {
           //signUpWithEmailAndPhone(credential);
         },

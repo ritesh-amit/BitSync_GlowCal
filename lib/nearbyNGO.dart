@@ -33,7 +33,7 @@ class _NearbyNGOState extends State<NearbyNGO> {
     loadList();
   }
 
-  List nearbyNGOList = [];
+  List<NGO> nearbyNGOList = [];
 
   loadList() async {
     FirebaseFirestore.instance
@@ -46,6 +46,13 @@ class _NearbyNGOState extends State<NearbyNGO> {
       for (var i in completeList) {
         double lat = i.data()['lat'];
         double lon = i.data()['lon'];
+        bool isVerified = false;
+        int packagesNo = 0;
+
+        if (i.data()['isVerified'] != null) isVerified = i.data()['isVerified'];
+
+        if (i.data()['packagesDelivered'] != null)
+          packagesNo = i.data()['packagesDelivered'];
 
         int distance = (Geolocator.distanceBetween(lat, lon,
                     widget.foodPacket.latitude, widget.foodPacket.longitude) /
@@ -56,7 +63,9 @@ class _NearbyNGOState extends State<NearbyNGO> {
             distance: distance,
             name: i.data()['name'],
             photoUrl: i.data()['image1'],
-            uid: i.data()['uid']);
+            uid: i.data()['uid'],
+            isVerified: isVerified,
+            packageNo: packagesNo);
 
         nearbyNGOList.add(tempNGO);
       }
@@ -173,7 +182,9 @@ class _NearbyNGOState extends State<NearbyNGO> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                "12",
+                                                nearbyNGOList[index]
+                                                    .packageNo
+                                                    .toString(),
                                                 style: txtS(textColor, 10,
                                                     FontWeight.w500),
                                               ),
@@ -186,29 +197,32 @@ class _NearbyNGOState extends State<NearbyNGO> {
                                           ),
                                         ],
                                       ),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            alignment: Alignment.center,
-                                            width: b * 18,
-                                            height: h * 18,
-                                            decoration: BoxDecoration(
-                                              color: Color(0xff28797c),
-                                              borderRadius:
-                                                  BorderRadius.circular(b * 4),
-                                            ),
-                                            child: Icon(Icons.verified,
-                                                color: Colors.white,
-                                                size: b * 11),
-                                          ),
-                                          SizedBox(width: b * 5),
-                                          Text(
-                                            'Verified',
-                                            style: txtS(
-                                                textColor, 12, FontWeight.w500),
-                                          ),
-                                        ],
-                                      ),
+                                      nearbyNGOList[index].isVerified
+                                          ? Row(
+                                              children: [
+                                                Container(
+                                                  alignment: Alignment.center,
+                                                  width: b * 18,
+                                                  height: h * 18,
+                                                  decoration: BoxDecoration(
+                                                    color: Color(0xff28797c),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            b * 4),
+                                                  ),
+                                                  child: Icon(Icons.verified,
+                                                      color: Colors.white,
+                                                      size: b * 11),
+                                                ),
+                                                SizedBox(width: b * 5),
+                                                Text(
+                                                  'Verified',
+                                                  style: txtS(textColor, 12,
+                                                      FontWeight.w500),
+                                                ),
+                                              ],
+                                            )
+                                          : SizedBox(),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,

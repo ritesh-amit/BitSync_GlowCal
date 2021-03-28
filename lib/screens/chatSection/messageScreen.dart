@@ -114,8 +114,12 @@ class _MessageScreenState extends State<MessageScreen> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(builder: (context) {
                                   return ChatScreen(
-                                      snapshot.data.docs[index]['uid'],
-                                      widget.uid);
+                                    receiverUid: snapshot.data.docs[index]
+                                        ['uid'],
+                                    senderUID: widget.uid,
+                                    receiverName: snapshot.data.docs[index]
+                                        ['name'],
+                                  );
                                 }),
                               );
                             },

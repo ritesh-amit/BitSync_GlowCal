@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:gur/screens/chatSection/messageScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -60,6 +61,7 @@ class _NgoProfileState extends State<NgoProfile> {
   bool isImageUpload = false;
   bool isLocationUpload = false;
   bool isLocationLoading = false;
+  bool isImageButtonPressed = false;
   int count = 0;
 
   File image1File, image2File, image3File, image4File;
@@ -165,7 +167,13 @@ class _NgoProfileState extends State<NgoProfile> {
                 ),
                 Spacer(),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return MessageScreen(
+                          uid: FirebaseAuth.instance.currentUser.uid);
+                    }));
+                  },
                   child: Container(
                     height: h * 30,
                     width: b * 30,
@@ -636,9 +644,9 @@ class _NgoProfileState extends State<NgoProfile> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            isSumm ? 'Brief Summary' : 'Edit Summary',
+                            !isSumm ? 'Brief Summary' : 'Edit Summary',
                             style: txtS(
-                                isName ? textColor : rc, 14, FontWeight.w500),
+                                isSumm ? textColor : rc, 14, FontWeight.w500),
                           ),
                           sh(6),
                           isSumm
@@ -650,9 +658,12 @@ class _NgoProfileState extends State<NgoProfile> {
                                     decoration: dec('Summary'),
                                   ),
                                 )
-                              : Text(
-                                  summary,
-                                  style: txtS(textColor, 16, FontWeight.w500),
+                              : Container(
+                                  width: b * 270,
+                                  child: Text(
+                                    summary,
+                                    style: txtS(textColor, 16, FontWeight.w500),
+                                  ),
                                 ),
                           isSumm ? butt(field: 'summary') : SizedBox(),
                         ],
@@ -704,14 +715,25 @@ class _NgoProfileState extends State<NgoProfile> {
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
                             onPressed: () {
-                              uploadImageAndToDB();
+                              if (!isImageButtonPressed) {
+                                setState(() {
+                                  isImageButtonPressed = true;
+                                });
+                                uploadImageAndToDB();
+                              }
                             },
                             child: Container(
                               color: !isImageUpload ? mc : Color(0xff28797c),
-                              child: Text(
-                                !isImageUpload ? "Upload Images" : "Done",
-                                style: txtS(Colors.white, 10, FontWeight.w500),
-                              ),
+                              child: isImageButtonPressed
+                                  ? SpinKitCircle(
+                                      color: Colors.white,
+                                      size: h * 25,
+                                    )
+                                  : Text(
+                                      "Upload Images",
+                                      style: txtS(
+                                          Colors.white, 10, FontWeight.w500),
+                                    ),
                             ),
                           ),
                         ],
@@ -1063,6 +1085,8 @@ class _NgoProfileState extends State<NgoProfile> {
           inChargeName = data;
           isName = false;
         }
+        count++;
+        checkCount();
       });
     });
   }
@@ -1129,11 +1153,7 @@ class _NgoProfileState extends State<NgoProfile> {
           .child(uid)
           .child('4')
           .putFile(image4File)
-          .then((snapshot) {
-        setState(() {
-          isImageUpload = true;
-        });
-      });
+          .then((snapshot) {});
 
       String image1URL = await getImageLink('1', uid);
       String image2URL = await getImageLink('2', uid);
@@ -1147,8 +1167,12 @@ class _NgoProfileState extends State<NgoProfile> {
         'image4': image4URL
       }).then((value) {
         setState(() {
+          isImageUpload = true;
+          isImageButtonPressed = false;
           count++;
           checkCount();
+          preferences.setString('profileImageURL', image1URL);
+          preferences.setString('baseImageUrl', image2URL);
           preferences.setBool('isProfileImageUploaded', true);
           preferences.setString('profileImageURL', image1URL);
         });

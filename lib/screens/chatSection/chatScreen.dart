@@ -17,12 +17,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../Utils/constants.dart';
 import '../../Utils/SizeConfig.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ChatScreen extends StatefulWidget {
   final String receiverUid;
   final String senderUID;
+  final String receiverName;
 
-  ChatScreen(this.receiverUid, this.senderUID);
+  ChatScreen({this.receiverUid, this.senderUID, this.receiverName});
 
   _ChatScreenState createState() => _ChatScreenState();
 }
@@ -47,8 +49,8 @@ class _ChatScreenState extends State<ChatScreen> {
   int userType;
   String donationUIDOnlyForNGOSide = "";
   String userTypeString = '';
-  String typeofUser = "DONOR";
   bool accepted = false;
+  bool isDelivered = false;
   void tolast() {
     _scrollController.animateTo(
       0,
@@ -85,8 +87,12 @@ class _ChatScreenState extends State<ChatScreen> {
         .snapshots()
         .listen((event) {
       setState(() {
-        acceptOrNot = event.data()['isAccept'];
-        //isRejected = event.data()['isRejected'];
+        if (event.data()['isAccept'] != null)
+          acceptOrNot = event.data()['isAccept'];
+        if (event.data()['isDelivered'] != null)
+          isDelivered = event.data()['isDelivered'];
+        if (event.data()['isRejected'] != null)
+          isRejected = event.data()['isRejected'];
       });
     });
   }
@@ -181,52 +187,61 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                       SizedBox(width: b * 10),
                       Text(
-                        'Messages', //name of user to be displayed
+                        widget.receiverName == null
+                            ? 'Messages'
+                            : widget
+                                .receiverName, //name of user to be displayed
                         style: txtS(mc, 20, FontWeight.w600),
                       ),
                       Spacer(),
-                      InkWell(
-                        onTap: () {
-                          dialogBoxContact(context);
-                        },
-                        child: typeofUser == "DONOR"
-                            ? MaterialButton(
-                                height: h * 30,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(b * 6),
-                                ),
-                                color: !accepted ? mc : Color(0xff28797c),
-                                materialTapTargetSize:
-                                    MaterialTapTargetSize.shrinkWrap,
-                                onPressed: () {
-                                  setState(() {
-                                    accepted = !accepted;
-                                  });
-                                },
-                                child: Container(
-                                  color: !accepted ? mc : Color(0xff28797c),
-                                  child: Text(
-                                    !accepted ? "Order Received??" : "Yes!!",
-                                    style:
-                                        txtS(Colors.white, 10, FontWeight.w500),
-                                  ),
-                                ),
-                              )
-                            : Container(
-                                height: h * 30,
-                                width: b * 30,
+                      userTypeString == 'ngo'
+                          ? MaterialButton(
+                              height: h * 30,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(b * 6),
                               ),
-                      ),
+                              color: Color(0xFF28797c),
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              onPressed: () {
+                                dialogBoxReceived(context);
+                                setState(() {
+                                  accepted = !accepted;
+                                });
+                              },
+                              child: Container(
+                                color: Color(0xFF28797c),
+                                child: Text(
+                                  "Order Received??",
+                                  style:
+                                      txtS(Colors.white, 10, FontWeight.w500),
+                                ),
+                              ),
+                            )
+                          : SizedBox(),
+                      SizedBox(width: b * 10),
+                      userTypeString == 'ngo'
+                          ? acceptOrNot
+                              ? SizedBox()
+                              : InkWell(
+                                  onTap: () {
+                                    dialogBoxContact(context);
+                                  },
+                                  child: Icon(MdiIcons.accountBox, color: mc),
+                                )
+                          : SizedBox(),
                     ],
                   ),
                 ),
-                isRejected
-                    ? Text("Sorry, Your last donation was Rejected by NGO")
-                    : userType == 1
-                        ? acceptOrNot
-                            ? ChatMessagesListWidget()
-                            : collectionReq()
-                        : ChatMessagesListWidget(),
+                isDelivered
+                    ? Text("This Donation has been delivered")
+                    : isRejected
+                        ? Text("Oops! This donation has been Rejected")
+                        : userType == 1
+                            ? acceptOrNot
+                                ? ChatMessagesListWidget()
+                                : collectionReq()
+                            : ChatMessagesListWidget(),
                 acceptOrNot ? ChatInputWidget() : notAcceptedText(),
               ],
             ),
@@ -234,6 +249,14 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       ),
     );
+  }
+
+  void launchUrl(String url) async {
+    if (await canLaunch(url)) {
+      launch(url);
+    } else {
+      throw "Could not launch $url";
+    }
   }
 
   Widget ChatInputWidget() {
@@ -326,6 +349,105 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  void dialogBoxReceived(BuildContext context) {
+    var b = SizeConfig.screenWidth / 414;
+    var h = SizeConfig.screenHeight / 896;
+
+    showAnimatedDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          insetPadding: EdgeInsets.symmetric(horizontal: b * 40),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(b * 10),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(vertical: h * 20),
+                padding: EdgeInsets.symmetric(horizontal: b * 22),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: b * 0),
+                      child: Text(
+                        'Are you sure the package of ANY Kg is received?\n\nGet access to ANY points if received!!',
+                        textAlign: TextAlign.center,
+                        style: txtS(textColor, 16, FontWeight.w500),
+                      ),
+                    ),
+                    SizedBox(height: h * 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        MaterialButton(
+                          elevation: 5,
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(b * 36),
+                          ),
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: b * 97,
+                            height: h * 40,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(b * 36),
+                              border: Border.all(
+                                color: Color(0xff28797c),
+                                width: b * 2,
+                              ),
+                            ),
+                            child: Text(
+                              'NO',
+                              style:
+                                  txtS(Color(0xff28797c), 16, FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                        MaterialButton(
+                          elevation: 5,
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            onPackageDelivered();
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(b * 36),
+                          ),
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: b * 97,
+                            height: h * 40,
+                            decoration: BoxDecoration(
+                              color: Color(0xff28797c),
+                              borderRadius: BorderRadius.circular(b * 36),
+                            ),
+                            child: Text(
+                              'YES',
+                              style: txtS(Colors.white, 16, FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      animationType: DialogTransitionType.fadeScale,
+      curve: Curves.fastOutSlowIn,
+      duration: Duration(milliseconds: 300),
+    );
+  }
+
   Widget notAcceptedText() {
     return Text("Wait for NGO to accept your request");
   }
@@ -345,16 +467,21 @@ class _ChatScreenState extends State<ChatScreen> {
             bottomLeft: Radius.circular(b * 30),
             topLeft: Radius.circular(b * 30),
             topRight: Radius.circular(b * 30),
+            bottomRight: Radius.circular(b * 30),
           ),
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
-            'Hey! I Have accepted a request from You', //username to be added
+            userTypeString == 'ngo'
+                ? 'Hey! I have accepted your request for Donation'
+                : "Hey! NGO has accepted your Donation", //username to be added
             style: txtS(textColor, 14, FontWeight.w600),
           ),
           SizedBox(height: h * 15),
           Text(
-            'My contact details are:',
+            userTypeString == 'ngo'
+                ? 'My contact details are:'
+                : 'Valet Contact Details:',
             style: txtS(textColor, 14, FontWeight.w600),
           ),
           SizedBox(height: h * 10),
@@ -377,9 +504,26 @@ class _ChatScreenState extends State<ChatScreen> {
                 'Phone:  ',
                 style: txtS(textColor, 14, FontWeight.w600),
               ),
-              Text(
-                phone,
-                style: txtS(textColor, 14, FontWeight.w400),
+              InkWell(
+                splashColor: Colors.white,
+                highlightColor: Colors.white,
+                onTap: () {
+                  launchUrl("tel:$phone");
+                },
+                child: Text(
+                  phone,
+                  style: txtS(textColor, 14, FontWeight.w400),
+                ),
+              ),
+              SizedBox(width: b * 10),
+              InkWell(
+                splashColor: Colors.white,
+                highlightColor: Colors.white,
+                onTap: () {
+                  launchUrl("tel:$phone");
+                },
+                child: Icon(Icons.call_outlined,
+                    color: Colors.green, size: b * 16),
               ),
             ],
           ),
@@ -652,6 +796,12 @@ class _ChatScreenState extends State<ChatScreen> {
                                     ),
                                   ),
                                 ),
+                                SizedBox(width: b * 5),
+                                Text(
+                                  giveTime(snap['timestamp']),
+                                  style: txtS(
+                                      Color(0xff7d7d7d), 10, FontWeight.w600),
+                                ),
                               ])
                             : snap['type'] == 'contactCard'
                                 ? contactDetails(snap['pickUpPersonName'],
@@ -854,7 +1004,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<bool> checkForLocationPermission() async {
     loc.Location location = loc.Location();
     loc.PermissionStatus permissionStatus;
-    bool permissionsOK;
+    bool permissionsOK = true;
 
     bool serviceEnabled = await location.serviceEnabled();
 
@@ -967,5 +1117,35 @@ class _ChatScreenState extends State<ChatScreen> {
         timestamp: FieldValue.serverTimestamp());
 
     addMessageToDb(message);
+  }
+
+  onPackageDelivered() async {
+    FirebaseFirestore.instance
+        .collection('donations')
+        .doc(donationUIDOnlyForNGOSide)
+        .update({'isDelivered': true});
+
+    setState(() {
+      isDelivered = true;
+    });
+
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) {
+        return userTypeString == 'ngo'
+            ? HomeNgo()
+            : userTypeString == 'org'
+                ? HomeOrg()
+                : HomeInd();
+      }), (route) => false);
+    });
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.senderUID)
+        .update({
+      'points': FieldValue.increment(50),
+      'packagesDelivered': FieldValue.increment(1)
+    });
   }
 }

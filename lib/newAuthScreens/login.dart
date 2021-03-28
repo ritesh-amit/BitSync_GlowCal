@@ -149,10 +149,12 @@ class _LoginState extends State<Login> {
                       Container(
                         child: MaterialButton(
                           onPressed: () {
-                            login();
-                            setState(() {
-                              isLoggedInPresses = true;
-                            });
+                            if (!isLoggedInPresses) {
+                              login();
+                              setState(() {
+                                isLoggedInPresses = true;
+                              });
+                            }
                           },
                           color: mc,
                           shape: RoundedRectangleBorder(
@@ -328,6 +330,9 @@ class _LoginState extends State<Login> {
           preferences.setString('profileImageURL', snapshot.data()['image1']);
         if (snapshot.data()['image2'] != null)
           preferences.setString('baseImageUrl', snapshot.data()['image2']);
+
+        if (snapshot.data()['isVerified'] != null)
+          preferences.setBool('isVerified', snapshot.data()['isVerified']);
       } else if (snapshot.data()['userType'] == 'org') {
         if (snapshot.data()['designation'] != null)
           preferences.setString(
@@ -336,6 +341,9 @@ class _LoginState extends State<Login> {
         if (snapshot.data()['inChargeName'] != null)
           preferences.setString(
               'currentInChargeName', snapshot.data()['inChargeName']);
+        if (snapshot.data()['packagesDelivered'] != null)
+          preferences.setInt(
+              'packagesDelivered', snapshot.data()['packagesDelivered']);
       }
 
       String userType = snapshot.data()['userType'];
