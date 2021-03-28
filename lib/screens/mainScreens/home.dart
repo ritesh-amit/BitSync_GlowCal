@@ -6,6 +6,7 @@ import 'package:gur/dialogboxes/dialogBoxDonate.dart';
 import 'package:gur/drawerPages/drawer.dart';
 import 'package:gur/screens/chatSection/messageScreen.dart';
 import 'package:gur/screens/mainScreens/aboutNgo.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -21,6 +22,22 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List mainImageList = [];
+  String uid = '';
+  int userPoints = 0;
+  List images = [
+    'images/1.png',
+    'images/2.png',
+    'images/3.png',
+    'images/4.png',
+    'images/5.png',
+    'images/6.png',
+    'images/7.png',
+    'images/8.png',
+  ];
+  String userSumAmtDonat = '5 Kg';
+  String userSumTimeDonated = '1';
+  String globalSumAmtDonated = '101 Kg';
+  String globalSumTimeDonated = '1500';
 
   @override
   void initState() {
@@ -28,6 +45,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> loadMainImageList() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    uid = preferences.getString('currentUserUID');
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .snapshots()
+        .listen((event) {
+      if (event.data()['points'] != null) userPoints = event.data()['points'];
+    });
     FirebaseFirestore.instance
         .collection('users')
         .where('userType', isEqualTo: 'ngo')
@@ -43,6 +69,28 @@ class _HomePageState extends State<HomePage> {
       });
     });
 
+    FirebaseFirestore.instance
+        .collection('statSummary')
+        .doc('userSum')
+        .snapshots()
+        .listen((event) {
+      setState(() {
+        userSumAmtDonat = event.data()['amount'];
+        userSumTimeDonated = event.data()['times'];
+      });
+    });
+
+    FirebaseFirestore.instance
+        .collection('statSummary')
+        .doc('globalSum')
+        .snapshots()
+        .listen((event) {
+      setState(() {
+        globalSumAmtDonated = event.data()['amount'];
+        globalSumTimeDonated = event.data()['times'];
+      });
+    });
+
     //return mainImageList;
   }
 
@@ -51,24 +99,6 @@ class _HomePageState extends State<HomePage> {
     SizeConfig().init(context);
     var b = SizeConfig.screenWidth / 414;
     var h = SizeConfig.screenHeight / 896;
-    List images = [
-      'images/2.png',
-      'images/3.png',
-      'images/4.png',
-      'images/5.png',
-      'images/6.png',
-      'images/7.png',
-      'images/8.png',
-      'images/9.png',
-      'images/2.png',
-      'images/3.png',
-      'images/4.png',
-      'images/5.png',
-      'images/6.png',
-      'images/7.png',
-      'images/8.png',
-      'images/9.png',
-    ];
 
     List headingItems = [
       'User Summary',
@@ -83,7 +113,12 @@ class _HomePageState extends State<HomePage> {
       'Total amount donated',
       'Total donations'
     ];
-    List summaryItems = ['140 Kg', '7', '2000 Kg', '1900'];
+    List summaryItems = [
+      userSumAmtDonat,
+      userSumTimeDonated,
+      globalSumAmtDonated,
+      globalSumTimeDonated
+    ];
     List quoteItems = [
       'Remember that the happiest people are not those getting more, but those giving more.',
       'Since you get more joy out of giving joy to others, you should put a good deal of thought into the happiness that you are able to give.',
@@ -205,7 +240,7 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (BuildContext ctxt, int index) {
                       return InkWell(
                         onTap: () {
-                          return dialogBoxCoupon(context);
+                          return dialogBoxCoupon(context, index + 1);
                         },
                         child: Container(
                           width: b * 180,
@@ -425,7 +460,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void dialogBoxCoupon(BuildContext context) {
+  void dialogBoxCoupon(BuildContext context, int couponCode) {
     var b = SizeConfig.screenWidth / 414;
     var h = SizeConfig.screenHeight / 896;
 
@@ -491,7 +526,8 @@ class _HomePageState extends State<HomePage> {
                           padding: EdgeInsets.zero,
                           onPressed: () {
                             Navigator.pop(context);
-                            dialogBoxReedemed(context);
+                            dialogBoxReedemed(context, couponCode);
+                            addCouponToDb(couponCode);
                           },
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(b * 36),
@@ -525,7 +561,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void dialogBoxReedemed(BuildContext context) {
+  void dialogBoxReedemed(BuildContext context, int couponCode) {
     var b = SizeConfig.screenWidth / 414;
     var h = SizeConfig.screenHeight / 896;
 
@@ -561,5 +597,12 @@ class _HomePageState extends State<HomePage> {
       curve: Curves.fastOutSlowIn,
       duration: Duration(milliseconds: 500),
     );
+  }
+
+  addCouponToDb(int couponCode) {
+    images.removeAt(couponCode - 1);
+    FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'coupons': FieldValue.arrayUnion([couponCode])
+    });
   }
 }

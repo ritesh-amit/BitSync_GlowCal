@@ -13,7 +13,6 @@ import 'package:gur/models/currentUser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Utils/SizeConfig.dart';
 import '../Utils/constants.dart';
-import 'package:toast/toast.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Login extends StatefulWidget {
@@ -260,19 +259,21 @@ class _LoginState extends State<Login> {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: pwd)
           .then((credential) {
-        Toast.show("Login Succesfull", context,
-            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Welcome Back. We really Missed you a lot !"),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+        ));
         preferences.setBool('isLoggedIn', true);
         getUserDataFromDb(credential.user.uid);
         preferences.setString('currentUserUID', credential.user.uid);
       });
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found')
-        Toast.show("User not found", context,
-            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-      else
-        Toast.show("Failure, Kindly login after sometime", context,
-            duration: Toast.LENGTH_LONG);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.message),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ));
 
       setState(() {
         isLoggedInPresses = false;
@@ -292,18 +293,17 @@ class _LoginState extends State<Login> {
       preferences.setString('currentUserName', snapshot.data()['name']);
       preferences.setString('currentUserEmail', snapshot.data()['email']);
       preferences.setString('currentUserType', snapshot.data()['userType']);
+      preferences.setString('currentUserPhone', snapshot.data()['phone']);
 
       if (snapshot.data()['regDate'] != null)
         preferences.setString('currentUserRegDate',
             snapshot.data()['regDate'].toDate().toString());
 
-      if (snapshot.data()['phone'] != null) {
-        preferences.setString('currentUserPhone', snapshot.data()['phone']);
-      }
-      preferences.setString('currentUserPhone', snapshot.data()['phone']);
-      if (snapshot.data()['address'] != null) {
+      if (snapshot.data()['address'] != null)
         preferences.setString('currentUserAddress', snapshot.data()['address']);
-      }
+
+      if (snapshot.data()['points'] != null)
+        preferences.setString('currentUserPoints', snapshot.data()['points']);
 
       if (snapshot.data()['userType'] == 'ngo') {
         if (snapshot.data()['image1'] != null)

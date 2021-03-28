@@ -73,10 +73,12 @@ class _DrawerCodeState extends State<DrawerCode> {
                       style: txtS(textColor, 30, FontWeight.w500),
                     ),
                     sh(20),
-                    Text(
-                      designation, // this.designation
-                      style: txtS(textColor, 16, FontWeight.w400),
-                    ),
+                    userType == 'ind'
+                        ? SizedBox()
+                        : Text(
+                            designation, // this.designation
+                            style: txtS(textColor, 16, FontWeight.w400),
+                          ),
                     // Mobile Number
                     sh(10),
                     InkWell(
