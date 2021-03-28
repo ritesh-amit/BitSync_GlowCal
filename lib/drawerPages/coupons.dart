@@ -97,7 +97,7 @@ class Coupons extends StatelessWidget {
                 Container(
                   width: b * 181,
                   child: Text(
-                    'Get 50 points for each Kg food you donate',
+                    'Get 2 points for each Kg food you donate',
                     style: txtS(Color(0xff266260), 17, FontWeight.w900),
                   ),
                 ),
