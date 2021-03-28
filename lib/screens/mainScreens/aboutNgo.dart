@@ -28,10 +28,11 @@ class _AboutNgoState extends State<AboutNgo> {
   String address = 'NA';
   String photo = 'NA';
   String photo2 = 'NA';
-  String headImageURL = '';
   String regDate = "NA";
   String summary = 'NA';
   Timestamp timestamp;
+  int packageNo = 0;
+  bool isVerified = false;
 
   @override
   void initState() {
@@ -60,6 +61,12 @@ class _AboutNgoState extends State<AboutNgo> {
         if (snap.data()['image2'] != null) photo2 = snap.data()['image2'];
 
         if (snap.data()['summary'] != null) summary = snap.data()['summary'];
+
+        if (snap.data()['packagesDelivered'] != null)
+          packageNo = snap.data()['packagesDelivered'];
+
+        if (snap.data()['isVerified'] != null)
+          isVerified = snap.data()['isVerified'];
       });
     });
   }
@@ -145,7 +152,9 @@ class _AboutNgoState extends State<AboutNgo> {
                           height: h * 138,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: NetworkImage(photo),
+                              image: photo == 'NA'
+                                  ? AssetImage('images/headNoImage.png')
+                                  : NetworkImage(photo),
                               fit: BoxFit.cover,
                             ),
                             borderRadius: BorderRadius.circular(b * 6),
@@ -208,7 +217,7 @@ class _AboutNgoState extends State<AboutNgo> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '12',
+                                packageNo.toString(),
                                 style: txtS(textColor, 16, FontWeight.w500),
                               ),
                               Text(
@@ -220,26 +229,28 @@ class _AboutNgoState extends State<AboutNgo> {
                         ],
                       ),
                       sh(20),
-                      Row(
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            width: b * 26,
-                            height: h * 26,
-                            decoration: BoxDecoration(
-                              color: Color(0xff28797c),
-                              borderRadius: BorderRadius.circular(b * 6),
+                      !isVerified
+                          ? SizedBox()
+                          : Row(
+                              children: [
+                                Container(
+                                  alignment: Alignment.center,
+                                  width: b * 26,
+                                  height: h * 26,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xff28797c),
+                                    borderRadius: BorderRadius.circular(b * 6),
+                                  ),
+                                  child: Icon(Icons.verified,
+                                      color: Colors.white, size: b * 14),
+                                ),
+                                SizedBox(width: b * 10),
+                                Text(
+                                  'Verified',
+                                  style: txtS(textColor, 16, FontWeight.w500),
+                                ),
+                              ],
                             ),
-                            child: Icon(Icons.verified,
-                                color: Colors.white, size: b * 14),
-                          ),
-                          SizedBox(width: b * 10),
-                          Text(
-                            'Verified',
-                            style: txtS(textColor, 16, FontWeight.w500),
-                          ),
-                        ],
-                      ),
                     ],
                   ),
                 ]),
@@ -258,7 +269,9 @@ class _AboutNgoState extends State<AboutNgo> {
                       ),
                     ],
                     image: DecorationImage(
-                      image: NetworkImage(photo2),
+                      image: photo2 == 'NA'
+                          ? AssetImage('images/baseNoImage.png')
+                          : NetworkImage(photo2),
                       fit: BoxFit.contain,
                     ),
                     borderRadius: BorderRadius.circular(b * 6),

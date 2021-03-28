@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -512,12 +513,14 @@ class _SignUpState extends State<SignUp> {
         return Login();
       }), (route) => false);
     } else {
+      String token = await FirebaseMessaging.instance.getToken();
       CurrentUser currentUser = CurrentUser(
           name: userName,
           email: email,
           phone: phone,
           userType: type,
-          regDate: FieldValue.serverTimestamp());
+          regDate: FieldValue.serverTimestamp(),
+          token: token);
 
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
         return Otp(phone, currentUser, pwd);

@@ -452,7 +452,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Text("Wait for NGO to accept your request");
   }
 
-  Widget contactDetails(String name, String phone) {
+  Widget contactDetails(String name, String phone, String colorType) {
     var b = SizeConfig.screenWidth / 414;
     var h = SizeConfig.screenHeight / 896;
 
@@ -462,7 +462,7 @@ class _ChatScreenState extends State<ChatScreen> {
         margin: EdgeInsets.only(right: b * 20),
         width: b * 260,
         decoration: BoxDecoration(
-          color: Color(0xfff1f1f1),
+          color: colorType == 'sender' ? Color(0xfff1f1f1) : Color(0xfffff2e1),
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(b * 30),
             topLeft: Radius.circular(b * 30),
@@ -764,7 +764,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               ])
                             : snap['type'] == 'contactCard'
                                 ? contactDetails(snap['pickUpPersonName'],
-                                    snap['pickUpPersonContact'])
+                                    snap['pickUpPersonContact'], 'sender')
                                 : SizedBox(),
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: h * 7),
@@ -805,7 +805,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               ])
                             : snap['type'] == 'contactCard'
                                 ? contactDetails(snap['pickUpPersonName'],
-                                    snap['pickUpPersonContact'])
+                                    snap['pickUpPersonContact'], 'receiver')
                                 : SizedBox(),
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: h * 7),
@@ -1128,6 +1128,7 @@ class _ChatScreenState extends State<ChatScreen> {
     setState(() {
       isDelivered = true;
     });
+    Navigator.of(context).pop();
 
     Future.delayed(Duration(seconds: 2), () {
       Navigator.of(context).pushAndRemoveUntil(
@@ -1143,9 +1144,14 @@ class _ChatScreenState extends State<ChatScreen> {
     FirebaseFirestore.instance
         .collection('users')
         .doc(widget.senderUID)
+        .update({'packagesDelivered': FieldValue.increment(1)});
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.receiverUid)
         .update({
-      'points': FieldValue.increment(50),
-      'packagesDelivered': FieldValue.increment(1)
+      'noOfDonation': FieldValue.increment(1),
+      'points': FieldValue.increment(5)
     });
   }
 }

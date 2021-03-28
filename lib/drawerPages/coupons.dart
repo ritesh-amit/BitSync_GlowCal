@@ -1,28 +1,51 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../Utils/SizeConfig.dart';
 import '../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
-class Coupons extends StatelessWidget {
+class Coupons extends StatefulWidget {
+  @override
+  _CouponsState createState() => _CouponsState();
+}
+
+class _CouponsState extends State<Coupons> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  int userPoints = 0;
+  List couponList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  loadData() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(preferences.getString('currentUserUID'))
+        .snapshots()
+        .listen((event) {
+      setState(() {
+        couponList.clear();
+        userPoints = event.data()['points'];
+        for (var i in event.data()['coupons']) {
+          couponList.add(i);
+        }
+        print('coupon' + (couponList[0] % 3).toString() + '.png');
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     var h = SizeConfig.screenHeight / 896;
     var b = SizeConfig.screenWidth / 412;
-    List images = [
-      'images/22.png',
-      'images/23.png',
-      'images/21.png',
-      'images/22.png',
-      'images/23.png',
-      'images/21.png',
-      'images/22.png',
-      'images/23.png',
-      'images/21.png',
-    ];
 
     return Scaffold(
       key: _scaffoldKey,
@@ -97,7 +120,7 @@ class Coupons extends StatelessWidget {
                 Container(
                   width: b * 181,
                   child: Text(
-                    'Get 2 points for each Kg food you donate',
+                    'Get 5 points for each Kg food you donate',
                     style: txtS(Color(0xff266260), 17, FontWeight.w900),
                   ),
                 ),
@@ -123,7 +146,7 @@ class Coupons extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '900',
+                        userPoints.toString(),
                         style: txtS(Colors.white, 30, FontWeight.w900),
                       ),
                       Text(
@@ -151,34 +174,38 @@ class Coupons extends StatelessWidget {
                   EdgeInsets.symmetric(horizontal: b * 20, vertical: h * 5),
               shrinkWrap: true,
               physics: BouncingScrollPhysics(),
-              itemCount: images.length,
+              itemCount: couponList.length,
               itemBuilder: (context, index) => Column(
                 children: <Widget>[
-                  InkWell(
-                    onTap: () {
-                      dialogBoxCoupon(context, true);
-                    },
-                    child: Container(
-                      height: h * 111,
-                      width: b * 370,
-                      margin: EdgeInsets.only(bottom: h * 20),
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.25),
-                            offset: Offset(0, 0),
-                            blurRadius: 6,
+                  couponList.length == 0
+                      ? CircularProgressIndicator()
+                      : InkWell(
+                          onTap: () {
+                            dialogBoxCoupon(context, true);
+                          },
+                          child: Container(
+                            height: h * 111,
+                            width: b * 370,
+                            margin: EdgeInsets.only(bottom: h * 20),
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.25),
+                                  offset: Offset(0, 0),
+                                  blurRadius: 6,
+                                ),
+                              ],
+                              image: DecorationImage(
+                                image: AssetImage('images/coupon' +
+                                    (couponList[index] % 3).toString() +
+                                    '.png'),
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: BorderRadius.circular(b * 10),
+                              color: Colors.transparent,
+                            ),
                           ),
-                        ],
-                        image: DecorationImage(
-                          image: AssetImage(images[index]),
-                          fit: BoxFit.cover,
                         ),
-                        borderRadius: BorderRadius.circular(b * 10),
-                        color: Colors.transparent,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
