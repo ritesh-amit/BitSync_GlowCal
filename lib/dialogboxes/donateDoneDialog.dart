@@ -48,12 +48,12 @@ class DialogBoxDonateDone extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: b * 36),
                   child: Text(
-                    'Thanks a lot for your Donation! Your Donation has been made and we will send you an invoice soon',
+                    'Thanks a lot for your Donation! Your donation request has been made and we will notify you as soon as the NGO accepts your request!\n\n Thanks for making people happier',
                     textAlign: TextAlign.center,
                     style: txtS(textColor, 16, FontWeight.w600),
                   ),
                 ),
-                sh(54),
+                sh(35),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -75,7 +75,7 @@ class DialogBoxDonateDone extends StatelessWidget {
                     )
                   ],
                 ),
-                sh(50),
+                sh(40),
               ],
             ),
           ),

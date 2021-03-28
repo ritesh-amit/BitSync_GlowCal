@@ -5,7 +5,7 @@ import 'package:gur/screens/mainScreens/profile.dart';
 import 'dart:ui' show lerpDouble;
 import 'package:gur/screens/mainScreens/home.dart';
 import 'package:gur/screens/mainScreens/settings.dart';
-import 'Utils/constants.dart';
+import '../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeInd extends StatefulWidget {
@@ -44,6 +44,7 @@ class _HomeIndState extends State<HomeInd> {
     return SafeArea(
       child: Scaffold(
           bottomNavigationBar: Container(
+            color: Colors.transparent,
             height: h * 71,
             child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
               AnimatedAlign(
@@ -51,7 +52,7 @@ class _HomeIndState extends State<HomeInd> {
                 curve: Curves.linear,
                 duration: duration,
                 child: Container(
-                  color: mc ?? gc,
+                  color: mc ?? Colors.transparent,
                   width: b * 412 / items.length,
                   height: h * 2,
                 ),

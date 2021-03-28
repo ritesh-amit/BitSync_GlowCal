@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../Utils/SizeConfig.dart';
-import '../../Utils/constants.dart';
+import '../Utils/SizeConfig.dart';
+import '../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
@@ -97,7 +97,7 @@ class Coupons extends StatelessWidget {
                 Container(
                   width: b * 181,
                   child: Text(
-                    'Get 50 points for each Kg food you donate',
+                    'Get 2 points for each Kg food you donate',
                     style: txtS(Color(0xff266260), 17, FontWeight.w900),
                   ),
                 ),
@@ -174,8 +174,8 @@ class Coupons extends StatelessWidget {
                           image: AssetImage(images[index]),
                           fit: BoxFit.cover,
                         ),
-                        borderRadius: BorderRadius.circular(b * 6),
-                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(b * 10),
+                        color: Colors.transparent,
                       ),
                     ),
                   ),
