@@ -2,11 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gur/drawer.dart';
+import 'package:gur/drawerPages/drawer.dart';
 import 'package:gur/screens/mainScreens/home.dart';
-import 'package:gur/searchNgo.dart';
-import 'Utils/SizeConfig.dart';
-import 'Utils/constants.dart';
+import 'package:gur/searchScreens/searchNgo.dart';
+import '../Utils/SizeConfig.dart';
+import '../Utils/constants.dart';
 import 'dart:ui' as ui;
 import 'package:flutter_svg/flutter_svg.dart';
 

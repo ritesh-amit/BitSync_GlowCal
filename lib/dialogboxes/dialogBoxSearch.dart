@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gur/searchNgo.dart';
+import 'package:gur/searchScreens/searchNgo.dart';
 import '../Utils/SizeConfig.dart';
 
 class DialogBoxSearch extends StatelessWidget {

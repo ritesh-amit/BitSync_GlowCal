@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:gur/homeMainInd.dart';
-import 'package:gur/homeMainNGO.dart';
-import 'package:gur/homeMainOrg.dart';
+import 'package:gur/homePages/homeMainInd.dart';
+import 'package:gur/homePages/homeMainNGO.dart';
+import 'package:gur/homePages/homeMainOrg.dart';
 import 'package:gur/newAuthScreens/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';

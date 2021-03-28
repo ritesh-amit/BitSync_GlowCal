@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'Utils/SizeConfig.dart';
-import 'Utils/constants.dart';
+import '../Utils/SizeConfig.dart';
+import '../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class About extends StatelessWidget {
@@ -179,6 +179,7 @@ class About extends StatelessWidget {
                       ),
                     ],
                   ),
+                  sh(20),
                 ],
               ),
             ),

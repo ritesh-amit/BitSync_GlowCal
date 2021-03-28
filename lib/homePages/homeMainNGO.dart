@@ -4,7 +4,7 @@ import 'package:gur/screens/mainScreens/ngoHome.dart';
 import 'package:gur/screens/mainScreens/ngoProfile.dart';
 import 'package:gur/screens/mainScreens/notifications.dart';
 import 'package:gur/screens/mainScreens/settings.dart';
-import 'Utils/constants.dart';
+import '../Utils/constants.dart';
 import 'dart:ui' show lerpDouble;
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -44,6 +44,7 @@ class _HomeNgoState extends State<HomeNgo> {
     return SafeArea(
       child: Scaffold(
           bottomNavigationBar: Container(
+            color: Colors.transparent,
             height: h * 71,
             child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
               AnimatedAlign(
@@ -51,7 +52,7 @@ class _HomeNgoState extends State<HomeNgo> {
                 curve: Curves.linear,
                 duration: duration,
                 child: Container(
-                  color: mc ?? gc,
+                  color: mc ?? Colors.transparent,
                   width: b * 412 / items.length,
                   height: h * 2,
                 ),

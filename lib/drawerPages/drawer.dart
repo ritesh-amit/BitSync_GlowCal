@@ -1,14 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'package:gur/about.dart';
-import 'package:gur/mission.dart';
-import 'package:gur/screens/mainScreens/coupons.dart';
+import 'package:gur/drawerPages/about.dart';
+import 'package:gur/drawerPages/mission.dart';
+import 'package:gur/drawerPages/coupons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Utils/SizeConfig.dart';
-import 'Utils/constants.dart';
+import '../Utils/SizeConfig.dart';
+import '../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'newAuthScreens/login.dart';
+import '../newAuthScreens/login.dart';
 
 class DrawerCode extends StatefulWidget {
   final String userName;
@@ -56,6 +56,7 @@ class _DrawerCodeState extends State<DrawerCode> {
     var b = SizeConfig.screenWidth / 414;
     var h = SizeConfig.screenHeight / 896;
     return Drawer(
+      elevation: 0,
       child: Container(
         color: Colors.transparent,
         child: Column(

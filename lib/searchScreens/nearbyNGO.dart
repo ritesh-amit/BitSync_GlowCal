@@ -12,8 +12,8 @@ import 'package:gur/dialogboxes/donateDoneDialog.dart';
 import 'package:gur/models/ngo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
-import 'Utils/SizeConfig.dart';
-import 'Utils/constants.dart';
+import '../Utils/SizeConfig.dart';
+import '../Utils/constants.dart';
 
 class NearbyNGO extends StatefulWidget {
   final FoodPacket foodPacket;
@@ -293,8 +293,6 @@ class _NearbyNGOState extends State<NearbyNGO> {
 
     FirebaseFirestore.instance.collection('donations').add(map).then((value) {
       sendNotification(ngoUID);
-
-      dialogBoxDonateDone(context);
     }).catchError((error) {
       print(error);
       Toast.show("Error Encountered", context);

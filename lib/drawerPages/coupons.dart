@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../Utils/SizeConfig.dart';
-import '../../Utils/constants.dart';
+import '../Utils/SizeConfig.dart';
+import '../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
@@ -174,8 +174,8 @@ class Coupons extends StatelessWidget {
                           image: AssetImage(images[index]),
                           fit: BoxFit.cover,
                         ),
-                        borderRadius: BorderRadius.circular(b * 6),
-                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(b * 10),
+                        color: Colors.transparent,
                       ),
                     ),
                   ),

@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/dialogboxes/dialogBoxDonate.dart';
-import 'package:gur/drawer.dart';
+import 'package:gur/drawerPages/drawer.dart';
 import 'package:gur/screens/chatSection/messageScreen.dart';
 import 'package:gur/screens/mainScreens/aboutNgo.dart';
 import '../../Utils/SizeConfig.dart';
@@ -11,7 +11,7 @@ import '../../Utils/constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
-import 'package:gur/search.dart';
+import 'package:gur/searchScreens/search.dart';
 import 'package:page_transition/page_transition.dart';
 
 class HomePage extends StatefulWidget {
@@ -381,14 +381,6 @@ class _HomePageState extends State<HomePage> {
                     width: b * 374,
                     decoration: BoxDecoration(
                       color: mc,
-                      boxShadow: [
-                        BoxShadow(
-                          color: mc.withOpacity(0.2),
-                          blurRadius: 8,
-                          spreadRadius: 2,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
                       borderRadius: BorderRadius.circular(b * 46),
                     ),
                     child: Text(

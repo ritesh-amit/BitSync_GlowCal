@@ -4,7 +4,7 @@ import 'package:gur/newAuthScreens/login.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gur/drawer.dart';
+import 'package:gur/drawerPages/drawer.dart';
 import 'package:gur/screens/chatSection/messageScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_switch/flutter_switch.dart';

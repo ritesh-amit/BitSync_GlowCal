@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gur/models/foodPacket.dart';
-import 'package:gur/nearbyNGO.dart';
+import 'package:gur/searchScreens/nearbyNGO.dart';
 import 'package:location/location.dart' as loc;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
@@ -42,7 +42,7 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
     var b = SizeConfig.screenWidth / 414;
     var h = SizeConfig.screenHeight / 896;
     return Dialog(
-      insetPadding: EdgeInsets.only(top: h * 285),
+      insetPadding: EdgeInsets.only(top: h * 400),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(b * 30),
@@ -188,7 +188,7 @@ class _DialogBoxRemarkState extends State<DialogBoxRemark> {
                     height: h * 48,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: isLocationGot ? mc : Colors.grey,
+                      color: isLocationGot ? mc : Color(0xff828282),
                       borderRadius: BorderRadius.circular(b * 46),
                     ),
                     child: Text(
