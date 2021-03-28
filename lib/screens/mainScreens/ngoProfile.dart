@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gur/screens/chatSection/messageScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -60,6 +61,7 @@ class _NgoProfileState extends State<NgoProfile> {
   bool isImageUpload = false;
   bool isLocationUpload = false;
   bool isLocationLoading = false;
+  bool isImageButtonPressed = false;
   int count = 0;
 
   File image1File, image2File, image3File, image4File;
@@ -713,14 +715,25 @@ class _NgoProfileState extends State<NgoProfile> {
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
                             onPressed: () {
-                              uploadImageAndToDB();
+                              if (!isImageButtonPressed) {
+                                setState(() {
+                                  isImageButtonPressed = true;
+                                });
+                                uploadImageAndToDB();
+                              }
                             },
                             child: Container(
                               color: !isImageUpload ? mc : Color(0xff28797c),
-                              child: Text(
-                                !isImageUpload ? "Upload Images" : "Done",
-                                style: txtS(Colors.white, 10, FontWeight.w500),
-                              ),
+                              child: isImageButtonPressed
+                                  ? SpinKitCircle(
+                                      color: Colors.white,
+                                      size: h * 25,
+                                    )
+                                  : Text(
+                                      "Upload Images",
+                                      style: txtS(
+                                          Colors.white, 10, FontWeight.w500),
+                                    ),
                             ),
                           ),
                         ],
@@ -1072,6 +1085,8 @@ class _NgoProfileState extends State<NgoProfile> {
           inChargeName = data;
           isName = false;
         }
+        count++;
+        checkCount();
       });
     });
   }
@@ -1138,11 +1153,7 @@ class _NgoProfileState extends State<NgoProfile> {
           .child(uid)
           .child('4')
           .putFile(image4File)
-          .then((snapshot) {
-        setState(() {
-          isImageUpload = true;
-        });
-      });
+          .then((snapshot) {});
 
       String image1URL = await getImageLink('1', uid);
       String image2URL = await getImageLink('2', uid);
@@ -1156,8 +1167,12 @@ class _NgoProfileState extends State<NgoProfile> {
         'image4': image4URL
       }).then((value) {
         setState(() {
+          isImageUpload = true;
+          isImageButtonPressed = false;
           count++;
           checkCount();
+          preferences.setString('profileImageURL', image1URL);
+          preferences.setString('baseImageUrl', image2URL);
           preferences.setBool('isProfileImageUploaded', true);
           preferences.setString('profileImageURL', image1URL);
         });

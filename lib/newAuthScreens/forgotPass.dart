@@ -1,14 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:gur/newAuthScreens/forgotPasswordOtp.dart';
 import 'package:gur/newAuthScreens/login.dart';
-import 'package:gur/models/currentUser.dart';
-import 'package:gur/newAuthScreens/signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Utils/SizeConfig.dart';
 import '../Utils/constants.dart';
-import 'package:toast/toast.dart';
 
 class ForgotPassword extends StatefulWidget {
   _ForgotPasswordState createState() => _ForgotPasswordState();
@@ -19,10 +16,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   String uid = "";
   String userToken = "";
   bool isVisible = false;
-  TextEditingController mobileController = TextEditingController();
-
-  AutovalidateMode phoneValidator = AutovalidateMode.disabled;
-  AutovalidateMode pwdValidator = AutovalidateMode.disabled;
+  TextEditingController emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +44,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
-                            'Enter Number',
+                            'Forgot Password',
                             style: TextStyle(
                               color: mc,
                               fontWeight: FontWeight.w700,
-                              fontSize: b * 40,
+                              fontSize: b * 30,
                             ),
                           ),
                         ],
@@ -68,16 +62,18 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           borderRadius: BorderRadius.circular(b * 10),
                         ),
                         child: TextField(
-                          controller: mobileController,
-                          keyboardType: TextInputType.phone,
+                          controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
                           style: txtS(tc, 16, FontWeight.w500),
-                          decoration: dec('Mobile Number'),
+                          decoration: dec('Enter Email'),
                         ),
                       ),
                       sh(12),
                       Container(
                         child: MaterialButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            sendVerificationLink();
+                          },
                           color: mc,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(b * 10),
@@ -86,7 +82,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           height: h * 65,
                           minWidth: b * 345,
                           child: Text(
-                            'Send OTP',
+                            'Send Verification Link',
                             style: txtS(Colors.white, 16, FontWeight.w700),
                           ),
                         ),
@@ -94,11 +90,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       sh(45),
                       InkWell(
                         onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) {
-                              return Login();
-                            }),
-                          );
+                          Navigator.of(context).pop();
                         },
                         child: Text(
                           'Back to Login',
@@ -143,5 +135,25 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   SizedBox sh(double h) {
     return SizedBox(height: SizeConfig.screenHeight * h / 896);
+  }
+
+  void sendVerificationLink() async {
+    String email = emailController.text;
+    await FirebaseAuth.instance
+        .sendPasswordResetEmail(email: email)
+        .then((value) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text("Password reset link is sent to your email, Check your Inbox"),
+        backgroundColor: Colors.green,
+      ));
+      Navigator.of(context).pop();
+    }).catchError((error) {
+      print(error.message);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(error.message),
+        backgroundColor: Colors.red,
+      ));
+    });
   }
 }

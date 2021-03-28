@@ -44,7 +44,7 @@ class _HomeIndState extends State<HomeInd> {
     return SafeArea(
       child: Scaffold(
           bottomNavigationBar: Container(
-            height: h * 70.5,
+            height: h * 71,
             child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
               AnimatedAlign(
                 alignment: Alignment(_getIndicatorPosition(_selectedIndex), 0),

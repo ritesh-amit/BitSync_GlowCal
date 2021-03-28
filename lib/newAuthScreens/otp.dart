@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gur/homeMainInd.dart';
 import 'package:gur/homeMainNGO.dart';
 import 'package:gur/homeMainOrg.dart';
@@ -25,10 +26,22 @@ class Otp extends StatefulWidget {
 class _OtpState extends State<Otp> {
   String verificationCode = "";
   String uid = "";
+  bool otpTimeOut = false;
+  bool timerWidget = true;
+  bool isButtonPressed = false;
   @override
   void initState() {
     super.initState();
     otpVerify();
+    resendTime();
+  }
+
+  resendTime() {
+    Future.delayed(Duration(seconds: 60), () {
+      setState(() {
+        otpTimeOut = true;
+      });
+    });
   }
 
   @override
@@ -98,10 +111,14 @@ class _OtpState extends State<Otp> {
                         elevation: 0,
                         height: h * 65,
                         minWidth: b * 345,
-                        child: Text(
-                          'Verify & Proceed',
-                          style: txtS(Colors.white, 16, FontWeight.w700),
-                        ),
+                        child: isButtonPressed
+                            ? SpinKitCircle(
+                                color: Colors.white,
+                              )
+                            : Text(
+                                'Verify & Proceed',
+                                style: txtS(Colors.white, 16, FontWeight.w700),
+                              ),
                       ),
                     ),
                     sh(40),
@@ -113,18 +130,27 @@ class _OtpState extends State<Otp> {
                           style: txtS(textColor, 16, FontWeight.w500),
                         ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            if (otpTimeOut) {
+                              setState(() {
+                                otpTimeOut = false;
+                                timerWidget = false;
+                                timerWidget = true;
+                              });
+                              resendTime();
+                              otpVerify();
+                            }
+                          },
                           child: Text(
                             'Resend it!',
-                            style: txtS(mc, 16, FontWeight.w700),
+                            style: txtS(otpTimeOut ? mc : Colors.grey, 16,
+                                FontWeight.w700),
                           ),
                         ),
                       ],
                     ),
                     sh(30),
-                    Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                      OtpTimer(),
-                    ]),
+                    timerWidget ? OtpTimer() : SizedBox(),
                   ],
                 ),
               ),
@@ -152,7 +178,7 @@ class _OtpState extends State<Otp> {
 
     auth.verifyPhoneNumber(
         phoneNumber: widget.phoneNo,
-        timeout: Duration(seconds: 120),
+        timeout: Duration(seconds: 60),
         verificationCompleted: (PhoneAuthCredential credential) async {
           //signUpWithEmailAndPhone(credential);
         },
@@ -325,18 +351,16 @@ class _OtpTimerState extends State<OtpTimer> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     var b = SizeConfig.screenWidth / 414;
-    var h = SizeConfig.screenHeight / 896;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Text(
-          "Send Otp After",
+          "Re-send OTP after: ",
           style: TextStyle(color: textColor, fontWeight: FontWeight.w600),
         ),
-        SizedBox(width: b * 10),
         Icon(Icons.timer, color: textColor),
-        SizedBox(width: b * 10),
+        SizedBox(width: b * 3),
         Text(
           timerText,
           style: TextStyle(color: mc, fontWeight: FontWeight.w600),

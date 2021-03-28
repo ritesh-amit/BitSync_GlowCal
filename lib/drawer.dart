@@ -73,7 +73,7 @@ class _DrawerCodeState extends State<DrawerCode> {
                     ),
                     sh(20),
                     Text(
-                      "Designation", // this.designation
+                      designation, // this.designation
                       style: txtS(textColor, 16, FontWeight.w400),
                     ),
                     // Mobile Number

@@ -22,8 +22,9 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 class ChatScreen extends StatefulWidget {
   final String receiverUid;
   final String senderUID;
+  final String receiverName;
 
-  ChatScreen(this.receiverUid, this.senderUID);
+  ChatScreen({this.receiverUid, this.senderUID, this.receiverName});
 
   _ChatScreenState createState() => _ChatScreenState();
 }
@@ -48,8 +49,8 @@ class _ChatScreenState extends State<ChatScreen> {
   int userType;
   String donationUIDOnlyForNGOSide = "";
   String userTypeString = '';
-  String typeofUser = "DONOR";
   bool accepted = false;
+  bool isDelivered = false;
   void tolast() {
     _scrollController.animateTo(
       0,
@@ -86,8 +87,12 @@ class _ChatScreenState extends State<ChatScreen> {
         .snapshots()
         .listen((event) {
       setState(() {
-        acceptOrNot = event.data()['isAccept'];
-        //isRejected = event.data()['isRejected'];
+        if (event.data()['isAccept'] != null)
+          acceptOrNot = event.data()['isAccept'];
+        if (event.data()['isDelivered'] != null)
+          isDelivered = event.data()['isDelivered'];
+        if (event.data()['isRejected'] != null)
+          isRejected = event.data()['isRejected'];
       });
     });
   }
@@ -182,11 +187,14 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                       SizedBox(width: b * 10),
                       Text(
-                        'Messages', //name of user to be displayed
+                        widget.receiverName == null
+                            ? 'Messages'
+                            : widget
+                                .receiverName, //name of user to be displayed
                         style: txtS(mc, 20, FontWeight.w600),
                       ),
                       Spacer(),
-                      typeofUser == "DONOR"
+                      userTypeString == 'ngo'
                           ? MaterialButton(
                               height: h * 30,
                               shape: RoundedRectangleBorder(
@@ -212,22 +220,28 @@ class _ChatScreenState extends State<ChatScreen> {
                             )
                           : SizedBox(),
                       SizedBox(width: b * 10),
-                      InkWell(
-                        onTap: () {
-                          dialogBoxContact(context);
-                        },
-                        child: Icon(MdiIcons.accountBox, color: mc),
-                      ),
+                      userTypeString == 'ngo'
+                          ? acceptOrNot
+                              ? SizedBox()
+                              : InkWell(
+                                  onTap: () {
+                                    dialogBoxContact(context);
+                                  },
+                                  child: Icon(MdiIcons.accountBox, color: mc),
+                                )
+                          : SizedBox(),
                     ],
                   ),
                 ),
-                isRejected
-                    ? Text("Sorry, Your last donation was Rejected by NGO")
-                    : userType == 1
-                        ? acceptOrNot
-                            ? ChatMessagesListWidget()
-                            : collectionReq()
-                        : ChatMessagesListWidget(),
+                isDelivered
+                    ? Text("This Donation has been delivered")
+                    : isRejected
+                        ? Text("Oops! This donation has been Rejected")
+                        : userType == 1
+                            ? acceptOrNot
+                                ? ChatMessagesListWidget()
+                                : collectionReq()
+                            : ChatMessagesListWidget(),
                 acceptOrNot ? ChatInputWidget() : notAcceptedText(),
               ],
             ),
@@ -400,7 +414,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           elevation: 5,
                           padding: EdgeInsets.zero,
                           onPressed: () {
-                            Navigator.pop(context);
+                            onPackageDelivered();
                           },
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(b * 36),
@@ -458,12 +472,16 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
-            'Hey! I Have accepted a request from You', //username to be added
+            userTypeString == 'ngo'
+                ? 'Hey! I have accepted your request for Donation'
+                : "Hey! NGO has accepted your Donation", //username to be added
             style: txtS(textColor, 14, FontWeight.w600),
           ),
           SizedBox(height: h * 15),
           Text(
-            'My contact details are:',
+            userTypeString == 'ngo'
+                ? 'My contact details are:'
+                : 'Valet Contact Details:',
             style: txtS(textColor, 14, FontWeight.w600),
           ),
           SizedBox(height: h * 10),
@@ -986,7 +1004,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<bool> checkForLocationPermission() async {
     loc.Location location = loc.Location();
     loc.PermissionStatus permissionStatus;
-    bool permissionsOK;
+    bool permissionsOK = true;
 
     bool serviceEnabled = await location.serviceEnabled();
 
@@ -1099,5 +1117,35 @@ class _ChatScreenState extends State<ChatScreen> {
         timestamp: FieldValue.serverTimestamp());
 
     addMessageToDb(message);
+  }
+
+  onPackageDelivered() async {
+    FirebaseFirestore.instance
+        .collection('donations')
+        .doc(donationUIDOnlyForNGOSide)
+        .update({'isDelivered': true});
+
+    setState(() {
+      isDelivered = true;
+    });
+
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) {
+        return userTypeString == 'ngo'
+            ? HomeNgo()
+            : userTypeString == 'org'
+                ? HomeOrg()
+                : HomeInd();
+      }), (route) => false);
+    });
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.senderUID)
+        .update({
+      'points': FieldValue.increment(50),
+      'packagesDelivered': FieldValue.increment(1)
+    });
   }
 }

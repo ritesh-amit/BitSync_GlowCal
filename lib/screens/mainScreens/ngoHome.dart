@@ -17,19 +17,10 @@ import '../../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gur/drawer.dart';
 
-final GlobalKey<NavigatorState> _loadingKey = GlobalKey<NavigatorState>();
-
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print(message.data);
   print("Handling a background message: ${message.messageId}");
-
-  /* FirebaseMessaging.instance.getInitialMessage().then((msg) {
-    if (message.data['uid'] != null) Get.to(MessageScreen());
-    /*  Navigator.of(ctx).push(MaterialPageRoute(builder: (ctx) {
-        return MessageScreen();
-      })); */
-  }); */
 }
 
 class NgoHome extends StatefulWidget {
@@ -45,12 +36,12 @@ class _NgoHomeState extends State<NgoHome> {
   String email = "NA";
   String phone = 'NA';
   String address = 'NA';
-  String photo = '';
-  String photo2 = '';
-  String headImageURL = '';
+  String photo2 = 'NA';
+  String headImageURL = 'NA';
   String regDate = "NA";
   String summary = 'NA';
   bool isVerified = false;
+  int packagesNo = 0;
 
   File image1File, image2File, image3File, image4File;
   bool getImage1 = false;
@@ -116,7 +107,9 @@ class _NgoHomeState extends State<NgoHome> {
         uid = FirebaseAuth.instance.currentUser.uid;
 
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return ChatScreen(message.data['donorUid'], message.data['uid']);
+          return ChatScreen(
+              receiverUid: message.data['donorUid'],
+              senderUID: message.data['uid']);
         }));
       });
 
@@ -147,9 +140,12 @@ class _NgoHomeState extends State<NgoHome> {
         summary = preferences.getString('currentUserSummary');
 
       if (preferences.containsKey('isVerified'))
-        isVerified = preferences.getBool('isVarified');
+        isVerified = preferences.getBool('isVerified');
       if (preferences.containsKey('currentUserRegDate'))
         regDate = preferences.getString('currentUserRegDate');
+
+      if (preferences.containsKey('packagesDelivered'))
+        packagesNo = preferences.getInt('packagesDelivered');
     });
   }
 
@@ -249,11 +245,32 @@ class _NgoHomeState extends State<NgoHome> {
                             offset: Offset(0, 6),
                           ),
                         ],
-                        image: DecorationImage(
-                            image: NetworkImage(headImageURL),
-                            fit: BoxFit.cover),
+                        /* image: DecorationImage(
+                            image: headImageURL == "NA"
+                                ? AssetImage('images/headNoImage.png')
+                                : NetworkImage(headImageURL),
+                            fit: headImageURL == "NA"
+                                ? BoxFit.contain
+                                : BoxFit.cover), */
                         borderRadius: BorderRadius.circular(b * 12),
                       ),
+                      child: headImageURL == 'NA'
+                          ? Image.asset(
+                              'images/headNoImage.png',
+                              fit: BoxFit.contain,
+                            )
+                          : CachedNetworkImage(
+                              imageUrl: headImageURL,
+                              fit: BoxFit.cover,
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(b * 12),
+                                  image: DecorationImage(
+                                      image: imageProvider, fit: BoxFit.cover),
+                                ),
+                              ),
+                            ),
                     ),
                     Positioned(
                       right: b * 30,
@@ -312,7 +329,7 @@ class _NgoHomeState extends State<NgoHome> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '12',
+                              packagesNo.toString(),
                               style: txtS(textColor, 16, FontWeight.w500),
                             ),
                             Text(
@@ -369,8 +386,10 @@ class _NgoHomeState extends State<NgoHome> {
                         ),
                       ],
                       image: DecorationImage(
-                        image: NetworkImage(photo2),
-                        fit: BoxFit.contain,
+                        image: photo2 == 'NA'
+                            ? AssetImage('images/baseNoImage.png')
+                            : NetworkImage(photo2), // NetworkImage(photo2),
+                        fit: BoxFit.cover,
                       ),
                       color: gc,
                       borderRadius: BorderRadius.circular(b * 6),
