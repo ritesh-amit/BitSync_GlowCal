@@ -72,11 +72,11 @@ class Mission extends StatelessWidget {
                     children: [
                       Column(
                         children: [
-                          Image.asset('images/icon.png',
+                          Image.asset('images/splash2.png',
                               height: h * 50, width: b * 50),
                           sh(7),
                           Text(
-                            'App Name',
+                            'GlowCal',
                             style: txtS(textColor, 10, FontWeight.w700),
                           ),
                           Text(

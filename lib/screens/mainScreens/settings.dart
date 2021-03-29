@@ -276,7 +276,7 @@ class _SettingsState extends State<Settings> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.asset('images/icon.png',
+                            Image.asset('images/splash2.png',
                                 height: h * 127, width: b * 127),
                           ],
                         ),

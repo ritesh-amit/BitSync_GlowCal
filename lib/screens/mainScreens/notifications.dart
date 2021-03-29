@@ -86,43 +86,18 @@ class _NotificationsState extends State<Notifications> {
               ],
             ),
           ),
-          sh(18),
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: b * 20),
-              shrinkWrap: true,
-              physics: BouncingScrollPhysics(),
-              itemCount: 5,
-              itemBuilder: (context, index) => Column(
-                children: <Widget>[
-                  InkWell(
-                    onTap: () {},
-                    child: Container(
-                      height: h * 60,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: b * 20, vertical: h * 10),
-                      margin: EdgeInsets.only(top: h * 12, bottom: h * 12),
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.13),
-                            offset: Offset(0, 0),
-                            blurRadius: 6,
-                          ),
-                        ],
-                        image: DecorationImage(
-                          image: AssetImage('images/ill1.png'),
-                          fit: BoxFit.contain,
-                        ),
-                        borderRadius: BorderRadius.circular(b * 12),
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
+          Spacer(),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.notifications_paused, color: mc, size: b * 110),
+              Text(
+                'Sorry!! No Notifications',
+                style: txtS(mc, 26, FontWeight.w400),
               ),
-            ),
+            ],
           ),
+          Spacer(),
         ]),
       ),
     );

@@ -169,9 +169,7 @@ class _AboutNgoState extends State<AboutNgo> {
                                 style: txtS(textColor, 12, FontWeight.w400),
                               ),
                               Text(
-                                regDate == 'NA'
-                                    ? regDate
-                                    : regDate.substring(0, 10),
+                                '2021',
                                 style: txtS(textColor, 12, FontWeight.w600),
                               ),
                             ],
