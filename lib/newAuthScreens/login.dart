@@ -261,7 +261,7 @@ class _LoginState extends State<Login> {
           .then((credential) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("Welcome Back. We really Missed you a lot !"),
-          backgroundColor: Colors.green,
+          backgroundColor: Color(0xff28797c),
           behavior: SnackBarBehavior.floating,
         ));
         preferences.setBool('isLoggedIn', true);

@@ -135,11 +135,6 @@ class About extends StatelessWidget {
                             'Google Maps',
                             style: txtS(Color(0xff949494), 16, FontWeight.w400),
                           ),
-                          sh(10),
-                          Text(
-                            'Google Auth',
-                            style: txtS(Color(0xff949494), 16, FontWeight.w400),
-                          ),
                         ],
                       ),
                     ],
@@ -148,13 +143,13 @@ class About extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset('images/icon.png',
+                      Image.asset('images/splash2.png',
                           height: h * 127, width: b * 127),
                     ],
                   ),
                   sh(15),
                   Text(
-                    'App Name',
+                    'GlowCal',
                     style: txtS(textColor, 20, FontWeight.w600),
                   ),
                   sh(10),
