@@ -126,8 +126,7 @@ class _NearbyNGOState extends State<NearbyNGO> {
                             uploadDonationToDB(nearbyNGOList[index].uid);
                           },
                           child: Container(
-                            margin:
-                                EdgeInsets.only(top: h * 12, bottom: h * 12),
+                            height: h * 120,
                             decoration: BoxDecoration(
                               boxShadow: [
                                 BoxShadow(
@@ -280,6 +279,7 @@ class _NearbyNGOState extends State<NearbyNGO> {
                             ),
                           ),
                         ),
+                        sh(20),
                       ],
                     ),
             ),

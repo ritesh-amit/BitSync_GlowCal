@@ -166,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                 sh(20),
                 Container(
                   width: b * 375,
-                  height: h * 145,
+                  height: h * 140,
                   margin: EdgeInsets.only(left: b * 10),
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -181,12 +181,13 @@ class _HomePageState extends State<HomePage> {
                         },
                         child: Container(
                           width: b * 180,
+                          height: h * 140,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(b * 6),
                             image: DecorationImage(
                               image: AssetImage(images[index]),
-                              fit: BoxFit.cover,
+                              fit: BoxFit.fitWidth,
                             ),
                           ),
                         ),

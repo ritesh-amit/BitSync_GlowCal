@@ -69,8 +69,6 @@ class _MessageScreenState extends State<MessageScreen> {
                       Navigator.pop(context);
                     },
                     child: Container(
-                      height: h * 30,
-                      width: b * 30,
                       child: SvgPicture.asset(
                         'images/Arrow1.svg',
                         allowDrawingOutsideViewBox: true,

@@ -469,8 +469,8 @@ class _ProfileState extends State<Profile> {
       child: SvgPicture.asset(
         'images/edit.svg',
         allowDrawingOutsideViewBox: true,
-        width: h * 20,
-        height: b * 20,
+        width: h * 22,
+        height: b * 22,
       ),
     );
   }
@@ -598,7 +598,7 @@ class _ProfileState extends State<Profile> {
     }).then((value) {
       auth.currentUser.updatePassword(newPwd).catchError((e) {
         print(e);
-      }).timeout(Duration(seconds: 10), onTimeout: () {
+      }).timeout(Duration(seconds: 5), onTimeout: () {
         Toast.show("Server Error", context, duration: Toast.LENGTH_LONG);
       }).then((value) {
         Toast.show("Password Changed Succesfully", context,

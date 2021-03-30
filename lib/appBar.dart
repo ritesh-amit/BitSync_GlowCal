@@ -45,8 +45,6 @@ class Bar extends StatelessWidget {
               child: SvgPicture.asset(
                 'images/Chart.svg',
                 allowDrawingOutsideViewBox: true,
-                width: h * 20,
-                height: b * 20,
               ),
             ),
           ),

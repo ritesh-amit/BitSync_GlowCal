@@ -85,6 +85,10 @@ class _CouponsState extends State<Coupons> {
                   style: txtS(mc, 20, FontWeight.w600),
                 ),
                 Spacer(),
+                Text(
+                  ' ',
+                  style: txtS(mc, 20, FontWeight.w600),
+                ),
               ],
             ),
           ),
@@ -114,7 +118,7 @@ class _CouponsState extends State<Coupons> {
                 Container(
                   width: b * 181,
                   child: Text(
-                    'Get 50 points for each Kg food you donate',
+                    'Get 5 points for each Kg food you donate',
                     style: txtS(Color(0xff266260), 17, FontWeight.w900),
                   ),
                 ),
