@@ -631,7 +631,7 @@ class _NgoHomeState extends State<NgoHome> {
         .child('ngoImages')
         .child(uid)
         .child(fileCode)
-        .putFile(image1File)
+        .putFile(code == 1 ? image1File : image2File)
         .then((task) async {
       String imageURL = await getImageLink(fileCode, uid);
 

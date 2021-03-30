@@ -513,18 +513,25 @@ class _SignUpState extends State<SignUp> {
         return Login();
       }), (route) => false);
     } else {
-      String token = await FirebaseMessaging.instance.getToken();
-      CurrentUser currentUser = CurrentUser(
-          name: userName,
-          email: email,
-          phone: phone,
-          userType: type,
-          regDate: FieldValue.serverTimestamp(),
-          token: token);
+      await FirebaseMessaging.instance.getToken().then((token) {
+        CurrentUser currentUser = CurrentUser(
+            name: userName,
+            email: email,
+            phone: phone,
+            userType: type,
+            regDate: FieldValue.serverTimestamp(),
+            token: token);
 
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return Otp(phone, currentUser, pwd);
-      }));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return Otp(phone, currentUser, pwd);
+        }));
+      }).catchError((e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Error Encountered"),
+          backgroundColor: Colors.red,
+        ));
+        Navigator.of(context).pop();
+      });
     }
   }
 

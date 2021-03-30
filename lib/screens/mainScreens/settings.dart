@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/newAuthScreens/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -448,6 +449,7 @@ class _SettingsState extends State<Settings> {
                           padding: EdgeInsets.zero,
                           onPressed: () {
                             Navigator.pop(context);
+                            deleteUser();
                           },
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(b * 36),
@@ -481,7 +483,8 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  deleteUser() {
+  deleteUser() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
     String uid = FirebaseAuth.instance.currentUser.uid;
     String email = FirebaseAuth.instance.currentUser.email;
     String pwd = pwdController.text;
@@ -504,13 +507,17 @@ class _SettingsState extends State<Settings> {
         }), (route) => false);
       });
     }).catchError((error) {
-      if (error.message == 'requires-recent-login') {
+      if (error.code == 'requires-recent-login') {
         FirebaseAuth.instance.currentUser
             .reauthenticateWithCredential(
                 EmailAuthProvider.credential(email: email, password: pwd))
             .then((credential) {
+          FirebaseAuth.instance.currentUser.delete().catchError((er) {
+            print(er.message);
+          });
+          preferences.clear();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Account Deleted Successfully. We gonna miss u !"),
+            content: Text("Account Deleted Successfully. We gonna miss you !"),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
           ));
@@ -520,17 +527,19 @@ class _SettingsState extends State<Settings> {
           }), (route) => false);
         }).catchError((e) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(e.message),
+            content: Text(e.code),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
           ));
         });
-      } else
+      } else {
+        print(error.code);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(error.message),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ));
+      }
     });
   }
 }
