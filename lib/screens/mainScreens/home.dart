@@ -61,8 +61,9 @@ class _HomePageState extends State<HomePage> {
       mainImageList.clear();
       setState(() {
         for (var i in documentSnapshot) {
-          mainImageList
-              .add({'imageURL': i.data()['image1'], 'uid': i.data()['uid']});
+          if (i.data()['image1'] != null)
+            mainImageList
+                .add({'imageURL': i.data()['image1'], 'uid': i.data()['uid']});
         }
       });
     });

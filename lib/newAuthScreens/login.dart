@@ -303,7 +303,7 @@ class _LoginState extends State<Login> {
         preferences.setString('currentUserAddress', snapshot.data()['address']);
 
       if (snapshot.data()['points'] != null)
-        preferences.setString('currentUserPoints', snapshot.data()['points']);
+        preferences.setInt('currentUserPoints', snapshot.data()['points']);
 
       if (snapshot.data()['userType'] == 'ngo') {
         if (snapshot.data()['image1'] != null)

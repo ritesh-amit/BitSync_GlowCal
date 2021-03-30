@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences pref = await SharedPreferences.getInstance();
-  bool isLoggedIn;
+  bool isLoggedIn = false;
   await Firebase.initializeApp();
   FirebaseAuth auth = FirebaseAuth.instance;
   User user = auth.currentUser;

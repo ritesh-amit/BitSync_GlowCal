@@ -40,6 +40,7 @@ class _NearbyNGOState extends State<NearbyNGO> {
         .snapshots()
         .listen((snapshot) {
       List<QueryDocumentSnapshot> completeList = snapshot.docs;
+      nearbyNGOList.clear();
 
       for (var i in completeList) {
         double lat = i.data()['lat'];
@@ -47,32 +48,34 @@ class _NearbyNGOState extends State<NearbyNGO> {
         bool isVerified = false;
         int packagesNo = 0;
 
-        if (i.data()['isVerified'] != null) isVerified = i.data()['isVerified'];
+        if (i.data()['isVerified'] != null && i.data()['isVerified'] == true) {
+          isVerified = i.data()['isVerified'];
 
-        if (i.data()['packagesDelivered'] != null)
-          packagesNo = i.data()['packagesDelivered'];
+          if (i.data()['packagesDelivered'] != null)
+            packagesNo = i.data()['packagesDelivered'];
 
-        int distance = (Geolocator.distanceBetween(lat, lon,
-                    widget.foodPacket.latitude, widget.foodPacket.longitude) /
-                1000)
-            .ceil();
+          int distance = (Geolocator.distanceBetween(lat, lon,
+                      widget.foodPacket.latitude, widget.foodPacket.longitude) /
+                  1000)
+              .ceil();
 
-        NGO tempNGO = NGO(
-            distance: distance,
-            name: i.data()['name'],
-            photoUrl: i.data()['image1'],
-            uid: i.data()['uid'],
-            isVerified: isVerified,
-            packageNo: packagesNo);
+          NGO tempNGO = NGO(
+              distance: distance,
+              name: i.data()['name'],
+              photoUrl: i.data()['image1'],
+              uid: i.data()['uid'],
+              isVerified: isVerified,
+              packageNo: packagesNo);
 
-        nearbyNGOList.add(tempNGO);
-      }
+          nearbyNGOList.add(tempNGO);
+        }
 
-      setState(() {
-        nearbyNGOList.sort((a, b) {
-          return a.distance.compareTo(b.distance);
+        setState(() {
+          nearbyNGOList.sort((a, b) {
+            return a.distance.compareTo(b.distance);
+          });
         });
-      });
+      }
     });
   }
 
