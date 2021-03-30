@@ -1,19 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/dialogboxes/dialogBoxDonate.dart';
+import 'package:gur/dialogboxes/dialogBoxReedemed.dart';
 import 'package:gur/drawerPages/drawer.dart';
-import 'package:gur/screens/chatSection/messageScreen.dart';
 import 'package:gur/screens/mainScreens/aboutNgo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:gur/searchScreens/search.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:gur/appBar.dart';
 
 class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
@@ -32,7 +31,6 @@ class _HomePageState extends State<HomePage> {
     'images/5.png',
     'images/6.png',
     'images/7.png',
-    'images/8.png',
   ];
   String userSumAmtDonat = '5 Kg';
   String userSumTimeDonated = '1';
@@ -138,69 +136,7 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: Stack(children: [
           Column(children: [
-            Container(
-              height: h * 60,
-              padding: EdgeInsets.symmetric(horizontal: b * 20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.07),
-                    blurRadius: b * 4,
-                    spreadRadius: 0,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Builder(
-                    builder: (BuildContext context) {
-                      return InkWell(
-                        onTap: () {
-                          _scaffoldKey.currentState.openDrawer();
-                        },
-                        child: Container(
-                          height: h * 30,
-                          width: b * 30,
-                          child: SvgPicture.asset(
-                            'images/Chart.svg',
-                            allowDrawingOutsideViewBox: true,
-                            width: h * 20,
-                            height: b * 20,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  Spacer(),
-                  Text(
-                    'Home',
-                    style: txtS(mc, 20, FontWeight.w600),
-                  ),
-                  Spacer(),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
-                        return MessageScreen(
-                            uid: FirebaseAuth.instance.currentUser.uid);
-                      }));
-                    },
-                    child: Container(
-                      height: h * 30,
-                      width: b * 30,
-                      child: SvgPicture.asset(
-                        'images/SendColor.svg',
-                        allowDrawingOutsideViewBox: true,
-                        width: h * 20,
-                        height: b * 20,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            Bar(scaffoldKey: _scaffoldKey, title: "Home"),
             Expanded(
               child: ListView(physics: BouncingScrollPhysics(), children: [
                 sh(20),
@@ -358,7 +294,7 @@ class _HomePageState extends State<HomePage> {
                     builder: (context, snapshot) {
                       return Container(
                         width: b * 375,
-                        height: h * 102,
+                        height: h * 105,
                         margin: EdgeInsets.only(left: b * 20),
                         child: ListView.builder(
                           shrinkWrap: true,
@@ -369,34 +305,51 @@ class _HomePageState extends State<HomePage> {
                           itemBuilder: (BuildContext ctxt, int index) {
                             return InkWell(
                               onTap: () {
-                                Navigator.of(context)
-                                    .push(MaterialPageRoute(builder: (context) {
-                                  return AboutNgo(
-                                    uidNGO: mainImageList[index]['uid'],
-                                  );
-                                }));
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (context) {
+                                    return AboutNgo(
+                                      uidNGO: mainImageList[index]['uid'],
+                                    );
+                                  }),
+                                );
                               },
                               child: Container(
-                                margin: EdgeInsets.only(right: b * 13),
+                                margin: EdgeInsets.only(
+                                    right: b * 13,
+                                    top: h * 5,
+                                    bottom: h * 5,
+                                    left: b * 5),
                                 width: b * 102,
                                 decoration: BoxDecoration(
                                   color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 8,
+                                      spreadRadius: 1,
+                                      offset: Offset(0, 0),
+                                    ),
+                                  ],
                                   borderRadius: BorderRadius.circular(b * 17),
                                 ),
-                                child: CachedNetworkImage(
-                                  imageUrl: mainImageList[index]['imageURL'],
-                                  fit: BoxFit.cover,
-                                  imageBuilder: (context, imageProvider) =>
-                                      Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(b * 10),
-                                      image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover),
-                                    ),
-                                  ),
-                                ),
+                                child: mainImageList[index]['imageURL'] != null
+                                    ? CachedNetworkImage(
+                                        imageUrl: mainImageList[index]
+                                            ['imageURL'],
+                                        fit: BoxFit.cover,
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(b * 10),
+                                            image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.cover),
+                                          ),
+                                        ),
+                                      )
+                                    : Image.asset('images/headNoImage.png'),
                               ),
                             );
                           },
@@ -527,7 +480,7 @@ class _HomePageState extends State<HomePage> {
                           padding: EdgeInsets.zero,
                           onPressed: () {
                             Navigator.pop(context);
-                            dialogBoxReedemed(context, couponCode);
+                            dialogBoxRedeemed(context);
                             addCouponToDb(couponCode);
                           },
                           shape: RoundedRectangleBorder(
@@ -559,44 +512,6 @@ class _HomePageState extends State<HomePage> {
       animationType: DialogTransitionType.fadeScale,
       curve: Curves.fastLinearToSlowEaseIn,
       duration: Duration(milliseconds: 300),
-    );
-  }
-
-  void dialogBoxReedemed(BuildContext context, int couponCode) {
-    var b = SizeConfig.screenWidth / 414;
-    var h = SizeConfig.screenHeight / 896;
-
-    showAnimatedDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return Dialog(
-          insetPadding: EdgeInsets.symmetric(horizontal: b * 40),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(b * 10),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                margin: EdgeInsets.symmetric(vertical: h * 20),
-                padding: EdgeInsets.symmetric(horizontal: b * 22),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: b * 0),
-                  child: Text(
-                    'Thanks for redeeming this coupon.. You can now avail it\'s benefits!!',
-                    textAlign: TextAlign.center,
-                    style: txtS(textColor, 20, FontWeight.w600),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-      animationType: DialogTransitionType.rotate3D,
-      curve: Curves.fastOutSlowIn,
-      duration: Duration(milliseconds: 500),
     );
   }
 
