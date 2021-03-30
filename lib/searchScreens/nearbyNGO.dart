@@ -1,19 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gur/dialogboxes/donateDoneDialog.dart';
 import 'package:gur/models/foodPacket.dart';
-
-import 'package:gur/dialogboxes/dialogBoxDonate.dart';
-import 'package:gur/dialogboxes/donateDoneDialog.dart';
 import 'package:gur/models/ngo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 import '../Utils/SizeConfig.dart';
 import '../Utils/constants.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class NearbyNGO extends StatefulWidget {
   final FoodPacket foodPacket;
@@ -89,16 +87,27 @@ class _NearbyNGOState extends State<NearbyNGO> {
         margin: EdgeInsets.symmetric(horizontal: b * 20),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           sh(50),
-          Text(
-            'Near By NGOs',
-            style: txtS(mc, 20, FontWeight.w500),
+          Row(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  child: SvgPicture.asset(
+                    'images/Arrow1.svg',
+                    allowDrawingOutsideViewBox: true,
+                  ),
+                ),
+              ),
+              SizedBox(width: b * 10),
+              Text(
+                'Near By NGOs',
+                style: txtS(mc, 20, FontWeight.w500),
+              ),
+            ],
           ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: b * 10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(b * 13),
-              color: Colors.white,
-            ),
+          Expanded(
             child: ListView.builder(
               shrinkWrap: true,
               physics: BouncingScrollPhysics(),
@@ -114,16 +123,15 @@ class _NearbyNGOState extends State<NearbyNGO> {
                             uploadDonationToDB(nearbyNGOList[index].uid);
                           },
                           child: Container(
-                            margin: EdgeInsets.only(
-                                top: index == 0 ? h * 0 : h * 12,
-                                bottom: h * 12),
+                            margin:
+                                EdgeInsets.only(top: h * 12, bottom: h * 12),
                             decoration: BoxDecoration(
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.15),
                                   blurRadius: 10,
                                   spreadRadius: -3,
-                                  offset: Offset(0, 2),
+                                  offset: Offset(0, 5),
                                 ),
                               ],
                               borderRadius: BorderRadius.circular(b * 10),
@@ -133,16 +141,30 @@ class _NearbyNGOState extends State<NearbyNGO> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  height: h * 100,
+                                  height: h * 120,
                                   width: b * 97,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(b * 13),
-                                    color: Color(0xff785758),
-                                    image: DecorationImage(
-                                      image: AssetImage('images/ill1.png'),
-                                      fit: BoxFit.cover,
-                                    ),
+                                    color: Colors.black12,
                                   ),
+                                  child: nearbyNGOList[index].photoUrl == null
+                                      ? Image.asset('images/headNoImage.png')
+                                      : CachedNetworkImage(
+                                          imageUrl:
+                                              nearbyNGOList[index].photoUrl,
+                                          fit: BoxFit.fitHeight,
+                                          imageBuilder:
+                                              (context, imageProvider) =>
+                                                  Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(b * 13),
+                                              image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                        ),
                                 ),
                                 SizedBox(width: b * 15),
                                 Container(
@@ -153,7 +175,7 @@ class _NearbyNGOState extends State<NearbyNGO> {
                                     children: [
                                       sh(7),
                                       Container(
-                                        width: b * 144,
+                                        width: b * 200,
                                         child: Text(
                                           nearbyNGOList[index].name,
                                           overflow: TextOverflow.ellipsis,
@@ -161,22 +183,29 @@ class _NearbyNGOState extends State<NearbyNGO> {
                                               textColor, 20, FontWeight.w600),
                                         ),
                                       ),
+                                      sh(5),
                                       Row(
                                         children: [
                                           Container(
                                             alignment: Alignment.center,
                                             width: b * 18,
-                                            height: h * 18,
+                                            height: h * 22,
                                             decoration: BoxDecoration(
                                               color: mc,
                                               borderRadius:
-                                                  BorderRadius.circular(b * 4),
+                                                  BorderRadius.circular(b * 6),
                                             ),
-                                            child: Icon(Icons.restaurant,
-                                                color: Colors.white,
-                                                size: b * 10),
+                                            child: Container(
+                                              height: h * 14,
+                                              width: b * 14,
+                                              child: SvgPicture.asset(
+                                                'images/rest.svg',
+                                                allowDrawingOutsideViewBox:
+                                                    true,
+                                              ),
+                                            ),
                                           ),
-                                          SizedBox(width: b * 5),
+                                          SizedBox(width: b * 10),
                                           Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -197,6 +226,7 @@ class _NearbyNGOState extends State<NearbyNGO> {
                                           ),
                                         ],
                                       ),
+                                      sh(5),
                                       nearbyNGOList[index].isVerified
                                           ? Row(
                                               children: [
@@ -240,7 +270,6 @@ class _NearbyNGOState extends State<NearbyNGO> {
                                               color: mc),
                                         ],
                                       ),
-                                      sh(5),
                                     ],
                                   ),
                                 ),

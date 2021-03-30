@@ -4,6 +4,7 @@ import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class AboutNgo extends StatefulWidget {
   final String uidNGO;
@@ -28,9 +29,7 @@ class _AboutNgoState extends State<AboutNgo> {
   String address = 'NA';
   String photo = 'NA';
   String photo2 = 'NA';
-  String regDate = "NA";
   String summary = 'NA';
-  Timestamp timestamp;
   int packageNo = 0;
   bool isVerified = false;
 
@@ -53,9 +52,6 @@ class _AboutNgoState extends State<AboutNgo> {
         phone = snap.data()['phone'];
         if (snap.data()['address'] != null) address = snap.data()['address'];
 
-        if (snap.data()['regDate'] != null) {
-          if (timestamp != null) timestamp = snap.data()['regData'];
-        }
         if (snap.data()['image1'] != null) photo = snap.data()['image1'];
 
         if (snap.data()['image2'] != null) photo2 = snap.data()['image2'];
@@ -99,22 +95,16 @@ class _AboutNgoState extends State<AboutNgo> {
               ),
               child: Row(
                 children: [
-                  Builder(
-                    builder: (BuildContext context) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Container(
-                          height: h * 30,
-                          width: b * 30,
-                          child: SvgPicture.asset(
-                            'images/Arrow1.svg',
-                            allowDrawingOutsideViewBox: true,
-                          ),
-                        ),
-                      );
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).pop();
                     },
+                    child: Container(
+                      child: SvgPicture.asset(
+                        'images/Arrow1.svg',
+                        allowDrawingOutsideViewBox: true,
+                      ),
+                    ),
                   ),
                   Spacer(),
                   Text(
@@ -131,7 +121,7 @@ class _AboutNgoState extends State<AboutNgo> {
                 Row(children: [
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: b * 20),
-                    width: b * 144,
+                    width: b * 140,
                     height: h * 177,
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -148,17 +138,27 @@ class _AboutNgoState extends State<AboutNgo> {
                     child: Column(
                       children: [
                         Container(
-                          width: b * 144,
+                          width: b * 140,
                           height: h * 138,
                           decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: photo == 'NA'
-                                  ? AssetImage('images/headNoImage.png')
-                                  : NetworkImage(photo),
-                              fit: BoxFit.cover,
-                            ),
                             borderRadius: BorderRadius.circular(b * 6),
                           ),
+                          child: photo == 'NA'
+                              ? Image.asset('images/headNoImage.png')
+                              : CachedNetworkImage(
+                                  imageUrl: photo,
+                                  fit: BoxFit.cover,
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.circular(b * 10),
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                         ),
                         sh(5),
                         Container(
@@ -170,7 +170,7 @@ class _AboutNgoState extends State<AboutNgo> {
                               ),
                               Text(
                                 '2021',
-                                style: txtS(textColor, 12, FontWeight.w600),
+                                style: txtS(textColor, 12, FontWeight.w800),
                               ),
                             ],
                           ),
@@ -183,7 +183,7 @@ class _AboutNgoState extends State<AboutNgo> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        width: b * 170,
+                        width: b * 200,
                         child: Text(
                           ngoName,
                           overflow: TextOverflow.ellipsis,
@@ -234,7 +234,7 @@ class _AboutNgoState extends State<AboutNgo> {
                                 Container(
                                   alignment: Alignment.center,
                                   width: b * 26,
-                                  height: h * 26,
+                                  height: h * 30,
                                   decoration: BoxDecoration(
                                     color: Color(0xff28797c),
                                     borderRadius: BorderRadius.circular(b * 6),
@@ -266,14 +266,21 @@ class _AboutNgoState extends State<AboutNgo> {
                         offset: Offset(0, 6),
                       ),
                     ],
-                    image: DecorationImage(
-                      image: photo2 == 'NA'
-                          ? AssetImage('images/baseNoImage.png')
-                          : NetworkImage(photo2),
-                      fit: BoxFit.contain,
-                    ),
                     borderRadius: BorderRadius.circular(b * 6),
                   ),
+                  child: photo2 == 'NA'
+                      ? Image.asset('images/baseNoImage.png')
+                      : CachedNetworkImage(
+                          imageUrl: photo2,
+                          fit: BoxFit.fitHeight,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(b * 10),
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.cover),
+                            ),
+                          ),
+                        ),
                 ),
                 sh(25),
                 Container(
@@ -288,8 +295,6 @@ class _AboutNgoState extends State<AboutNgo> {
                       sh(10),
                       Text(
                         summary,
-                        maxLines: 5,
-                        overflow: TextOverflow.ellipsis,
                         style: txtS(Color(0xff828282), 14, FontWeight.w500),
                       ),
                       sh(30),
@@ -406,6 +411,7 @@ class _AboutNgoState extends State<AboutNgo> {
                           ],
                         ),
                       ),
+                      sh(30),
                     ],
                   ),
                 ),

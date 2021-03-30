@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gur/screens/chatSection/chatScreen.dart';
 import '../../Utils/SizeConfig.dart';
 import '../../Utils/constants.dart';
@@ -93,14 +94,14 @@ class _MessageScreenState extends State<MessageScreen> {
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting)
-                  return CircularProgressIndicator();
+                  return SpinKitCircle(color: mc);
                 else if (snapshot.data.docs.length == 0)
-                  return Center(
-                    child: Text(
+                  return Column(children: [
+                    Text(
                       'Oops ! No Chat so far',
                       style: txtS(Color(0xff28797c), 20, FontWeight.w600),
                     ),
-                  );
+                  ]);
                 else
                   return Expanded(
                     child: ListView.builder(
