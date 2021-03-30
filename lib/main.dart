@@ -16,18 +16,18 @@ void main() async {
   FirebaseAuth auth = FirebaseAuth.instance;
   User user = auth.currentUser;
   SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      statusBarBrightness: Brightness.light,
-      systemNavigationBarColor: Colors.white,
-      systemNavigationBarIconBrightness: Brightness.dark,
-      systemNavigationBarDividerColor: Colors.transparent);
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.light,
+    statusBarBrightness: Brightness.light,
+    systemNavigationBarColor: Colors.white,
+    systemNavigationBarIconBrightness: Brightness.dark,
+    systemNavigationBarDividerColor: Colors.transparent,
+  );
 
   if (user == null)
     isLoggedIn = false;
   else
     isLoggedIn = true;
-
   String homeType;
   if (pref.containsKey('currentUserType'))
     homeType = pref.getString('currentUserType');
@@ -41,9 +41,13 @@ class MyApp extends StatelessWidget {
   MyApp(this.isLoggedIn, this.homeType);
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'DSC Challenge',
+      title: 'GlowCal',
       theme: ThemeData(primarySwatch: Colors.orange),
       home: !isLoggedIn
           ? Login()

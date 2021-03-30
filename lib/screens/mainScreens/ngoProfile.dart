@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:gur/screens/chatSection/messageScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,7 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:gur/drawerPages/drawer.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart' as loc;
-
+import 'package:gur/appBar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 import '../../Utils/SizeConfig.dart';
@@ -129,65 +128,7 @@ class _NgoProfileState extends State<NgoProfile> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(children: [
-          Container(
-            height: h * 60,
-            padding: EdgeInsets.symmetric(horizontal: b * 20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.07),
-                  blurRadius: b * 4,
-                  spreadRadius: 0,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                InkWell(
-                  onTap: () {
-                    _scaffoldKey.currentState.openDrawer();
-                  },
-                  child: Container(
-                    height: h * 30,
-                    width: b * 30,
-                    child: SvgPicture.asset(
-                      'images/Chart.svg',
-                      allowDrawingOutsideViewBox: true,
-                      width: h * 20,
-                      height: b * 20,
-                    ),
-                  ),
-                ),
-                Spacer(),
-                Text(
-                  'Profile',
-                  style: txtS(mc, 20, FontWeight.w600),
-                ),
-                Spacer(),
-                InkWell(
-                  onTap: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return MessageScreen(
-                          uid: FirebaseAuth.instance.currentUser.uid);
-                    }));
-                  },
-                  child: Container(
-                    height: h * 30,
-                    width: b * 30,
-                    child: SvgPicture.asset(
-                      'images/SendColor.svg',
-                      allowDrawingOutsideViewBox: true,
-                      width: h * 20,
-                      height: b * 20,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          Bar(scaffoldKey: _scaffoldKey, title: "Profile"),
           sh(23),
           Expanded(
             child: ListView(
@@ -472,7 +413,7 @@ class _NgoProfileState extends State<NgoProfile> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ico('images/Group 23.svg'),
+                      ico('images/Profile.svg'),
                       SizedBox(width: b * 10),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -765,10 +706,8 @@ class _NgoProfileState extends State<NgoProfile> {
                             child: Container(
                               color: !isLocation ? mc : Color(0xff28797c),
                               child: isLocationLoading
-                                  ? CircularProgressIndicator(
-                                      backgroundColor: Colors.white,
-                                      strokeWidth: 2,
-                                    )
+                                  ? SpinKitCircle(
+                                      color: Colors.white, size: h * 25)
                                   : Text(
                                       !isLocation ? "Get location" : "Done",
                                       style: txtS(

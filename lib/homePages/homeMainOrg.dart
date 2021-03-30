@@ -93,7 +93,7 @@ class _HomeOrgState extends State<HomeOrg> {
                     child: SvgPicture.asset(
                       _selectedIndex == 2
                           ? 'images/Set.svg'
-                          : 'images/set2.svg',
+                          : 'images/Set1.svg',
                       allowDrawingOutsideViewBox: true,
                     ),
                   ),

@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:gur/dialogboxes/dialogBoxReedemed.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Utils/SizeConfig.dart';
 import '../Utils/constants.dart';
@@ -12,7 +14,6 @@ class Coupons extends StatefulWidget {
 }
 
 class _CouponsState extends State<Coupons> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int userPoints = 0;
   List couponList = [];
 
@@ -48,7 +49,6 @@ class _CouponsState extends State<Coupons> {
     var b = SizeConfig.screenWidth / 412;
 
     return Scaffold(
-      key: _scaffoldKey,
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -68,22 +68,16 @@ class _CouponsState extends State<Coupons> {
             ),
             child: Row(
               children: [
-                Builder(
-                  builder: (BuildContext context) {
-                    return InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        height: h * 30,
-                        width: b * 30,
-                        child: SvgPicture.asset(
-                          'images/Arrow1.svg',
-                          allowDrawingOutsideViewBox: true,
-                        ),
-                      ),
-                    );
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
                   },
+                  child: Container(
+                    child: SvgPicture.asset(
+                      'images/Arrow1.svg',
+                      allowDrawingOutsideViewBox: true,
+                    ),
+                  ),
                 ),
                 Spacer(),
                 Text(
@@ -109,7 +103,7 @@ class _CouponsState extends State<Coupons> {
                 ),
               ],
               image: DecorationImage(
-                image: AssetImage('images/amit.png'),
+                image: AssetImage('images/Frame.png'),
                 fit: BoxFit.cover,
               ),
               borderRadius: BorderRadius.circular(b * 6),
@@ -120,7 +114,7 @@ class _CouponsState extends State<Coupons> {
                 Container(
                   width: b * 181,
                   child: Text(
-                    'Get 5 points for each Kg food you donate',
+                    'Get 50 points for each Kg food you donate',
                     style: txtS(Color(0xff266260), 17, FontWeight.w900),
                   ),
                 ),
@@ -146,7 +140,7 @@ class _CouponsState extends State<Coupons> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        userPoints.toString(),
+                        userPoints == null ? "0" : userPoints.toString(),
                         style: txtS(Colors.white, 30, FontWeight.w900),
                       ),
                       Text(
@@ -178,10 +172,10 @@ class _CouponsState extends State<Coupons> {
               itemBuilder: (context, index) => Column(
                 children: <Widget>[
                   couponList.length == 0
-                      ? CircularProgressIndicator()
+                      ? SpinKitCircle(color: mc)
                       : InkWell(
                           onTap: () {
-                            dialogBoxCoupon(context, true);
+                            return dialogBoxCoupon(context);
                           },
                           child: Container(
                             height: h * 111,
@@ -215,7 +209,7 @@ class _CouponsState extends State<Coupons> {
     );
   }
 
-  void dialogBoxCoupon(BuildContext context, bool status) {
+  void dialogBoxCoupon(BuildContext context) {
     var b = SizeConfig.screenWidth / 414;
     var h = SizeConfig.screenHeight / 896;
 
@@ -236,77 +230,68 @@ class _CouponsState extends State<Coupons> {
                 padding: EdgeInsets.symmetric(horizontal: b * 22),
                 child: Column(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: b * 0),
-                      child: Text(
-                        status
-                            ? 'You want to redeem this Coupon?'
-                            : 'You have already redeemed this coupon.. Try another coupon',
-                        textAlign: TextAlign.center,
-                        style: txtS(textColor, 20, FontWeight.w600),
-                      ),
+                    Text(
+                      'You want to redeem this Coupon?',
+                      textAlign: TextAlign.center,
+                      style: txtS(textColor, 20, FontWeight.w600),
                     ),
-                    status ? sh(30) : sh(0),
-                    status
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              MaterialButton(
-                                elevation: 5,
-                                padding: EdgeInsets.zero,
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(b * 36),
-                                ),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width: b * 97,
-                                  height: h * 40,
-                                  decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    borderRadius: BorderRadius.circular(b * 36),
-                                    border: Border.all(
-                                      color: Color(0xff28797c),
-                                      width: b * 2,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'NO',
-                                    style: txtS(
-                                        Color(0xff28797c), 16, FontWeight.w600),
-                                  ),
-                                ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        MaterialButton(
+                          elevation: 5,
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(b * 36),
+                          ),
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: b * 97,
+                            height: h * 40,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(b * 36),
+                              border: Border.all(
+                                color: Color(0xff28797c),
+                                width: b * 2,
                               ),
-                              MaterialButton(
-                                elevation: 5,
-                                padding: EdgeInsets.zero,
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  dialogBoxReedemed(context);
-                                },
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(b * 36),
-                                ),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width: b * 97,
-                                  height: h * 40,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xff28797c),
-                                    borderRadius: BorderRadius.circular(b * 36),
-                                  ),
-                                  child: Text(
-                                    'YES',
-                                    style:
-                                        txtS(Colors.white, 16, FontWeight.w600),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                        : sh(0),
+                            ),
+                            child: Text(
+                              'NO',
+                              style:
+                                  txtS(Color(0xff28797c), 16, FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                        MaterialButton(
+                          elevation: 5,
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            Navigator.pop(context);
+                            dialogBoxRedeemed(context);
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(b * 36),
+                          ),
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: b * 97,
+                            height: h * 40,
+                            decoration: BoxDecoration(
+                              color: Color(0xff28797c),
+                              borderRadius: BorderRadius.circular(b * 36),
+                            ),
+                            child: Text(
+                              'YES',
+                              style: txtS(Colors.white, 16, FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -317,44 +302,6 @@ class _CouponsState extends State<Coupons> {
       animationType: DialogTransitionType.fadeScale,
       curve: Curves.fastOutSlowIn,
       duration: Duration(milliseconds: 300),
-    );
-  }
-
-  void dialogBoxReedemed(BuildContext context) {
-    var b = SizeConfig.screenWidth / 414;
-    var h = SizeConfig.screenHeight / 896;
-
-    showAnimatedDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return Dialog(
-          insetPadding: EdgeInsets.symmetric(horizontal: b * 40),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(b * 10),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                margin: EdgeInsets.symmetric(vertical: h * 20),
-                padding: EdgeInsets.symmetric(horizontal: b * 22),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: b * 0),
-                  child: Text(
-                    'Thanks for redeeming this coupon.. You can now avail it\'s benefits!!',
-                    textAlign: TextAlign.center,
-                    style: txtS(textColor, 20, FontWeight.w600),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-      animationType: DialogTransitionType.rotate3D,
-      curve: Curves.fastOutSlowIn,
-      duration: Duration(milliseconds: 500),
     );
   }
 
