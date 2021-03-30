@@ -11,17 +11,17 @@ import 'package:flutter/services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences pref = await SharedPreferences.getInstance();
-  bool isLoggedIn;
+  bool isLoggedIn = false;
   await Firebase.initializeApp();
   FirebaseAuth auth = FirebaseAuth.instance;
   User user = auth.currentUser;
-  SystemUiOverlayStyle(
+  /* SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
       statusBarBrightness: Brightness.light,
       systemNavigationBarColor: Colors.white,
       systemNavigationBarIconBrightness: Brightness.dark,
-      systemNavigationBarDividerColor: Colors.transparent);
+      systemNavigationBarDividerColor: Colors.transparent); */
 
   if (user == null)
     isLoggedIn = false;
