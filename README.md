@@ -2,14 +2,14 @@
 
 ## Developer Students Club - Solution Challenge 2021
 
-- With aim to address the challenges being faced by humanity, DSC Students were invited to propose solutions for one or more [Sustainable Development Goals(SDGs)](https://developers.google.com/community/dsc-solution-challenge/UN-goals)
+- With aim to address the challenges being faced by humanity, DSC Students were invited to propose solutions for one or more [United Nation Sustainable Development Goals(SDGs)](https://developers.google.com/community/dsc-solution-challenge/UN-goals)
 - We selected the problem statement 2: [Zero Hunger](https://www.un.org/sustainabledevelopment/hunger/)
 - It also aligns to the following goals as a helping hand:
 > 1. [Reduced Inequalities](https://www.un.org/sustainabledevelopment/inequality/)
 > 2. [Responsible Consumption and Production](https://www.un.org/sustainabledevelopment/sustainable-consumption-production)
 > 3. [Climate Action](https://www.un.org/sustainabledevelopment/climate-change)
 
-- We created a Flutter Application named GlowCal, to help people having extra food due to some reason(cooked excessive, got an invite to a party, have to rush to other city)
+- We created a Flutter Application named GlowCal, we've tried to make food available to those people who are deprived of this basic need, but they have generous people around them for help. People have excess food due to unavoidable circumstances or negligence; they can donate the same food to the needy ones.
 
 - The application has a very simple interface, is completely private(we do not share the user's personal information with anyone).
 - This application allows the users to donate food to local NGOs, who will transport it to the needy persons.
@@ -17,16 +17,17 @@
 - The application will automatically detect your location and list the NGOs near you.
 - You can select any NGO of your choice(affected by your previous experience or fame of NGOs).
 - You can also have an in-app chat conversation with the person who will be coming up, if there is any change in plan, or they need to come delayed, or early.
-- You'll get a prompt for your packet request and will get a message as soon as the NGO accepts/rejects it.
+- You will get a notification when the NGO has received your food package. You'll also get points for the donations based on the amount of food you have donated, - those points can be used to redeem the coupons of offline and online stores.
 
 ### Link to demo video: [GlowCal - GDSC Solution Challenge 2021](https://youtu.be/KV0qE6azEeU)
 ### Download apk from release section
 
 ## To start the application
-> - `git clone `https://www.github.com/ritesh-amit/Dsc` 
-> - `cd Dsc`
+> - `git clone https://www.github.com/ritesh-amit/BitSync_GlowCal`
+> - `cd BitSync_GlowCal`
 > - `flutter pub get`
-> - ` flutter run <devicename>`
+> - `flutter build apk --split-per-abi`
+> - `flutter install`
 
 ## Development Credits
 - Design: [Nishant Singh](https:www.github.com/iamoo7)
