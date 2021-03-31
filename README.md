@@ -19,8 +19,8 @@
 - You can also have an in-app chat conversation with the person who will be coming up, if there is any change in plan, or they need to come delayed, or early.
 - You'll get a prompt for your packet request and will get a message as soon as the NGO accepts/rejects it.
 
-### Link to vide demo: [DEMO](https://youtu.be/KV0qE6azEeU)
-### Download the app: [Android]()
+### Link to demo video: [GlowCal - GDSC Solution Challenge 2021](https://youtu.be/KV0qE6azEeU)
+### Download apk from release section
 
 ## To start the application
 > - `git clone `https://www.github.com/ritesh-amit/Dsc` 
