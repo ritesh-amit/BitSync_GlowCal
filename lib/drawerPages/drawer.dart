@@ -9,6 +9,7 @@ import '../Utils/SizeConfig.dart';
 import '../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../newAuthScreens/login.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DrawerCode extends StatefulWidget {
   final String userName;
@@ -124,7 +125,7 @@ class _DrawerCodeState extends State<DrawerCode> {
                 color: rc,
                 height: h * 1),
             sh(10),
-            row('images/Send.svg', 'Share the App', null),
+            row('images/Send.svg', 'Share the App', share),
             sh(10),
           ],
         ),
@@ -175,6 +176,14 @@ class _DrawerCodeState extends State<DrawerCode> {
       fontWeight: wg,
       fontSize: SizeConfig.screenWidth * siz / 414,
     );
+  }
+
+  void share() async {
+    if (await canLaunch('https://github.com/ritesh-amit/BitSync_GlowCal')) {
+      launch('https://github.com/ritesh-amit/BitSync_GlowCal');
+    } else {
+      throw "Could not launch";
+    }
   }
 
   void logOut() async {

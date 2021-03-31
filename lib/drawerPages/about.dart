@@ -3,6 +3,15 @@ import '../Utils/SizeConfig.dart';
 import '../Utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gur/appBar2.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+void launchUrl(String url) async {
+  if (await canLaunch(url)) {
+    launch(url);
+  } else {
+    throw "Could not launch $url";
+  }
+}
 
 class About extends StatelessWidget {
   @override
@@ -32,24 +41,32 @@ class About extends StatelessWidget {
                     ),
                   ),
                   sh(28),
-                  Row(
-                    children: [
-                      SizedBox(width: b * 14),
-                      Text(
-                        'Terms of Service',
-                        style: txtS(textColor, 16, FontWeight.w400),
-                      ),
-                      Spacer(),
-                      Container(
-                        height: h * 30,
-                        width: b * 30,
-                        child: SvgPicture.asset(
-                          'images/Arrow2.svg',
-                          allowDrawingOutsideViewBox: true,
+                  InkWell(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    onTap: () {
+                      launch(
+                          'https://avanishcodes.github.io/priv-pol/tos.html');
+                    },
+                    child: Row(
+                      children: [
+                        SizedBox(width: b * 14),
+                        Text(
+                          'Terms of Service',
+                          style: txtS(textColor, 16, FontWeight.w400),
                         ),
-                      ),
-                      SizedBox(width: b * 60),
-                    ],
+                        Spacer(),
+                        Container(
+                          height: h * 30,
+                          width: b * 30,
+                          child: SvgPicture.asset(
+                            'images/Arrow2.svg',
+                            allowDrawingOutsideViewBox: true,
+                          ),
+                        ),
+                        SizedBox(width: b * 60),
+                      ],
+                    ),
                   ),
                   sh(13),
                   Container(
@@ -58,24 +75,31 @@ class About extends StatelessWidget {
                     height: h * 0.3,
                   ),
                   sh(13),
-                  Row(
-                    children: [
-                      SizedBox(width: b * 14),
-                      Text(
-                        'Privacy Policy',
-                        style: txtS(textColor, 16, FontWeight.w400),
-                      ),
-                      Spacer(),
-                      Container(
-                        height: h * 30,
-                        width: b * 30,
-                        child: SvgPicture.asset(
-                          'images/Arrow2.svg',
-                          allowDrawingOutsideViewBox: true,
+                  InkWell(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    onTap: () {
+                      launch('https://avanishcodes.github.io/priv-pol/pp.html');
+                    },
+                    child: Row(
+                      children: [
+                        SizedBox(width: b * 14),
+                        Text(
+                          'Privacy Policy',
+                          style: txtS(textColor, 16, FontWeight.w400),
                         ),
-                      ),
-                      SizedBox(width: b * 60),
-                    ],
+                        Spacer(),
+                        Container(
+                          height: h * 30,
+                          width: b * 30,
+                          child: SvgPicture.asset(
+                            'images/Arrow2.svg',
+                            allowDrawingOutsideViewBox: true,
+                          ),
+                        ),
+                        SizedBox(width: b * 60),
+                      ],
+                    ),
                   ),
                   sh(50),
                   Row(

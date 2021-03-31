@@ -15,14 +15,14 @@ void main() async {
   await Firebase.initializeApp();
   FirebaseAuth auth = FirebaseAuth.instance;
   User user = auth.currentUser;
-  SystemUiOverlayStyle(
+  /*SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.light,
     statusBarBrightness: Brightness.light,
     systemNavigationBarColor: Colors.white,
     systemNavigationBarIconBrightness: Brightness.dark,
     systemNavigationBarDividerColor: Colors.transparent,
-  );
+  );*/
 
   if (user == null)
     isLoggedIn = false;

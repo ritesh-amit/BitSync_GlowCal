@@ -95,17 +95,6 @@ class _AboutNgoState extends State<AboutNgo> {
               ),
               child: Row(
                 children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Container(
-                      child: SvgPicture.asset(
-                        'images/Arrow1.svg',
-                        allowDrawingOutsideViewBox: true,
-                      ),
-                    ),
-                  ),
                   Spacer(),
                   Text(
                     ngoName,
