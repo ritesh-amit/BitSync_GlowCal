@@ -23,7 +23,7 @@
 ### Download apk from release section
 
 ## To start the application
-> - `git clone `https://www.github.com/ritesh-amit/BitSync_GlowCal``
+> - `git clone https://www.github.com/ritesh-amit/BitSync_GlowCal`
 > - `cd BitSync_GlowCal`
 > - `flutter pub get`
 > - `flutter build apk --split-per-abi`
