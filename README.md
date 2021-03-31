@@ -23,6 +23,7 @@
 ### Download the app: [Android]()
 
 ## To start the application
+> - `git clone `https://www.github.com/ritesh-amit/Dsc` 
 > - `cd Dsc`
 > - `flutter pub get`
 > - ` flutter run <devicename>`
