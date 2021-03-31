@@ -6,6 +6,7 @@ import 'package:gur/models/ngo.dart';
 import 'package:gur/screens/mainScreens/aboutNgo.dart';
 import '../Utils/SizeConfig.dart';
 import '../Utils/constants.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class SearchScreen extends StatefulWidget {
   _SearchScreenState createState() => _SearchScreenState();
@@ -81,7 +82,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
           sh(30),
           Container(
-            constraints: BoxConstraints(maxHeight: h * 600, minHeight: h * 0),
+            constraints: BoxConstraints(maxHeight: h * 600, minHeight: h * 100),
             margin: EdgeInsets.symmetric(horizontal: b * 20),
             padding: EdgeInsets.symmetric(horizontal: b * 15, vertical: h * 10),
             decoration: BoxDecoration(
@@ -125,25 +126,46 @@ class _SearchScreenState extends State<SearchScreen> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(b * 20),
                                   color: Color(0xffff1f1f1),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: b * 4,
+                                      spreadRadius: 1,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
                                 ),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                      height: h * 97,
+                                      height: h * 100,
                                       width: b * 97,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(b * 13),
-                                          bottomLeft: Radius.circular(b * 13),
-                                        ),
-                                        color: Color(0xff785758),
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                              newDataList[index].photoUrl),
-                                          fit: BoxFit.cover,
-                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(b * 13),
+                                        color: Colors.black12,
                                       ),
+                                      child: newDataList[index].photoUrl == null
+                                          ? Image.asset(
+                                              'images/headNoImage.png')
+                                          : CachedNetworkImage(
+                                              imageUrl:
+                                                  newDataList[index].photoUrl,
+                                              fit: BoxFit.fitHeight,
+                                              imageBuilder:
+                                                  (context, imageProvider) =>
+                                                      Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          b * 10),
+                                                  image: DecorationImage(
+                                                      image: imageProvider,
+                                                      fit: BoxFit.cover),
+                                                ),
+                                              ),
+                                            ),
                                     ),
                                     SizedBox(width: b * 15),
                                     Container(

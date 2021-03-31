@@ -62,29 +62,30 @@ class _DialogBoxDonateState extends State<DialogBoxDonate> {
                       return Column(children: [
                         InkWell(
                           onTap: () {
-                            setState(() {
-                              if (index == 0) {
-                                weight[0] = !weight[0];
-                                weight[1] = false;
-                                weight[2] = false;
-                                weight[3] = false;
-                              } else if (index == 1) {
-                                weight[1] = !weight[1];
-                                weight[0] = false;
-                                weight[2] = false;
-                                weight[3] = false;
-                              } else if (index == 2) {
-                                weight[2] = !weight[2];
-                                weight[0] = false;
-                                weight[1] = false;
-                                weight[3] = false;
-                              } else if (index == 3) {
-                                weight[3] = !weight[3];
-                                weight[0] = false;
-                                weight[2] = false;
-                                weight[1] = false;
-                              }
-                            });
+                            if (mounted)
+                              setState(() {
+                                if (index == 0) {
+                                  weight[0] = !weight[0];
+                                  weight[1] = false;
+                                  weight[2] = false;
+                                  weight[3] = false;
+                                } else if (index == 1) {
+                                  weight[1] = !weight[1];
+                                  weight[0] = false;
+                                  weight[2] = false;
+                                  weight[3] = false;
+                                } else if (index == 2) {
+                                  weight[2] = !weight[2];
+                                  weight[0] = false;
+                                  weight[1] = false;
+                                  weight[3] = false;
+                                } else if (index == 3) {
+                                  weight[3] = !weight[3];
+                                  weight[0] = false;
+                                  weight[2] = false;
+                                  weight[1] = false;
+                                }
+                              });
                           },
                           child: Container(
                             alignment: Alignment.center,
@@ -145,13 +146,14 @@ class _DialogBoxDonateState extends State<DialogBoxDonate> {
                       },
                       onTap: () {
                         toNavigate(500);
-                        setState(() {
-                          print(amit);
-                          weight[0] = false;
-                          weight[1] = false;
-                          weight[2] = false;
-                          weight[3] = false;
-                        });
+                        if (mounted)
+                          setState(() {
+                            print(amit);
+                            weight[0] = false;
+                            weight[1] = false;
+                            weight[2] = false;
+                            weight[3] = false;
+                          });
                       },
                       style: txtS(textColor, 16, FontWeight.w600),
                       decoration: InputDecoration(

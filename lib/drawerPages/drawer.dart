@@ -103,9 +103,10 @@ class _DrawerCodeState extends State<DrawerCode> {
                     ),
                     sh(20),
                     Container(
-                        margin: EdgeInsets.only(right: b * 20),
-                        color: rc,
-                        height: h * 1),
+                      margin: EdgeInsets.only(right: b * 20),
+                      color: rc,
+                      height: h * 1,
+                    ),
                   ]),
             ),
             sh(50),

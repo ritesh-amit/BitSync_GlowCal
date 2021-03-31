@@ -373,7 +373,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: b * 0),
                       child: Text(
-                        'Are you sure the package of ANY Kg is received?\n\nGet access to ANY points if received!!',
+                        'Are you sure the package is received by you?',
                         textAlign: TextAlign.center,
                         style: txtS(textColor, 16, FontWeight.w500),
                       ),
@@ -449,7 +449,11 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget notAcceptedText() {
-    return Text("Wait for NGO to accept your request");
+    return Text(isDelivered
+        ? "This package has been delivered"
+        : userTypeString == 'ngo'
+            ? "Accept the request to start this conversation"
+            : "Wait for NGO to accept your request");
   }
 
   Widget contactDetails(String name, String phone, String colorType) {
@@ -846,7 +850,7 @@ class _ChatScreenState extends State<ChatScreen> {
               Padding(
                 padding: EdgeInsets.fromLTRB(b * 25, h * 27, b * 60, h * 19),
                 child: Text(
-                  'You Have accepted request from Person',
+                  'You Have accepted request for the donation.',
                   style: txtS(textColor, 20, FontWeight.w500),
                 ),
               ),
@@ -1115,6 +1119,13 @@ class _ChatScreenState extends State<ChatScreen> {
         pickUpPersonName: name,
         pickUpPersonContact: phone,
         timestamp: FieldValue.serverTimestamp());
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+          "Your Contact details has been shared. Kindly get back and had a conversation with donar."),
+      backgroundColor: Colors.green,
+      behavior: SnackBarBehavior.floating,
+      duration: Duration(seconds: 5),
+    ));
 
     addMessageToDb(message);
   }

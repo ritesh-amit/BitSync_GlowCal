@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:gur/appBar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,7 +8,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gur/screens/chatSection/chatScreen.dart';
-import 'package:gur/screens/chatSection/messageScreen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -161,69 +160,7 @@ class _NgoHomeState extends State<NgoHome> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(children: [
-          Container(
-            height: h * 60,
-            padding: EdgeInsets.symmetric(horizontal: b * 20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.07),
-                  blurRadius: b * 4,
-                  spreadRadius: 0,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                Builder(
-                  builder: (BuildContext context) {
-                    return InkWell(
-                      onTap: () {
-                        _scaffoldKey.currentState.openDrawer();
-                      },
-                      child: Container(
-                        height: h * 30,
-                        width: b * 30,
-                        child: SvgPicture.asset(
-                          'images/Chart.svg',
-                          allowDrawingOutsideViewBox: true,
-                          width: h * 20,
-                          height: b * 20,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                Spacer(),
-                Text(
-                  'Home',
-                  style: txtS(mc, 20, FontWeight.w600),
-                ),
-                Spacer(),
-                InkWell(
-                  onTap: () {
-                    String uid = FirebaseAuth.instance.currentUser.uid;
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return MessageScreen(uid: uid);
-                    }));
-                  },
-                  child: Container(
-                    height: h * 30,
-                    width: b * 30,
-                    child: SvgPicture.asset(
-                      'images/SendColor.svg',
-                      allowDrawingOutsideViewBox: true,
-                      width: h * 20,
-                      height: b * 20,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          Bar(scaffoldKey: _scaffoldKey, title: "Home"),
           Expanded(
             child: ListView(physics: BouncingScrollPhysics(), children: [
               sh(20),
@@ -245,13 +182,6 @@ class _NgoHomeState extends State<NgoHome> {
                             offset: Offset(0, 6),
                           ),
                         ],
-                        /* image: DecorationImage(
-                            image: headImageURL == "NA"
-                                ? AssetImage('images/headNoImage.png')
-                                : NetworkImage(headImageURL),
-                            fit: headImageURL == "NA"
-                                ? BoxFit.contain
-                                : BoxFit.cover), */
                         borderRadius: BorderRadius.circular(b * 12),
                       ),
                       child: headImageURL == 'NA'
@@ -284,7 +214,7 @@ class _NgoHomeState extends State<NgoHome> {
                           width: b * 26,
                           height: h * 26,
                           decoration: BoxDecoration(
-                            color: mc,
+                            color: Color(0xff28797c),
                             borderRadius: BorderRadius.circular(b * 6),
                           ),
                           child: Icon(MdiIcons.imageEdit,
@@ -370,10 +300,6 @@ class _NgoHomeState extends State<NgoHome> {
               Stack(
                 children: [
                   Container(
-                    /* child: Image.network(
-                      photo2,
-                      fit: BoxFit.cover,
-                    ),*/
                     margin: EdgeInsets.symmetric(horizontal: b * 20),
                     height: h * 147,
                     decoration: BoxDecoration(
@@ -385,15 +311,22 @@ class _NgoHomeState extends State<NgoHome> {
                           offset: Offset(0, 6),
                         ),
                       ],
-                      image: DecorationImage(
-                        image: photo2 == 'NA'
-                            ? AssetImage('images/baseNoImage.png')
-                            : NetworkImage(photo2), // NetworkImage(photo2),
-                        fit: BoxFit.cover,
-                      ),
                       color: gc,
                       borderRadius: BorderRadius.circular(b * 6),
                     ),
+                    child: photo2 == 'NA'
+                        ? Image.asset('images/baseNoImage.png')
+                        : CachedNetworkImage(
+                            imageUrl: photo2,
+                            fit: BoxFit.cover,
+                            imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(b * 10),
+                                image: DecorationImage(
+                                    image: imageProvider, fit: BoxFit.cover),
+                              ),
+                            ),
+                          ),
                   ),
                   Positioned(
                     right: b * 30,
@@ -407,7 +340,7 @@ class _NgoHomeState extends State<NgoHome> {
                         width: b * 26,
                         height: h * 26,
                         decoration: BoxDecoration(
-                          color: mc,
+                          color: Color(0xff28797c),
                           borderRadius: BorderRadius.circular(b * 6),
                         ),
                         child: Icon(MdiIcons.imageEdit,
@@ -435,8 +368,7 @@ class _NgoHomeState extends State<NgoHome> {
                     sh(10),
                     Text(
                       summary,
-                      maxLines: 5,
-                      overflow: TextOverflow.ellipsis,
+                      maxLines: null,
                       style: txtS(Color(0xff828282), 14, FontWeight.w500),
                     ),
                     sh(20),
@@ -583,7 +515,6 @@ class _NgoHomeState extends State<NgoHome> {
                   ],
                 ),
               ),
-              sh(200),
             ]),
           ),
         ]),
@@ -631,7 +562,7 @@ class _NgoHomeState extends State<NgoHome> {
         .child('ngoImages')
         .child(uid)
         .child(fileCode)
-        .putFile(image1File)
+        .putFile(code == 1 ? image1File : image2File)
         .then((task) async {
       String imageURL = await getImageLink(fileCode, uid);
 
